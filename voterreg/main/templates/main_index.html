@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Are you registered?</h1>
+<p><a href="#">Yes, I am already Registered</a></p>
+{% endblock %}
