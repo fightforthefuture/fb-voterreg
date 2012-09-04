@@ -1,4 +1,7 @@
 Django==1.4
 South==0.7.5
+dj-database-url==0.2.0
 psycopg2==2.4.5
 gunicorn==0.14.3
+boto==2.4.1
+django-storages==1.1.4

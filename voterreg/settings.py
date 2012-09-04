@@ -1,4 +1,5 @@
 import os
+from os import environ
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -97,6 +98,25 @@ LOGGING = {
         },
     }
 }
+
+if environ.get("RACK_ENV", None) == "production":
+    import dj_database_url
+
+    DEBUG = False
+
+    DATABASES = {
+        'default': dj_database_url.config(default='postgres://localhost') 
+        }
+
+    INSTALLED_APPS += ("gunicorn", "storages",)
+
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+    AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
+    AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
+    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
+    STATIC_URL= 'http://s3.amazonaws.com/voterreg.fb/'
+    INSTALLATION = "production"
 
 try:
     from settings_local import *
