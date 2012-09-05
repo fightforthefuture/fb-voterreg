@@ -114,6 +114,7 @@ if environ.get("RACK_ENV", None) == "production":
     AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
     AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
     AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
+    AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
     STATIC_URL= 'http://s3.amazonaws.com/voterreg.fb/'
     INSTALLATION = "production"
 
