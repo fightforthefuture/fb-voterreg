@@ -1,4 +1,5 @@
 import facebook
+from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
