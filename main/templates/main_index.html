@@ -8,6 +8,28 @@
 {% endblock %}
 
 {% block content %}
-<h1>Are you registered?</h1>
-<p><a href="#">Yes, I am already Registered</a></p>
+<div class="main-content">
+{% if not fetched %}
+  Loading...
+{% elif not registered %}
+  You are not registered!
+{% elif not pledged %}
+  You have not pledged! %}
+{% else %}
+  You need to invite your friends to this thing!
+{% endif %}
+</div>
+<div class="friends-content">
+{% if friends %}
+  We are going to show your friends listed down here, along with the graphic design for friends.
+{% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+  var LOAD = {% if fetched %}false{% else %}true{% endif %};
+  var LOAD_FRIENDS = {% if friends %}false{% else %}true{% endif %};
+</script>
+<script type="text/javascript" src="{% static 'js/main_index.js' %}"></script>
 {% endblock %}
