@@ -118,6 +118,10 @@ if environ.get("RACK_ENV", None) == "production":
     STATIC_URL= 'http://s3.amazonaws.com/voterreg.fb/'
     INSTALLATION = "production"
 
+    FACEBOOK_APP_ID = "220561354738022"
+    FACEBOOK_APP_SECRET = environ.get("FACEBOOK_APP_SECRET", "")
+    FACEBOOK_CANVAS_PAGE = "http://voterreg-facebook.herokuapp.com/"
+
 try:
     from settings_local import *
 except ImportError:
