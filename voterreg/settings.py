@@ -98,10 +98,14 @@ LOGGING = {
     }
 }
 
+FACEBOOK_APP_ID = "258722907563918"
+FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
+FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/258722907563918/"
+
 if environ.get("RACK_ENV", None) == "production":
     import dj_database_url
 
-    DEBUG = True # temporary
+    DEBUG = False
 
     DATABASES = {
         'default': dj_database_url.config(default='postgres://localhost') 
@@ -121,11 +125,8 @@ if environ.get("RACK_ENV", None) == "production":
     FACEBOOK_APP_ID = "220561354738022"
     FACEBOOK_APP_SECRET = environ.get("FACEBOOK_APP_SECRET", "")
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/220561354738022/"
-else: # local
-    FACEBOOK_APP_ID = "258722907563918"
-    FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
-    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/258722907563918/"
-
+else:
+    INSTALLED_APPS += ("staticpages",)
 
 try:
     from settings_local import *
