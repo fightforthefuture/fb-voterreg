@@ -3,6 +3,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
 def _post_index(request):
     signed_request = request.POST["signed_request"]
