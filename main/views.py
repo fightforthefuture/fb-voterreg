@@ -8,7 +8,7 @@ def _post_index(request):
     signed_request = request.POST["signed_request"]
     data = facebook.parse_signed_request(
         signed_request,
-        settings.FACEBOOK_SECRET_KEY)
+        settings.FACEBOOK_APP_SECRET)
     if not data.get("user_id"):
         scope = ("user_birthday,user_location,friends_birthday,"
                  "friends_hometown,friends_location")
