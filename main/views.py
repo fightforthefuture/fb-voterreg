@@ -11,8 +11,8 @@ def _post_index(request):
         signed_request,
         settings.FACEBOOK_APP_SECRET)
     if not data.get("user_id"):
-        scope = ("user_birthday,user_location,friends_birthday,"
-                 "friends_hometown,friends_location")
+        scope = ["user_birthday", "user_location", "friends_birthday,"
+                 "friends_hometown", "friends_location"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,
                                      settings.FACEBOOK_CANVAS_PAGE,
                                      scope)
