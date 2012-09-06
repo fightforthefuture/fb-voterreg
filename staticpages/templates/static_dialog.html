@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="main-content-message">
+        <i class="icon-sad"></i>
+        <span class="sad">A long long text text text</span>
+    </div>
+    <div class="main-content-message">
+        <i class="icon-happy"></i>
+        <span class="happy">A long long text text text</span>
+    </div>
+    <div class="main-content-buttons">
+        <a href="#" class="btn  btn-large btn-green"><i class="icon-ok"></i> Pledge to vote this year</a>
+        <a href="#" class="btn  btn-large btn-blue"><i class="icon-cancel"></i> Pledge to vote this year</a>
+    </div>
+    <div class="main-content-buttons">
+        <a href="#" class="btn  btn-large"><i class="icon-notification"></i> Pledge to vote this year</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
