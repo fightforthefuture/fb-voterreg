@@ -120,7 +120,12 @@ if environ.get("RACK_ENV", None) == "production":
 
     FACEBOOK_APP_ID = "220561354738022"
     FACEBOOK_APP_SECRET = environ.get("FACEBOOK_APP_SECRET", "")
-    FACEBOOK_CANVAS_PAGE = "http://voterreg-facebook.herokuapp.com/"
+    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/220561354738022/"
+else: # local
+    FACEBOOK_APP_ID = "258722907563918"
+    FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
+    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/258722907563918/"
+
 
 try:
     from settings_local import *
