@@ -1,8 +1,22 @@
 $(function() {
+    function loadFriends() {
+        // TODO: show thing for loading friends.
+        $(".friends-content").load(
+            FETCH_FRIENDS_URL,
+            function() {
+                // TODO: hide thing for loading friends.
+            });
+    }
+
     if (LOAD) {
-        // TODO: load user, then load friends.
+        $(".main-content").load(
+            FETCH_ME_URL,
+            function() {
+                // TODO: hide loading.
+                loadFriends();
+            });
     }
     else if (LOAD_FRIENDS) {
-        // TODO: load friends.
+        loadFriends();
     }
 });

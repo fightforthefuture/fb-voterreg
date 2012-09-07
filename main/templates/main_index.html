@@ -11,12 +11,8 @@
 <div class="main-content">
 {% if not fetched %}
   Loading...
-{% elif not registered %}
-  You are not registered!
-{% elif not pledged %}
-  You have not pledged! %}
 {% else %}
-  You need to invite your friends to this thing!
+  {% include "_main_content.html" %}
 {% endif %}
 </div>
 <div class="friends-content">
@@ -30,6 +26,8 @@
 <script type="text/javascript">
   var LOAD = {% if fetched %}false{% else %}true{% endif %};
   var LOAD_FRIENDS = {% if friends %}false{% else %}true{% endif %};
+  var FETCH_ME_URL = '{% url "main:fetch_me" %}';
+  var FETCH_FRIENDS_URL = '{% url "main:fetch_friends" %}';
 </script>
 <script type="text/javascript" src="{% static 'js/main_index.js' %}"></script>
 {% endblock %}

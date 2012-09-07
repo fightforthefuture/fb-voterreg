@@ -33,4 +33,9 @@ class FacebookMiddleware(object):
     def process_request(self, request):
         fb_user = self._get_fb_user(request)
         request.facebook = fb_user
+        if fb_user:
+            user, created = User.objects.get_or_create(fb_uid=fb_user["uid"])
+            request.session["fb_user"] = fb_user
+        else:
+            request.facebook = request.session.get("fb_user", None)
         return None

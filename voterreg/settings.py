@@ -68,6 +68,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'kombu.transport.django',
+    'djcelery',
     'main',
 )
 
@@ -94,6 +96,8 @@ LOGGING = {
         },
     }
 }
+
+BROKER_BACKEND = "django"
 
 FACEBOOK_APP_ID = "258722907563918"
 FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"

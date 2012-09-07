@@ -11,6 +11,7 @@ class User(models.Model):
     invited_pledge_count = models.IntegerField(default=0)
     # whether or not my data has been fetched from the votizen api.
     data_fetched = models.BooleanField(default=False)
+    friends_fetch_started = models.BooleanField(default=False)
     # whether or not we've filled in Friendship models for this user yet.
     friends_fetched = models.BooleanField(default=False)
 

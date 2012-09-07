@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from tasks import fetch_fb_friends
 import voting_api
 from models import User
 
@@ -23,24 +24,52 @@ def _post_index(request):
         return HttpResponse(markup)
     return None
 
-def _friends_context(request, user):
-    return 
+def _main_content_context(user):
+    return {
+        "registered": user.registered,
+        "pledged": user.pledged,
+        "invited_friends": user.invited_friends
+    }
 
 @csrf_exempt
 def index(request):
-    user, created = User.objects.get_or_create(fb_uid=request.facebook["uid"])
+    if request.method == "POST":
+        response = _post_index(request)
+        if response:
+            return response
+    user = User.objects.get(fb_uid=request.facebook["uid"])
     context = {}
     if user.data_fetched or voting_api.requests_exhausted():
         context["fetched"] = True
-        context["registered"] = user.registered
-        context["pledged"] = user.pledged
-        context["invited_friends"] = user.invited_friends
+        context.update(_main_content_context(request))
         if user.friends_fetched:
             context["friends"] = \
                 user.friends_set.order_by("-display_ordering")[:4]
     else:
         context["fetched"] = False
+    if not user.friends_fetched:
+        fetch_fb_friends.delay(request.facebook["uid"],
+                               request.facebook["access_token"])
     return render_to_response(
         "main_index.html", 
         context, 
         RequestContext(request))
+
+def fetch_me(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    if not user.data_fetched and not voting_api.requests_exhausted():
+        voter = voting_api.fetch_voter(request.facebook["uid"],
+                                       request.facebook["access_token"])
+        # possibly save other data here in future, e.g. years voted
+        # in past
+        user.data_fetched = True
+        user.registered = voter.registered
+        user.save()
+    return render_to_response(
+        "_main_content.html",
+        _main_content_context(user),
+        RequestContext(request))
+
+def fetch_friends(request):
+    # TODO: check the user.friends_fetched
+    pass
