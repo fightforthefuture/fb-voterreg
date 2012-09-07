@@ -11,5 +11,6 @@ Want to develop locally? Easy! Here are the steps:
 
       127.0.0.1       local.voterreg.org
 
-* Start the web app and celery using `foreman start`.
+* syncdb, migrate, runserver
+* Start celeryd with `./manage.py celeryd --loglevel=INFO`
 * Access https://apps.facebook.com/258722907563918/

@@ -1,10 +1,11 @@
 import facebook
 from django.conf import settings
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render_to_string
 from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tasks import fetch_fb_friends
+from decorators import render_json
 import voting_api
 from models import User
 
@@ -41,7 +42,7 @@ def index(request):
     context = {}
     if user.data_fetched or voting_api.requests_exhausted():
         context["fetched"] = True
-        context.update(_main_content_context(request))
+        context.update(_main_content_context(user))
         if user.friends_fetched:
             context["friends"] = \
                 user.friends_set.order_by("-display_ordering")[:4]
@@ -70,6 +71,18 @@ def fetch_me(request):
         _main_content_context(user),
         RequestContext(request))
 
+@render_json
 def fetch_friends(request):
-    # TODO: check the user.friends_fetched
-    pass
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    if not user.friends_fetched:
+        if not user.friends_fetch_started:
+            fetch_fb_friends.delay(request.facebook["uid"],
+                                   request.facebook["access_token"])
+        return { "fetched": False }
+    friends = user.friends_set.order_by("-display_ordering")[:4]
+    html = render_to_string(
+        "_main_friends.html",
+        { "friends": friends },
+        context_instance=RequestContext(request))
+    return { "fetched": True,
+             "html": html }
