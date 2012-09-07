@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="main-content cf">
+    <div class="main-content-message">
+        <i class="icon-sad"></i><span class="sad">You're not registered to vote!</span>
+    </div>
+    <div class="main-content-buttons">
+        <a href="#" class="btn  btn-large btn-green"><i class="icon-ok"></i> Register to Vote</a>
+        <span class="or"><span>OR</span></span>
+        <a href="#" class="btn  btn-large"><i class="icon-cancel"></i> I won't vote this year</a>
+    </div>
+    <div class="main-content-extra">
+        <a href="#">Your records are wrong I am registered to vote this year!</a>
+    </div>
+</div>
+<div class="main-friends cf">
+    <h2>Your friends will be!</h2>
+    <div class="cf">
+        <div class="main-friends-friend">
+            <img src="http://placehold.it/86x86&text=pic">
+            <span class="name">John Smith</span>
+            <span class="info">Super Voter</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Registered</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Pledged</span>
+            <span class="progress progress-inactive"><i class="icon-mini-empty"></i> Invited 106 friends</span>
+            <span class="points">23,000 pts.</span>
+        </div>
+        <div class="main-friends-friend">
+            <img src="http://placehold.it/86x86&text=pic">
+            <span class="name">John Smith</span>
+            <span class="info">Super Voter</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Registered</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Pledged</span>
+            <span class="progress progress-inactive"><i class="icon-mini-empty"></i> Invited 106 friends</span>
+            <span class="points">23,000 pts.</span>
+        </div>
+        <div class="main-friends-friend">
+            <img src="http://placehold.it/86x86&text=pic">
+            <span class="name">John Smith</span>
+            <span class="info">Super Voter</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Registered</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Pledged</span>
+            <span class="progress progress-inactive"><i class="icon-mini-empty"></i> Invited 106 friends</span>
+            <span class="points">23,000 pts.</span>
+        </div>
+        <div class="main-friends-friend">
+            <img src="http://placehold.it/86x86&text=pic">
+            <span class="name">John Smith</span>
+            <span class="info">Super Voter</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Registered</span>
+            <span class="progress progress-active"><i class="icon-mini-ok"></i> Pledged</span>
+            <span class="progress progress-inactive"><i class="icon-mini-ok"></i> Invited 106 friends</span>
+            <span class="points">23,000 pts.</span>
+        </div>
+    </div>
+</div>
+<div id="loading-friends"></div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

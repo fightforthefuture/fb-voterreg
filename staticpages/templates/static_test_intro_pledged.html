@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<a href="#pledged" role="button" class="btn btn-blue" data-toggle="modal">Pledged</a>
+
+<div id="pledged" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="title">Pledge to Vote</h3>
+    </div>
+    <div class="modal-body">
+        <p>Do you promise to vote in this year’s election?</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-large btn-green" data-dismiss="modal" aria-hidden="true"><i class="icon-ok"></i> Yes! I will vote!</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}
