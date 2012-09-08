@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+{% endblock %}
+
+{% block content %}
+<div class="main-content cf">
+    <div class="main-content-message">
+        <i class="icon-happy"></i><span class="happy">You’re registered to vote this year! Congratulations!</span>
+    </div>
+    <div class="main-content-buttons">
+        <a href="#" class="btn btn-large btn-blue"><i class="icon-notification"></i> Get your friends to vote</a>
+    </div>
+</div>
+<div class="main-friends cf">
+    <div id="loading-friends"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $('#loading-friends').show();
+</script>
+{% endblock %}
