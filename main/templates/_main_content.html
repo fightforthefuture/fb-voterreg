@@ -1,7 +1,19 @@
+<div class="main-content cf">
 {% if not registered %}
-  You are not registered!
+  <div class="main-content-message">
+    <i class="icon-sad"></i><span class="sad">You're not registered to vote!</span>
+  </div>
+  <div class="main-content-buttons">
+    <a href="#" class="btn  btn-large btn-green"><i class="icon-ok"></i> Register to Vote</a>
+    <span class="or"><span>OR</span></span>
+    <a href="#" class="btn  btn-large"><i class="icon-cancel"></i> I won't vote this year</a>
+  </div>
+  <div class="main-content-extra">
+    <a href="#">Your records are wrong. I am registered to vote this year!</a>
+  </div>
 {% elif not pledged %}
   You have not pledged! %}
 {% else %}
   You need to invite your friends to this thing!
 {% endif %}
+</div>

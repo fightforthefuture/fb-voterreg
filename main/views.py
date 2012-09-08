@@ -1,6 +1,7 @@
 import facebook
 from django.conf import settings
-from django.shortcuts import render_to_response, render_to_string
+from django.shortcuts import render_to_response
+from django.template.loader import render_to_string
 from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
@@ -40,7 +41,7 @@ def index(request):
             return response
     user = User.objects.get(fb_uid=request.facebook["uid"])
     context = {}
-    if user.data_fetched or voting_api.requests_exhausted():
+    if user.data_fetched:
         context["fetched"] = True
         context.update(_main_content_context(user))
         if user.friends_fetched:
@@ -58,7 +59,7 @@ def index(request):
 
 def fetch_me(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    if not user.data_fetched and not voting_api.requests_exhausted():
+    if not user.data_fetched:
         voter = voting_api.fetch_voter(request.facebook["uid"],
                                        request.facebook["access_token"])
         # possibly save other data here in future, e.g. years voted
@@ -73,6 +74,7 @@ def fetch_me(request):
 
 @render_json
 def fetch_friends(request):
+    return None
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if not user.friends_fetched:
         if not user.friends_fetch_started:

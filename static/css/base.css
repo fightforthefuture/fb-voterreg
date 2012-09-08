@@ -44,7 +44,7 @@ body {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 15px;
     background: transparent url(../img/body-back.png) 0 116px no-repeat;
-    min-height: 500px;
+    min-height: 900px;
 }
 
 a {
@@ -168,7 +168,6 @@ div.content {
     border-radius: 5px;
     -webkit-box-shadow:  5px 5px 18px 0px #999999;
     box-shadow:  5px 5px 18px 0px #999999;
-    display: none;
 }
 
 #loading:after {

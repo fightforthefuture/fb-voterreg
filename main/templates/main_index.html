@@ -8,12 +8,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
 {% if not fetched %}
-  Loading...
-{% else %}
-  {% include "_main_content.html" %}
+  <div id="loading"></div>
 {% endif %}
+<div id="main-content">
+  {% if fetched %}
+    {% include "_main_content.html" %}
+  {% endif %}
 </div>
 <div class="friends-content">
 {% if friends %}

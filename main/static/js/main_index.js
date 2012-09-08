@@ -9,10 +9,10 @@ $(function() {
     }
 
     if (LOAD) {
-        $(".main-content").load(
+        $("#main-content").load(
             FETCH_ME_URL,
             function() {
-                // TODO: hide loading.
+                $("#loading").hide();
                 loadFriends();
             });
     }
