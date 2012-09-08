@@ -49,8 +49,10 @@ class Friendship(models.Model):
         return "https://graph.facebook.com/{0}/picture?type=large".format(
             self.user_fb_uid)
 
-@receiver(pre_save, sender=Friendship)
-def fill_in_display_ordering(sender, **kwargs):
-    sender.display_ordering = \
-        (1 if sender.registered else 0) + \
-        (1 if sender.pledged else 0)
+def fill_in_display_ordering(sender, instance, **kwargs):
+    instance.display_ordering = \
+        (1 if instance.registered else 0) + \
+        (1 if instance.pledged else 0)
+
+pre_save.connect(fill_in_display_ordering, sender=Friendship, 
+                 dispatch_uid="fill_in_display_ordering")

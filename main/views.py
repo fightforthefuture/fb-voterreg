@@ -79,7 +79,7 @@ def fetch_friends(request):
             fetch_fb_friends.delay(request.facebook["uid"],
                                    request.facebook["access_token"])
         return { "fetched": False }
-    friends = user.friends_set.order_by("-display_ordering")[:4]
+    friends = user.friends.order_by("-display_ordering")[:4]
     html = render_to_string(
         "_main_friends.html",
         { "friends": friends },

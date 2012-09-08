@@ -1,7 +1,6 @@
 class Voter(object):
-    @property
-    def registered(self):
-        return False
+    def __init__(self, registered=False):
+        self.registered = registered
 
 def _requests_exhausted():
     return False
