@@ -5,6 +5,7 @@ from django.dispatch import receiver
 class User(models.Model):
     fb_uid = models.CharField(max_length=32, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=128, blank=True)
     registered = models.BooleanField(default=False)
     used_registration_widget = models.BooleanField(default=False)
     date_pledged = models.DateTimeField(null=True)
@@ -35,6 +36,7 @@ class Friendship(models.Model):
     user_fb_uid = models.CharField(max_length=32, db_index=True)
     friend = models.ForeignKey(User, related_name="friends_of")
     friend_fb_uid = models.CharField(max_length=32, db_index=True)
+    name = models.CharField(max_length=128)
     # registered * 1 + pledged * 1
     display_ordering = models.IntegerField(default=0, db_index=True)
     registered = models.BooleanField()
@@ -45,9 +47,19 @@ class Friendship(models.Model):
     def pledged(self):
         return self.date_pledged is not None
 
+    @classmethod
+    def create(cls, user, friend, **kwargs):
+        return Friendship(
+            user=user, 
+            user_fb_uid=user.fb_uid,
+            friend=friend, 
+            friend_fb_uid=friend.fb_uid,
+            name=friend.name, 
+            **kwargs)
+
     def picture_url(self):
         return "https://graph.facebook.com/{0}/picture?type=large".format(
-            self.user_fb_uid)
+            self.friend_fb_uid)
 
 def fill_in_display_ordering(sender, instance, **kwargs):
     instance.display_ordering = \

@@ -1,1 +1,21 @@
-We are going to show your friends listed down here, along with the graphic design for friends.
+{% load main_extras %}
+
+<div class="main-friends cf">
+  <h2>Your friends will be voting!</h2>
+  <div class="cf">
+{% for f in friends %}
+  <div class="main-friends-friend">
+    <img src="{{f.picture_url}}" alt="{{f.name}}"/>
+    <span class="name">{{f.name}}</span>
+    <span class="info"></span>
+    {% friend_progress f.registered "Registered" %}
+    {% friend_progress f.pledged "Pledged" %}
+    {% if f.invited_pledge_count == 0 %}
+    <span class="progress progress-inactive"><i class="icon-mini-empty"></i> Invited 0 friends</span>
+    {% else %}
+    <span class="progress progress-active"><i class="icon-mini-ok"></i> Invited {{f.invited_pledge_count}} friend{{f.invited_pledge_count|pluralize}}</span>
+    {% endif %}
+  </div>
+{% endfor %}
+  </div>
+</div>

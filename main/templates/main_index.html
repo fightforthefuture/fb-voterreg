@@ -16,7 +16,12 @@
     {% include "_main_content.html" %}
   {% endif %}
 </div>
-<div class="friends-content">
+<div id="loading-friends">
+  <div class="main-friends cf">
+    <div id="loading-friends-spinner"></div>
+  </div>
+</div>
+<div id="main-friends">
 {% if friends %}
   {% include "_main_friends.html" %}
 {% endif %}

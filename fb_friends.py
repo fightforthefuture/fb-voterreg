@@ -14,11 +14,9 @@ def _find_existing_users(user, friend_uids):
             continue
         friend = results[0]
         if friend.is_admirable():
-            friendships.append(Friendship(
-                    user=user,
-                    user_fb_uid=user.fb_uid,
-                    friend=friend,
-                    friend_fb_uid=friend.fb_uid,
+            friendships.append(
+                Friendship.create(
+                    user, friend, 
                     registered=friend.registered,
                     date_pledged=friend.date_pledged,
                     invited_pledge_count=friend.invited_pledge_count))
@@ -26,42 +24,38 @@ def _find_existing_users(user, friend_uids):
                 break
     return friendships
 
-def _find_registered_voters(user, access_token, friend_uids, num_needed):
+def _find_registered_voters(user, access_token, friend_uids, 
+                            friend_names, num_needed):
     """ Uses the voting api to return first num_needed registered 
         voters as new Friendships """
     friendships = []
     for uid in friend_uids:
         voter = fetch_voter(uid, access_token)
         if voter.registered:
-            friend, created = User.objects.get_or_create(fb_uid=uid)
+            friend, created = User.objects.get_or_create(
+                fb_uid=uid,
+                defaults={ "name": friend_names[uid] })
             # FIXME: duplication with views.py#fetch_me
             friend.registered = True
             friend.data_fetched = True
             friend.save()
-            friendships.append(Friendship(
-                    user=user,
-                    user_fb_uid=user.fb_uid,
-                    friend=friend,
-                    friend_fb_uid=friend.fb_uid,
-                    registered=True))
+            friendships.append(
+                Friendship.create(user, friend, registered=True))
             if len(friendships) >= num_needed:
                 break
     return friendships
 
-def _plain_friendships(user, friend_uids):
+def _plain_friendships(user, friend_uids, friend_names):
     friendships = []
     for uid in friend_uids:
-        friend, created = User.objects.get_or_create(fb_uid=uid)
-        # TODO: make factory classmethod for creation of Friendships.
-        friendships.append(Friendship(
-                user=user,
-                user_fb_uid=user.fb_uid,
-                friend=friend,
-                friend_fb_uid=friend.fb_uid))
+        friend, created = User.objects.get_or_create(
+            fb_uid=uid, defaults={ "name": friend_names[uid] })
+        friendships.append(Friendship.create(user, friend))
     return friendships
 
 def _make_friendships(user, access_token, fb_friends):
     friend_uids = set(f["id"] for f in fb_friends)
+    friend_names = dict((f["id"], f["name"]) for f in fb_friends)
     friendships = _find_existing_users(user, friend_uids)
     if len(friendships) < TARGET_FRIEND_COUNT:
         friendship_uids = set(f.friend_fb_uid for f in friendships)
@@ -69,13 +63,14 @@ def _make_friendships(user, access_token, fb_friends):
                 user, 
                 access_token,
                 friend_uids - friendship_uids,
+                friend_names,
                 TARGET_FRIEND_COUNT - len(friendships)))
     if len(friendships) < TARGET_FRIEND_COUNT:
         friendship_uids = set(f.friend_fb_uid for f in friendships)
         friends_not_added = list(friend_uids - friendship_uids)
         num_needed = TARGET_FRIEND_COUNT - len(friendships)
         friendships.extend(_plain_friendships(
-                user, friends_not_added[:num_needed]))
+                user, friends_not_added[:num_needed], friend_names))
     for friendship in friendships:
         # possible (but unlikely) that an identical friendship has been 
         # saved by another process.
@@ -86,7 +81,8 @@ def _make_friendships(user, access_token, fb_friends):
 
 def get_friends(access_token):
     graph = facebook.GraphAPI(access_token)
-    return graph.get_connections("me", "friends")
+    connections = graph.get_connections("me", "friends")
+    return connections["data"]
 
 def fetch_friends(fb_uid, access_token):
     # this is a long-running function. so don't run it as part of an http request.

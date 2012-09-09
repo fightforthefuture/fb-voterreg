@@ -529,6 +529,10 @@ div.content {
 }
 
 #loading-friends {
+   display: none;
+}
+
+#loading-friends-spinner {
     width: 100px;
     height: 100px;
     margin: 40px auto;
@@ -537,10 +541,9 @@ div.content {
     border-radius: 5px;
     -webkit-box-shadow:  5px 5px 18px 0px #999999;
     box-shadow:  5px 5px 18px 0px #999999;
-    display: none;
 }
 
-#loading-friends::after {
+#loading-friends-spinner::after {
     color: #7f96ab;
     content: "Loading friends";
     display: block;

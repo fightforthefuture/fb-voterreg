@@ -1,10 +1,16 @@
 $(function() {
     function loadFriends() {
-        // TODO: show thing for loading friends.
-        $(".friends-content").load(
+        $("#loading-friends").show();
+        $.getJSON(
             FETCH_FRIENDS_URL,
-            function() {
-                // TODO: hide thing for loading friends.
+            function(response) {
+                if (response["fetched"]) {
+                    $("#loading-friends").hide();
+                    $("#main-friends").html(response["html"]);
+                }
+                else {
+                    setTimeout(loadFriends, 500);
+                }
             });
     }
 
@@ -19,4 +25,18 @@ $(function() {
     else if (LOAD_FRIENDS) {
         loadFriends();
     }
+
+    $(document).on(
+        "click", "#i-wont-vote",
+        function() {
+            
+            return false;
+        });
+
+    $(document).on(
+        "click", "#records-are-wrong",
+        function() {
+            
+            return false;
+        });
 });

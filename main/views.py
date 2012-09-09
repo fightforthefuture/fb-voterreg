@@ -46,7 +46,7 @@ def index(request):
         context.update(_main_content_context(user))
         if user.friends_fetched:
             context["friends"] = \
-                user.friends_set.order_by("-display_ordering")[:4]
+                user.friends.order_by("-display_ordering")[:4]
     else:
         context["fetched"] = False
     if not user.friends_fetched:
@@ -60,10 +60,13 @@ def index(request):
 def fetch_me(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if not user.data_fetched:
+        graph = facebook.GraphAPI(request.facebook["access_token"])
+        profile = graph.get_object("me")
         voter = voting_api.fetch_voter(request.facebook["uid"],
                                        request.facebook["access_token"])
         # possibly save other data here in future, e.g. years voted
         # in past
+        user.name = profile["name"]
         user.data_fetched = True
         user.registered = voter.registered
         user.save()
@@ -74,7 +77,6 @@ def fetch_me(request):
 
 @render_json
 def fetch_friends(request):
-    return None
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if not user.friends_fetched:
         if not user.friends_fetch_started:
@@ -88,3 +90,6 @@ def fetch_friends(request):
         context_instance=RequestContext(request))
     return { "fetched": True,
              "html": html }
+
+def register(request):
+    return None
