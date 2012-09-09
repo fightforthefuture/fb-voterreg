@@ -26,6 +26,10 @@
   {% include "_main_friends.html" %}
 {% endif %}
 </div>
+{# TODO: cache these. spaceless. #}
+{% include "_wont_vote_modal.html" with modal_id="wont-vote-modal" %}
+{% include "_whoops_registered_modal.html" with modal_id="whoops-modal" %}
+{% include "_pledge_modal.html" with modal_id="pledge-modal" %}
 {% endblock %}
 
 {% block scripts %}

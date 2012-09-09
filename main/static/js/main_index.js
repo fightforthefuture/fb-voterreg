@@ -29,7 +29,7 @@ $(function() {
     $(document).on(
         "click", "#i-wont-vote",
         function() {
-            
+            $("#wont-vote-modal").modal("show")
             return false;
         });
 
