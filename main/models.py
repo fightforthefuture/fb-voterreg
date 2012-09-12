@@ -17,6 +17,7 @@ class User(models.Model):
     friends_fetch_started = models.BooleanField(default=False)
     # whether or not we've filled in Friendship models for this user yet.
     friends_fetched = models.BooleanField(default=False)
+    votizen_id = models.CharField(max_length=132, blank=True)
 
     @property
     def pledged(self):

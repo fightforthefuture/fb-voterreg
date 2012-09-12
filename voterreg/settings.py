@@ -71,6 +71,7 @@ INSTALLED_APPS = (
     'kombu.transport.django',
     'djcelery',
     'main',
+    'voterapi',
 )
 
 LOGGING = {

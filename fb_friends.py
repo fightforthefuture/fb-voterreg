@@ -1,5 +1,5 @@
 import facebook
-from voting_api import fetch_voter
+from voterapi import fetch_voter_from_fb_uid
 from main.models import User, Friendship
 from django.db import IntegrityError
 
@@ -30,13 +30,15 @@ def _find_registered_voters(user, access_token, friend_uids,
         voters as new Friendships """
     friendships = []
     for uid in friend_uids:
-        voter = fetch_voter(uid, access_token)
-        if voter.registered:
+        print(uid)
+        voter = fetch_voter_from_fb_uid(uid, access_token)
+        if voter and voter.registered:
             friend, created = User.objects.get_or_create(
                 fb_uid=uid,
                 defaults={ "name": friend_names[uid] })
             # FIXME: duplication with views.py#fetch_me
             friend.registered = True
+            friend.votizen_id = voter.id
             friend.data_fetched = True
             friend.save()
             friendships.append(

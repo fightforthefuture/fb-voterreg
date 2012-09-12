@@ -1,11 +1,11 @@
 from django.utils import unittest
 from django.test.client import Client
-from voting_api import Voter
+from voterapi import Voter
 from models import User, Friendship
 import fb_friends
 
-def fetch_voter(uid, access_token):
-    return Voter(uid in ["1001", "1008", "1009"])
+def fetch_voter_from_fb_uid(uid, access_token):
+    return Voter(uid + "fb", uid in ["1001", "1008", "1009"])
 
 def get_friends(access_token):
     return [{ "name": "friend{0}".format(i),
@@ -13,7 +13,7 @@ def get_friends(access_token):
 
 class FBFriendsTest(unittest.TestCase):
     def test_fetch_friends(self):
-        fb_friends.fetch_voter = fetch_voter
+        fb_friends.fetch_voter_from_fb_uid = fetch_voter_from_fb_uid
         fb_friends.get_friends = get_friends
         User(fb_uid="100").save()
         fb_friends.fetch_friends("100", "abc")

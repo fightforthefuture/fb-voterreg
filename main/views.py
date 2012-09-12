@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from tasks import fetch_fb_friends
 from decorators import render_json
-import voting_api
+from voterapi import fetch_voter_from_fb_profile
 from models import User
 
 def _post_index(request):
@@ -62,13 +62,14 @@ def fetch_me(request):
     if not user.data_fetched:
         graph = facebook.GraphAPI(request.facebook["access_token"])
         profile = graph.get_object("me")
-        voter = voting_api.fetch_voter(request.facebook["uid"],
-                                       request.facebook["access_token"])
+        voter = fetch_voter_from_fb_profile(profile)
         # possibly save other data here in future, e.g. years voted
         # in past
         user.name = profile["name"]
         user.data_fetched = True
-        user.registered = voter.registered
+        if voter:
+            user.votizen_id = voter.id
+            user.registered = voter.registered
         user.save()
     return render_to_response(
         "_main_content.html",
@@ -79,9 +80,6 @@ def fetch_me(request):
 def fetch_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if not user.friends_fetched:
-        if not user.friends_fetch_started:
-            fetch_fb_friends.delay(request.facebook["uid"],
-                                   request.facebook["access_token"])
         return { "fetched": False }
     friends = user.friends.order_by("-display_ordering")[:4]
     html = render_to_string(
