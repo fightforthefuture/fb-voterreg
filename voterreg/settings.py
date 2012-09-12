@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'kombu.transport.django',
     'djcelery',
+    'south',
     'main',
     'voterapi',
 )
