@@ -126,6 +126,8 @@ def fetch_voter_from_fb_profile(fb_profile):
     return voter
 
 def fetch_voter(**kwargs):
+    if settings.USE_FAKE_VOTIZEN_API:
+        return None
     if not all(k in _FETCH_VOTER_PARAMS for k, v in kwargs.items()):
         raise AttributeError("Invalid arguments")
     hit_count = APIHitCount.next()

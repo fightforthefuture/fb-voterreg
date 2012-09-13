@@ -105,6 +105,9 @@ FACEBOOK_APP_ID = "258722907563918"
 FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
 FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/258722907563918/"
 
+VOTIZEN_API_KEY = "" # secret
+USE_FAKE_VOTIZEN_API = False
+
 if environ.get("RACK_ENV", None) == "production":
     import dj_database_url
 

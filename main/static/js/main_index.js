@@ -36,7 +36,30 @@ $(function() {
     $(document).on(
         "click", "#records-are-wrong",
         function() {
-            
+            $("#whoops-modal").modal("show")
+            return false;
+        });
+
+    $(document).on(
+        "click", "#wont-vote-modal .btn",
+        function() {
+            // TODO: won't vote reason to database and then get me to invite friends.
+            console.log("wont vote dialog button clicked");
+            return false;
+        });
+
+    $(document).on(
+        "click", "#whoops-modal .btn-green",
+        function() {
+            // TODO: save registration status to database and to votizen api and then get me to pledge.
+            console.log("records are wrong");
+            return false;
+        });
+
+    $(document).on(
+        "click", "#whoops-modal .btn-cancel",
+        function() {
+            $("#whoops-modal").modal("hide");
             return false;
         });
 });

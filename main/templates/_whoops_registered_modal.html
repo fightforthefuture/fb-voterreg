@@ -3,7 +3,14 @@
 {% block title %}Gah! You're registered?{% endblock %}
 
 {% block body %}
+<p>
+  Our records show that you haven't registered to vote this year. 
+  But even the best of us make mistakes sometimes :P. 
+  Just to be sure, are you <em>really</em> registered?
+</p>
 {% endblock %}
 
 {% block footer %}
+<button class="btn btn-large btn-green"><i class="icon-ok"></i> Yes, I'm registered</button>
+<button class="btn btn-large btn-cancel"><i class="icon-cancel"></i> Nope, not registered</button>
 {% endblock %}
