@@ -1,0 +1,33 @@
+{% extends "friends_listing_base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+
+{% block topcontent %}
+<div class="main-content-message">
+  <i class="icon-sad"></i><span class="sad">You're not registered to vote!</span>
+</div>
+<div class="main-content-buttons">
+  <a href="{% url 'main:register_widget' %}" class="btn btn-large btn-green"><i class="icon-ok"></i> Register to Vote</a>
+  <span class="or"><span>OR</span></span>
+  <a id="i-wont-vote" href="javascript:void(0)" class="btn btn-large"><i class="icon-cancel"></i> I won't vote this year</a>
+</div>
+<div class="main-content-extra">
+  <a id="records-are-wrong" href="javascript:void(0)">Your records are wrong. I am registered to vote this year!</a>
+</div>
+{% endblock %}
+
+{% block modals %}
+{% include "_wont_vote_modal.html" with modal_id="wont-vote-modal" %}
+{% include "_whoops_registered_modal.html" with modal_id="whoops-modal" %}
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'js/register.js' %}"></script>
+{% endblock %}

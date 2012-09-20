@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block content %}
+<div id="loading"></div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+  var FETCH_ME_URL = "{% url 'main:fetch_me' %}";
+</script>
+<script type="text/javascript" src="{% static 'js/loading.js' %}"></script>
+{% endblock %}

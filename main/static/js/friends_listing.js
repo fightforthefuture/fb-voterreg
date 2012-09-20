@@ -1,6 +1,5 @@
 $(function() {
     function loadFriends() {
-        $("#loading-friends").show();
         $.getJSON(
             FETCH_FRIENDS_URL,
             function(response) {
@@ -13,17 +12,7 @@ $(function() {
                 }
             });
     }
-
-    if (LOAD) {
-        $("#main-content").load(
-            FETCH_ME_URL,
-            function() {
-                $("#loading").hide();
-                loadFriends();
-            });
-    }
-    else if (LOAD_FRIENDS) {
+    if (LOAD_FRIENDS) {
         loadFriends();
     }
-
 });

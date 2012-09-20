@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block content %}
+<div class="main-content cf">
+  {% block topcontent %}{% endblock %}
+</div>
+<div id="loading-friends" {% if not friends%}style="display: block"{% endif %}>
+  <div class="main-friends cf">
+    <div id="loading-friends-spinner"></div>
+  </div>
+</div>
+<div id="main-friends">
+{% if friends %}
+  {% include "_friends.html" %}
+{% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+  var LOAD_FRIENDS = {% if friends %}false{% else %}true{% endif %};
+  var FETCH_FRIENDS_URL = "{% url 'main:fetch_friends' %}";
+</script>
+<script type="text/javascript" src="{% static 'js/friends_listing.js' %}"></script>
+{% endblock %}

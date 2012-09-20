@@ -21,23 +21,34 @@
     <![endif]-->
   </head>
   <body>
+    <div id="fb-root"></div>
     <header>
-        <a class="logo" href="{% url 'main:index' %}"><span>Vote for the Internet</span></a>
+      <a class="logo" href="{% url 'main:index' %}"><span>Vote for the Internet</span></a>
+      {% if user %}
+      <ul>
+        <li><a href="{% url 'main:pledge' %}">Promise</a></li>
+        <li><a href="{% url 'main:register' %}">Register</a></li>
+        <li><a href="{% url 'main:invite_friends' %}">Add Friends</a></li>
         {% comment %}
-        <ul>
-            <li><a href="">Promise</a></li>
-            <li><a href="">Register</a></li>
-            <li><a href="">Add Friends</a></li>
-            <li><a href="">Notifications</a></li>
-            <li><a href="">High Score</a></li>
-        </ul>
+        <li><a href="">Notifications</a></li>
+        <li><a href="">High Score</a></li>
         {% endcomment %}
+      </ul>
+      {% endif %}
     </header>
     <div class="content cf">
       {% block content %}{% endblock %}
     </div>
+    {% block modals %}{% endblock %}
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.modal.js' %}"></script>
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script>
+      FB.init({
+        appId  : '{{FACEBOOK_APP_ID}}',
+        frictionlessRequests: true
+      });
+    </script>
     {% block scripts %}{% endblock %}
   </body>
 </html>

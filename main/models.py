@@ -2,12 +2,21 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
+WONT_VOTE_REASONS = (
+    ("not_17", "Won't be 17 yet"),
+    ("not_citizen", "Not a citizen"),
+    ("dont_want_to", "I don't want to"),
+    ("rather_not_say", "I'd rather not say")
+)
+
 class User(models.Model):
     fb_uid = models.CharField(max_length=32, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=128, blank=True)
     registered = models.BooleanField(default=False)
     used_registration_widget = models.BooleanField(default=False)
+    wont_vote_reason = models.CharField(
+        max_length=18, choices=WONT_VOTE_REASONS, blank=True)
     date_pledged = models.DateTimeField(null=True)
     date_invited_friends = models.DateTimeField(null=True)
     # number of invited friends who have pledged
@@ -18,6 +27,10 @@ class User(models.Model):
     # whether or not we've filled in Friendship models for this user yet.
     friends_fetched = models.BooleanField(default=False)
     votizen_id = models.CharField(max_length=132, blank=True)
+
+    @property
+    def wont_vote(self):
+        return self.wont_vote_reason != ""
 
     @property
     def pledged(self):

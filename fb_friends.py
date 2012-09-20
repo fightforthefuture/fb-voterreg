@@ -30,8 +30,10 @@ def _find_registered_voters(user, access_token, friend_uids,
         voters as new Friendships """
     friendships = []
     for uid in friend_uids:
+        print("fetching voter from fb")
         voter = fetch_voter_from_fb_uid(uid, access_token)
         if voter and voter.registered:
+            print("found registered voter")
             friend, created = User.objects.get_or_create(
                 fb_uid=uid,
                 defaults={ "name": friend_names[uid] })

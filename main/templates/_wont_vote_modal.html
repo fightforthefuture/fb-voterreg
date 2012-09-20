@@ -1,15 +1,14 @@
 {% extends "_base_modal.html" %}
 
+{% load url from future %}
+
 {% block title %}Why not vote?{% endblock %}
 
 {% block body %}
 <p>I won't because:</p>
-<input id="not_18_yet" type="radio" name="reason" value="not_18_yet" checked /> <label for="not_18_yet">Won't be 17 yet</label><br/>
-<input id="not_citizen" type="radio" name="reason" value="not_citizen" /> <label for="not_citizen">Not a citizen</label><br/>
-<input id="dont_want_to" type="radio" name="reason" value="dont_want_to" /> <label for="dont_want_to">I don't want to</label><br/>
-<input id="rather_not_say" type="radio" name="reason" value="rather_not_say" /> <label for="rather_not_say">I'd rather not say</label><br/>
-{% endblock %}
-
-{% block footer %}
-<button class="btn btn-large btn-green"><i class="icon-ok"></i> OK</button>
+<form class="wont_vote" action="{% url 'main:wont_vote' %}" method="POST">
+  {% csrf_token %}
+  {{ wont_vote_form.wont_vote_reason }}
+  <button class="btn btn-large btn-green"><i class="icon-ok"></i> OK</button>
+</form>
 {% endblock %}

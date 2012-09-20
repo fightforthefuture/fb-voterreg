@@ -1,17 +1,6 @@
 {% load url from future %}
 <div class="main-content cf">
 {% if not registered %}
-  <div class="main-content-message">
-    <i class="icon-sad"></i><span class="sad">You're not registered to vote!</span>
-  </div>
-  <div class="main-content-buttons">
-    <a href="{% url 'main:register' %}" class="btn btn-large btn-green"><i class="icon-ok"></i> Register to Vote</a>
-    <span class="or"><span>OR</span></span>
-    <a id="i-wont-vote" href="javascript:void(0)" class="btn btn-large"><i class="icon-cancel"></i> I won't vote this year</a>
-  </div>
-  <div class="main-content-extra">
-    <a id="records-are-wrong" href="javascript:void(0)">Your records are wrong. I am registered to vote this year!</a>
-  </div>
 {% elif not pledged %}
   You're registered but you have not pledged!
 {% else %}

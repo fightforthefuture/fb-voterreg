@@ -1,0 +1,25 @@
+{% extends "friends_listing_base.html" %}
+
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+{% endblock %}
+
+
+{% block topcontent %}
+<div class="main-content-message">
+  <i class="icon-happy"></i><span class="happy">You’re registered to vote this year! Congratulations!</span>
+</div>
+<div class="main-content-buttons">
+  <a href="javascript:void(0)" id="get-friends" class="btn btn-large btn-blue"><i class="icon-notification"></i> Get your friends to vote</a>
+</div>
+{% endblock %}
+
+{% block modals %}
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'js/invite_friends.js' %}"></script>
+{% endblock %}
