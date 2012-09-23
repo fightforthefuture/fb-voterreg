@@ -89,6 +89,10 @@ def get_friends(access_token, limit=5000, offset=0):
 
 def fetch_friends(fb_uid, access_token):
     user = User.objects.get(fb_uid=fb_uid)
+    if user.friends_fetch_started:
+        return
+    user.friends_fetch_started = True
+    user.save()
     _make_friendships(
         user, access_token, get_friends(access_token, 500))
     user.friends_fetched = True
