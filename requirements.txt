@@ -6,6 +6,6 @@ gunicorn==0.14.3
 boto==2.4.1
 django-storages==1.1.4
 facebook-sdk==0.3.2
-django-celery==3.0.9
+django-celery==3.0.10
 pytz==2012d
 requests==0.14.0
