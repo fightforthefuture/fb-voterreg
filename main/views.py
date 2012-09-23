@@ -53,9 +53,9 @@ def _fetch_fb_friends(request):
     access_token = request.facebook["access_token"]
     user = User.objects.get(fb_uid=fb_uid)
     if not user.friends_fetch_started:
+        fetch_fb_friends.delay(fb_uid, access_token)
         user.friends_fetch_started = True
         user.save()
-        fetch_fb_friends.delay(fb_uid, access_token)
 
 @csrf_exempt
 def index(request):

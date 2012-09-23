@@ -107,7 +107,7 @@ def update_friends_of(user_id, access_token):
         friendship.save()
     fb_friends = get_friends(access_token)
     for fb_friend in fb_friends:
-        users = User.objects.filter(fb_uid=fb_friend["uid"])[:1]
+        users = User.objects.filter(fb_uid=fb_friend["id"])[:1]
         if len(users) == 1 and not Friendship.objects.filter(
             user=users[0], fb_uid=user.fb_uid).exists():
             try:
