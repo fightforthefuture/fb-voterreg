@@ -1,1 +1,26 @@
+{% extends "friends_listing_base.html" %}
 
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block topcontent %}
+<div class="main-content-message">
+  <i class="icon-happy"></i><span class="happy">You're registered to vote this year! Congratulations!</span>
+  <i class="icon-sad"></i><span class="sad">You haven't pledged to vote!</span>
+</div>
+<div class="main-content-buttons">
+  <a id="pledge-to-vote" href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Pledge to Vote This Year</a>
+</div>
+{% endblock %}
+
+{% block modals %}
+{% include "_pledge_modal.html" with modal_id="pledge-modal" %}
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+  var SUBMIT_PLEDGE_URL = "{% url 'main:submit_pledge' %}";
+</script>
+<script type="text/javascript" src="{% static 'js/pledge.js' %}"></script>
+{% endblock %}

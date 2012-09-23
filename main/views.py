@@ -6,11 +6,13 @@ from django.template.context import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from tasks import fetch_fb_friends
+from fb_friends import get_friends
+from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
-from voterapi import fetch_voter_from_fb_profile
+from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User
 from forms import WontVoteForm
+from datetime import datetime
 
 def _post_index(request):
     signed_request = request.POST["signed_request"]
@@ -46,6 +48,15 @@ def _index_redirect(user):
     else:
         return redirect("main:register")
 
+def _fetch_fb_friends(request):
+    fb_uid = request.facebook["uid"]
+    access_token = request.facebook["access_token"]
+    user = User.objects.get(fb_uid=fb_uid)
+    if not user.friends_fetch_started:
+        user.friends_fetch_started = True
+        user.save()
+        fetch_fb_friends.delay(fb_uid, access_token)
+
 @csrf_exempt
 def index(request):
     if request.method == "POST":
@@ -55,9 +66,6 @@ def index(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if user.data_fetched:
         return _index_redirect(user)
-    if not user.friends_fetched:
-        fetch_fb_friends.delay(request.facebook["uid"],
-                               request.facebook["access_token"])
     return render_to_response(
         "loading.html", 
         context_instance=RequestContext(request))
@@ -76,6 +84,9 @@ def fetch_me(request):
             user.votizen_id = voter.id
             user.registered = voter.registered
         user.save()
+        if user.registered:
+            update_friends_of.delay(
+                user.id, request.facebook["access_token"])
     redirect_url = reverse("main:pledge") if user.registered \
         else reverse("main:register")
     return HttpResponse(redirect_url, content_type="text/plain")
@@ -85,10 +96,9 @@ def _friend_listing_page(request, template, additional_context={}):
     context = { "user": user }
     context.update(additional_context)
     if user.friends_fetched:
-        context["friends"] = user.friends.order_by("-display_ordering")[:4]
+        context["friends"] = user.friendship_set.order_by("-display_ordering")[:4]
     else:
-        fetch_fb_friends.delay(request.facebook["uid"],
-                               request.facebook["access_token"])
+        _fetch_fb_friends(request)
     return render_to_response(
         template,
         context,
@@ -106,17 +116,33 @@ def invite_friends(request):
     return _friend_listing_page(request, "invite_friends.html")
 
 @render_json
+def submit_pledge(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    user.date_pledged = datetime.now()
+    user.save()
+    return { "response": "ok" }
+
+@render_json
 def fetch_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if not user.friends_fetched:
         return { "fetched": False }
-    friends = user.friends.order_by("-display_ordering")[:4]
+    friends = user.friendship_set.order_by("-display_ordering")[:4]
     html = render_to_string(
         "_friends.html",
         { "friends": friends },
         context_instance=RequestContext(request))
     return { "fetched": True,
              "html": html }
+
+def friend_invite_list(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    dont_invite_list = set([f.fb_uid for f in user.friendship_set.all()
+                            if not f.needs_invitation()])
+    # fb lets you send requests to a max of 50 users.
+    fb_friends = get_friends(request.facebook["access_token"], 50)
+    fb_uids = [f["id"] for f in fb_friends if f["id"] not in dont_invite_list]
+    return HttpResponse(",".join(fb_uids), content_type="text/plain")
 
 def wont_vote(request):
     form = WontVoteForm(request.POST)
@@ -126,6 +152,15 @@ def wont_vote(request):
         user.save()
         return redirect("main:invite_friends")
 
-def register_widget(request):
-    pass
+@render_json
+def im_actually_registered(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    user.registered = True
+    user.save()
+    correct_voter(user.fb_uid)
+    return { "next": reverse("main:pledge") }
 
+def register_widget(request):
+    return render_to_response(
+        "register_widget.html",
+        context_instance=RequestContext(request))

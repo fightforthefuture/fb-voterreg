@@ -21,5 +21,8 @@
 
 {% block scripts %}
 {{ block.super }}
+<script>
+  var FRIEND_INVITE_LIST_URL = "{% url 'main:friend_invite_list' %}";
+</script>
 <script src="{% static 'js/invite_friends.js' %}"></script>
 {% endblock %}

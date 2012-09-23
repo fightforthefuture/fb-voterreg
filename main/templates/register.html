@@ -29,5 +29,8 @@
 
 {% block scripts %}
 {{ block.super }}
+<script>
+  var ACTUALLY_REGISTERED_URL = "{% url 'main:actually_registered' %}";
+</script>
 <script type="text/javascript" src="{% static 'js/register.js' %}"></script>
 {% endblock %}

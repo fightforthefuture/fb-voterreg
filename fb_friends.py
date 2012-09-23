@@ -4,6 +4,7 @@ from main.models import User, Friendship
 from django.db import IntegrityError
 
 TARGET_FRIEND_COUNT = 5
+NUM_TO_TRY = 50 # limits searching of fb friends in votizen to about 15 seconds
 
 def _find_existing_users(user, friend_uids):
     """ Returns first TARGET_FRIEND_COUNT admirable existing users as Friendships. """
@@ -16,7 +17,7 @@ def _find_existing_users(user, friend_uids):
         if friend.is_admirable():
             friendships.append(
                 Friendship.create(
-                    user, friend, 
+                    user, friend.fb_uid, friend.name,
                     registered=friend.registered,
                     date_pledged=friend.date_pledged,
                     invited_pledge_count=friend.invited_pledge_count))
@@ -29,21 +30,20 @@ def _find_registered_voters(user, access_token, friend_uids,
     """ Uses the voting api to return first num_needed registered 
         voters as new Friendships """
     friendships = []
+    count = 0
     for uid in friend_uids:
+        if count > NUM_TO_TRY:
+            break
+        count += 1
         print("fetching voter from fb")
         voter = fetch_voter_from_fb_uid(uid, access_token)
         if voter and voter.registered:
             print("found registered voter")
-            friend, created = User.objects.get_or_create(
-                fb_uid=uid,
-                defaults={ "name": friend_names[uid] })
-            # FIXME: duplication with views.py#fetch_me
-            friend.registered = True
-            friend.votizen_id = voter.id
-            friend.data_fetched = True
-            friend.save()
             friendships.append(
-                Friendship.create(user, friend, registered=True))
+                Friendship.create(
+                    user, uid, friend_names[uid],
+                    registered=True,
+                    votizen_id=voter.id))
             if len(friendships) >= num_needed:
                 break
     return friendships
@@ -51,9 +51,8 @@ def _find_registered_voters(user, access_token, friend_uids,
 def _plain_friendships(user, friend_uids, friend_names):
     friendships = []
     for uid in friend_uids:
-        friend, created = User.objects.get_or_create(
-            fb_uid=uid, defaults={ "name": friend_names[uid] })
-        friendships.append(Friendship.create(user, friend))
+        friendships.append(Friendship.create(
+                user, uid, friend_names[uid]))
     return friendships
 
 def _make_friendships(user, access_token, fb_friends):
@@ -82,23 +81,41 @@ def _make_friendships(user, access_token, fb_friends):
         except IntegrityError:
             pass
 
-def get_friends(access_token):
+def get_friends(access_token, limit=5000, offset=0):
     graph = facebook.GraphAPI(access_token)
-    connections = graph.get_connections("me", "friends")
+    connections = graph.get_connections(
+        "me", "friends", offset=offset, limit=limit)
     return connections["data"]
 
 def fetch_friends(fb_uid, access_token):
-    # this is a long-running function. so don't run it as part of an http request.
-    # TODO: run the following section in one transaction
     user = User.objects.get(fb_uid=fb_uid)
-    if user.friends_fetch_started:
-        return
-    user.friends_fetch_started = True
-    user.save()
-
-    # TODO: run the following section in a separate transaction    
     _make_friendships(
-        user, access_token, get_friends(access_token))
-    user = User.objects.get(fb_uid=fb_uid)
+        user, access_token, get_friends(access_token, 500))
     user.friends_fetched = True
     user.save()
+
+def update_friends_of(user_id, access_token):
+    # modify any existing Friendship records that has this User on 
+    # the friend side.
+    # add Friendship records for existing Users in our system.
+    user = User.objects.get(id=user_id)
+    if not user.is_admirable():
+        return # no reason to modify/add Friendship records.
+    friendships = Friendship.objects.filter(fb_uid=user.fb_uid)
+    for friendship in friendships:
+        friendship.update_from(user)
+        friendship.save()
+    fb_friends = get_friends(access_token)
+    for fb_friend in fb_friends:
+        users = User.objects.filter(fb_uid=fb_friend["uid"])[:1]
+        if len(users) == 1 and not Friendship.objects.filter(
+            user=users[0], fb_uid=user.fb_uid).exists():
+            try:
+                # TODO give users[0] credit for getting user
+                # to join, if applicable.
+                friendship = Friendship.create(
+                    users[0], user.fb_uid, user.name)
+                friendship.update_from(user)
+                friendship.save()
+            except IntegrityError:
+                pass

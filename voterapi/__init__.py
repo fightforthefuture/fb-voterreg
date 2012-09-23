@@ -143,5 +143,8 @@ def fetch_voter(**kwargs):
         return None
 
 def correct_voter(fb_uid):
-    # TODO: this corrects the voter registration record, setting them to registered.
-    pass
+    voter_records = VoterRecord.objects.filter(fb_uid=fb_uid)[:1]
+    if len(voter_records) > 0:
+        v = voter_records[0]
+        v.registered = True
+        v.save()

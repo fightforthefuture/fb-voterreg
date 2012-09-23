@@ -2,7 +2,6 @@ $(function() {
     console.log("running");
     $("#i-wont-vote").click(
         function() {
-            console.log("clicked");
             $("#wont-vote-modal").modal("show")
             return false;
         });
@@ -16,8 +15,11 @@ $(function() {
     $(document).on(
         "click", "#whoops-modal .btn-green",
         function() {
-            // TODO: save registration status to database and to votizen api and then get me to pledge.
-            console.log("records are wrong");
+            $.getJSON(
+                ACTUALLY_REGISTERED_URL,
+                function(response) {
+                    window.location.assign(response["next"]);
+                });
             return false;
         });
 

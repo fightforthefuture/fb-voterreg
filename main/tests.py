@@ -18,7 +18,7 @@ class FBFriendsTest(unittest.TestCase):
         User(fb_uid="100").save()
         fb_friends.fetch_friends("100", "abc")
         user = User.objects.get(fb_uid="100")
-        friends = user.friends.order_by("-display_ordering")[:4]
+        friends = user.friendship_set.order_by("-display_ordering")[:4]
         self.assertEqual(4, len(friends))
         friend_ids = [f.friend_fb_uid for f in friends]
         for id in ["1001", "1008", "1009"]:

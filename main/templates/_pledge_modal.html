@@ -1,9 +1,18 @@
 {% extends "_base_modal.html" %}
 
-{% block title %}Gah! You're registered?{% endblock %}
+{% block title %}Plege to Vote{% endblock %}
 
 {% block body %}
+<div class="prepledge">
+  <span>Do you promise to vote in this year's election?</span>
+</div>
+<div class="postpledge" style="display: none">
+  <span>Awesome, thank you for your pledge to vote.</span>
+</div>
 {% endblock %}
 
 {% block footer %}
+<div class="prepledge">
+  <button id="yes-will-vote" class="btn btn-large btn-green"><i class="icon-ok"></i> <span class="button-text">Yes! I will vote!</span></button>
+</div>
 {% endblock %}
