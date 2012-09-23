@@ -7,7 +7,7 @@ import fb_friends
 def fetch_voter_from_fb_uid(uid, access_token):
     return Voter(uid + "fb", uid in ["1001", "1008", "1009"])
 
-def get_friends(access_token):
+def get_friends(access_token, limit=5000, offset=0):
     return [{ "name": "friend{0}".format(i),
               "id": "100{0}".format(i) } for i in range(10)]
 
@@ -20,7 +20,7 @@ class FBFriendsTest(unittest.TestCase):
         user = User.objects.get(fb_uid="100")
         friends = user.friendship_set.order_by("-display_ordering")[:4]
         self.assertEqual(4, len(friends))
-        friend_ids = [f.friend_fb_uid for f in friends]
+        friend_ids = [f.fb_uid for f in friends]
         for id in ["1001", "1008", "1009"]:
             self.assertTrue(id in friend_ids)
 

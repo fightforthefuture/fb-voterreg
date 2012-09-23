@@ -60,7 +60,7 @@ def _make_friendships(user, access_token, fb_friends):
     friend_names = dict((f["id"], f["name"]) for f in fb_friends)
     friendships = _find_existing_users(user, friend_uids)
     if len(friendships) < TARGET_FRIEND_COUNT:
-        friendship_uids = set(f.friend_fb_uid for f in friendships)
+        friendship_uids = set(f.fb_uid for f in friendships)
         friendships.extend(_find_registered_voters(
                 user, 
                 access_token,
@@ -68,7 +68,7 @@ def _make_friendships(user, access_token, fb_friends):
                 friend_names,
                 TARGET_FRIEND_COUNT - len(friendships)))
     if len(friendships) < TARGET_FRIEND_COUNT:
-        friendship_uids = set(f.friend_fb_uid for f in friendships)
+        friendship_uids = set(f.fb_uid for f in friendships)
         friends_not_added = list(friend_uids - friendship_uids)
         num_needed = TARGET_FRIEND_COUNT - len(friendships)
         friendships.extend(_plain_friendships(
