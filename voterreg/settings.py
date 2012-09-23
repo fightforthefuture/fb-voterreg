@@ -135,7 +135,7 @@ if environ.get("RACK_ENV", None) == "production":
     AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
     AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
-    STATIC_URL= 'http://s3.amazonaws.com/voterreg.fb/'
+    STATIC_URL= 'https://s3.amazonaws.com/voterreg.fb/'
     INSTALLATION = "production"
 
     VOTIZEN_API_KEY = environ.get("VOTIZEN_API_KEY", "")
