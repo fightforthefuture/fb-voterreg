@@ -138,6 +138,8 @@ if environ.get("RACK_ENV", None) == "production":
     STATIC_URL= 'http://s3.amazonaws.com/voterreg.fb/'
     INSTALLATION = "production"
 
+    VOTIZEN_API_KEY = environ.get("VOTIZEN_API_KEY", "")
+
     FACEBOOK_APP_ID = "220561354738022"
     FACEBOOK_APP_SECRET = environ.get("FACEBOOK_APP_SECRET", "")
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/220561354738022/"
