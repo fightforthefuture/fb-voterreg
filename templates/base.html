@@ -34,8 +34,9 @@
       </ul>
       {% endcomment %}
     </header>
+    {% block post_header %}{% endblock %}
     <div class="content cf">
-      {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
     </div>
     {% block modals %}{% endblock %}
     <script src="{% static 'js/jquery.js' %}"></script>
