@@ -94,7 +94,7 @@ def _friend_listing_page(request, template, additional_context={}):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     context = { "user": user }
     context.update(additional_context)
-    if user.friends_fetched:
+    if user.friendship_set.filter(registered=True).count() >= 4:
         context["friends"] = user.friendship_set.order_by("-display_ordering")[:4]
     else:
         _fetch_fb_friends(request)
@@ -124,7 +124,7 @@ def submit_pledge(request):
 @render_json
 def fetch_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    if not user.friends_fetched:
+    if user.friendship_set.filter(registered=True).count() < 4:
         return { "fetched": False }
     friends = user.friendship_set.order_by("-display_ordering")[:4]
     html = render_to_string(
