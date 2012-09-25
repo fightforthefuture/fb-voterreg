@@ -44,6 +44,7 @@ def _create(user, access_token, fb_friends, found_uids):
 
 def _make_friendships(user, access_token, fb_friends):
     found_uids = _create_from_existing_users(user, fb_friends)
+    user.save()
     _create(user, access_token, fb_friends, found_uids)
 
 def get_friends(access_token, limit=5000, offset=0):
@@ -58,8 +59,9 @@ def fetch_friends(fb_uid, access_token):
         return
     user.friends_fetch_started = True
     user.save()
-    _make_friendships(
-        user, access_token, get_friends(access_token))
+    friends = get_friends(access_token)
+    user.num_friends = len(friends)
+    _make_friendships(user, access_token, friends)
     user.friends_fetched = True
     user.save()
     user.friendshipbatch_set.all().update(completely_fetched=True)

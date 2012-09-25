@@ -1,0 +1,17 @@
+<div class="box cf" data-batch-id="{{batch.id}}">
+  <div class="friends"></div>
+  <div class="text">
+    <h2>{{ batch.title }}</h2>
+    {% if batch.type == 1 %}
+      <p>These friends look like they were younger than 18 during the last election, so they've never voted before. Make sure they're registered!</p>
+    {% elif batch.type == 2 %}
+      <p>These friends are living far from their hometown. They might not be registered yet in their new home!</p>
+    {% elif batch.type == 3 %}
+      <p>If you get a ton of {{ batch.city }} friends registered, who knows? Maybe you could elect one of them mayor!</p>
+    {% else %}
+      <p>{{ batch.short_description }} registered to vote, but didn't vote in the last election.</p>
+    {% endif %}
+    </p>
+    <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Register them</a>
+  </div>
+</div>

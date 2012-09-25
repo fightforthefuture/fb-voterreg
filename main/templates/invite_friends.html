@@ -1,4 +1,4 @@
-{% extends "friends_listing_base.html" %}
+{% extends "base.html" %}
 
 {% load static from staticfiles %}
 {% load url from future %}
@@ -6,22 +6,22 @@
 {% block css %}
 {% endblock %}
 
-
-{% block topcontent %}
-<div class="main-content-message">
-  <i class="icon-happy"></i><span class="happy">You’re registered to vote this year! Congratulations!</span>
+{% block content %}
+<div class="blackbar">
+  <div class="title">Help your friends vote!</div>
+  <div class="text"><strong class="primary"><span class="num-registered">{{ num_registered }}</span></strong> registered and <strong class="primary"><span class="num-pledged">{{ num_pledged }}</span></strong> pledged out of <strong><span>{{ num_friends }}</span></strong> friends</div>
 </div>
-<div class="main-content-buttons">
-  <a href="javascript:void(0)" id="get-friends" class="btn btn-large btn-blue"><i class="icon-notification"></i> Get your friends to vote</a>
+<div class="boxes">
+{% for batch in uninvited_batches %}
+  {% include "_batch.html" with batch=batch %}
+{% endfor %}
 </div>
-{% endblock %}
-
-{% block modals %}
 {% endblock %}
 
 {% block scripts %}
-{{ block.super }}
 <script>
+  var stillLoading = {% if still_loading %}true{% else %}false{% endif %};
+  var FETCH_UPDATED_BATCHES_URL = "{% url 'main:fetch_updated_batches' %}";
   var FRIEND_INVITE_LIST_URL = "{% url 'main:friend_invite_list' %}";
 </script>
 <script src="{% static 'js/invite_friends.js' %}"></script>

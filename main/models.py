@@ -20,12 +20,17 @@ BATCH_TYPES = (
     (BATCH_NEARBY, "Nearby"),
     (BATCH_REGULAR, "Not registered"))
 
+BATCH_MAP = dict(BATCH_TYPES)
+
 class User(models.Model):
     fb_uid = models.CharField(max_length=32, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=128, blank=True)
+    num_friends = models.IntegerField(null=True)
     birthday = models.DateTimeField(null=True)
     far_from_home = models.BooleanField(default=False)
+    location_city = models.CharField(max_length=64, blank=True, default="")
+    location_state = models.CharField(max_length=64, blank=True, default="")
     location_name = models.CharField(max_length=128, blank=True, default="")
     registered = models.BooleanField(default=False)
     used_registration_widget = models.BooleanField(default=False)
@@ -64,6 +69,33 @@ class FriendshipBatch(models.Model):
     type = models.IntegerField(choices=BATCH_TYPES)
     invite_date = models.DateTimeField(null=True)
     completely_fetched = models.BooleanField(default=False)
+
+    @property
+    def title(self):
+        if self.type == BATCH_NEARBY:
+            return "Friends in {0}, {1}".format(
+                self.user.location_city, self.user.location_state)
+        else:
+            return BATCH_MAP[self.type]
+
+    @property
+    def city(self):
+        return self.user.location_city
+
+    @property
+    def short_description(self):
+        f = self.friendship_set.all()[:3]
+        if self.count == 1:
+            return "{0} is".format(f[0].name)
+        elif self.count == 2:
+            return "{0} and {1} are".format(
+                f[0].name, f[1].name)
+        elif self.count == 3:
+            return "{0}, {1}, and {2} are".format(
+                f[0].name, f[1].name, f[2].name)
+        else:
+            return "{0}, {1}, and {2} others are".format(
+                f[0].name, f[1].name, self.count - 2)
 
 class Friendship(models.Model):
     class Meta:
@@ -131,7 +163,7 @@ def _fill_in_display_ordering(sender, instance, **kwargs):
         today = date.today()
         user = instance.user
         batch_type = None
-        if instance.birthday and today.year - instance.birthday.year < 23:
+        if instance.birthday and today.year - instance.birthday.year < 22:
             batch_type = BATCH_BARELY_LEGAL
         elif instance.far_from_home:
             batch_type = BATCH_FAR_FROM_HOME
@@ -151,7 +183,7 @@ def _update_batch(sender, instance, **kwargs):
         return
     batch = instance.batch
     batch.count = Friendship.objects.filter(batch=batch).count()
-    if batch.count >= 50:
+    if batch.count >= 32:
         batch.completely_fetched = True
         batch.regular_batch_no = FriendshipBatch.objects.filter(
             user=batch.user, type=batch.type).count()

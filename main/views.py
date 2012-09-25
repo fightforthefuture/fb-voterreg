@@ -77,6 +77,8 @@ def fetch_me(request):
         user.name = fb_profile["name"]
         user.birthday = profile.dob
         user.location_name = profile.location or ""
+        user.location_state = profile.location_state or ""
+        user.location_city = profile.location_city or ""
         user.far_from_home = profile.far_from_home()
         if voter:
             user.votizen_id = voter.id
@@ -112,7 +114,18 @@ def pledge(request):
     return _friend_listing_page(request, "pledge.html")
 
 def invite_friends(request):
-    return _friend_listing_page(request, "invite_friends.html")
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    f_mgr = user.friendship_set
+    context = {
+        "num_registered": f_mgr.filter(registered=True).count(),
+        "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
+        "num_friends": user.num_friends,
+        "uninvited_batches": user.friendshipbatch_set.all(),
+        "still_loading": not user.friends_fetched }
+    return render_to_response(
+        "invite_friends.html",
+        context,
+        context_instance=RequestContext(request))
 
 @render_json
 def submit_pledge(request):
@@ -150,6 +163,10 @@ def wont_vote(request):
         user.wont_vote_reason = form.cleaned_data["wont_vote_reason"]
         user.save()
         return redirect("main:invite_friends")
+
+@render_json
+def fetch_updated_batches(request):
+    pass
 
 @render_json
 def im_actually_registered(request):
