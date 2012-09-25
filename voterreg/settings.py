@@ -94,15 +94,15 @@ LOGGING = {
         }
     },
     'handlers': {
-        'mail_admins': {
+        'console': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+            'class':'logging.StreamHandler',
+            'strm': sys.stdout
         }
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['console'],
             'level': 'ERROR',
             'propagate': True,
         },
