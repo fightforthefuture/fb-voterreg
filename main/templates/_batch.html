@@ -1,5 +1,7 @@
-<div class="box cf" data-batch-id="{{batch.id}}">
-  <div class="friends"></div>
+<div class="box cf friend-box" data-batch-id="{{batch.id}}">
+  <div class="friends">
+    {% for f in batch.friendships %}<img src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}
+  </div>
   <div class="text">
     <h2>{{ batch.title }}</h2>
     {% if batch.type == 1 %}

@@ -74,6 +74,10 @@ class FriendshipBatch(models.Model):
     completely_fetched = models.BooleanField(default=False)
 
     @property
+    def friendships(self):
+        return self.friendship_set.all()[:32]
+
+    @property
     def title(self):
         if self.type == BATCH_NEARBY:
             return "Friends in {0}, {1}".format(

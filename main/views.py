@@ -132,7 +132,7 @@ def invite_friends(request):
         "num_registered": f_mgr.filter(registered=True).count(),
         "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
         "num_friends": user.num_friends,
-        "uninvited_batches": user.friendshipbatch_set.all(),
+        "uninvited_batches": user.friendshipbatch_set.filter(completely_fetched=True),
         "still_loading": not user.friends_fetched }
     return render_to_response(
         "invite_friends.html",
@@ -195,7 +195,27 @@ def im_actually_registered(request):
 
 @render_json
 def fetch_updated_batches(request):
-    pass
+    batch_ids = request.GET["batchids"]
+    if batch_ids == "":
+        batch_ids = []
+    else:
+        batch_ids = set([int(b) for b in batch_ids.split(",")])
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    f_mgr = user.friendship_set
+    batches = user.friendshipbatch_set.filter(completely_fetched=True)
+    htmls = []
+    for batch in batches:
+        if batch.id not in batch_ids:
+            htmls.append(
+                render_to_string(
+                    "_batch.html", { "batch": batch }, 
+                    context_instance=RequestContext(request)))
+    return {
+        "num_registered": f_mgr.filter(registered=True).count(),
+        "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
+        "num_friends": user.num_friends,
+        "boxes": htmls,
+        "finished": user.friends_fetched }
 
 def register_widget(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
