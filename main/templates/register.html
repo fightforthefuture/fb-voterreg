@@ -9,14 +9,20 @@
 
 {% block topcontent %}
 <div class="main-content-message">
-  <i class="icon-sad"></i><span class="sad">You're not registered to vote!</span>
+    <h2>We can't find any registration matching your Facebook information.</h2>
+    <h3>Do you want to register to vote now?</h3>
+    <p>(We searched for: Holmes Wilson / Worcester, MY / Born: NOV. 25, 1979)</p>
 </div>
 <div class="main-content-buttons">
   <a href="{% url 'main:register_widget' %}" class="btn btn-large btn-green"><i class="icon-ok"></i> Register Now</a>
   <a id="i-wont-vote" href="javascript:void(0)" class="btn btn-large"><i class="icon-cancel"></i> No, I'm sure I'm already registered</a>
 </div>
+<div class="main-content-right">
+    <a href="/">No, I am not eligible to vote</a>
+</div>
 <div class="main-content-extra">
-  Note: 
+  Note: Even if you think you might be registered, it's always best to re-register with your most recent information.
+  You can enter your correct info in the next step.
 </div>
 {% endblock %}
 
