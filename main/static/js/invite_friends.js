@@ -1,27 +1,34 @@
 $(function() {
-    function showFriendRequestDialog(friendList) {
+    function showFriendRequestDialog(friendList, batchID) {
         FB.ui(
             {
                 "method": "apprequests",
                 "message": "Please join me to register and pledge to vote in the upcoming election!",
                 "to": friendList
             },
-            friendRequestCallback);
+            function(response) {
+                if (response) {
+                    friendsInvited(batchID);
+                }
+            });
     }
 
-    function friendRequestCallback(response) {
-        if (console) {
-            console.log(response);
-        }
+    function friendsInvited(batchID) {
+        $.getJSON(
+            MARK_BATCH_INVITED_URL,
+            { "batch_id": batchID },
+            function(result) {
+                $('[data-batch-id="' + batchID + '"]').slideUp();
+            });
     }
 
-    $("#get-friends").click(function() {
-        // TODO: show loading
-        $.get(FRIEND_INVITE_LIST_URL,
-              function(result) {
-                  // TODO: hide loading
-                  showFriendRequestDialog(result);
-              });
+    $(document).on("click", ".friend-box a", function() {
+        var fbuids = [];
+        var friendBox = $(this).parents(".friend-box");
+        friendBox.find(".friends img").each(function() {
+            fbuids.push($(this).data("uid"));
+        });
+        showFriendRequestDialog(fbuids.join(","), parseInt(friendBox.data("batch-id")));
         return false;
     });
 

@@ -28,7 +28,7 @@
 <script>
   var stillLoading = {% if still_loading %}true{% else %}false{% endif %};
   var FETCH_UPDATED_BATCHES_URL = "{% url 'main:fetch_updated_batches' %}";
-  var FRIEND_INVITE_LIST_URL = "{% url 'main:friend_invite_list' %}";
+  var MARK_BATCH_INVITED_URL = "{% url 'main:mark_batch_invited' %}";
 </script>
 <script src="{% static 'js/invite_friends.js' %}"></script>
 {% endblock %}

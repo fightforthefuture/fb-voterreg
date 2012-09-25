@@ -12,7 +12,7 @@ from fb_friends import get_friends
 from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
-from models import User
+from models import User, FriendshipBatch
 from forms import WontVoteForm
 from datetime import datetime
 from fb_utils import FacebookProfile
@@ -132,7 +132,8 @@ def invite_friends(request):
         "num_registered": f_mgr.filter(registered=True).count(),
         "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
         "num_friends": user.num_friends,
-        "uninvited_batches": user.friendshipbatch_set.filter(completely_fetched=True),
+        "uninvited_batches": user.friendshipbatch_set.filter(
+            completely_fetched=True, invite_date__isnull=True),
         "still_loading": not user.friends_fetched }
     return render_to_response(
         "invite_friends.html",
@@ -161,15 +162,6 @@ def fetch_friends(request):
         context_instance=RequestContext(request))
     return { "fetched": True,
              "html": html }
-
-def friend_invite_list(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    dont_invite_list = set([f.fb_uid for f in user.friendship_set.all()
-                            if not f.needs_invitation()])
-    # fb lets you send requests to a max of 50 users.
-    fb_friends = get_friends(request.facebook["access_token"], 50)
-    fb_uids = [f["id"] for f in fb_friends if f["id"] not in dont_invite_list]
-    return HttpResponse(",".join(fb_uids), content_type="text/plain")
 
 @render_json
 def wont_vote(request):
@@ -202,7 +194,8 @@ def fetch_updated_batches(request):
         batch_ids = set([int(b) for b in batch_ids.split(",")])
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_mgr = user.friendship_set
-    batches = user.friendshipbatch_set.filter(completely_fetched=True)
+    batches = user.friendshipbatch_set.filter(
+        completely_fetched=True, invite_date__isnull=True)
     htmls = []
     for batch in batches:
         if batch.id not in batch_ids:
@@ -216,6 +209,14 @@ def fetch_updated_batches(request):
         "num_friends": user.num_friends,
         "boxes": htmls,
         "finished": user.friends_fetched }
+
+@render_json
+def mark_batch_invited(request):
+    batch_id = int(request.GET["batch_id"])
+    batch = FriendshipBatch.objects.get(id=batch_id)
+    batch.invite_date = datetime.now()
+    batch.save()
+    return { "response": "ok" }
 
 def register_widget(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])

@@ -12,6 +12,6 @@ urlpatterns = patterns(
     url(r"^actually_registered$", "im_actually_registered", name="actually_registered"),
     url(r"^wont_vote$", "wont_vote", name="wont_vote"),
     url(r"^invite_friends$", "invite_friends", name="invite_friends"),
-    url(r"^friend_invite_list$", "friend_invite_list", name="friend_invite_list"),
     url(r"^fetch_updated_batches$", "fetch_updated_batches", name="fetch_updated_batches"),
+    url(r"^mark_batch_invited$", "mark_batch_invited", name="mark_batch_invited"),
 )
