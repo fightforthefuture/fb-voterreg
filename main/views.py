@@ -1,4 +1,5 @@
 import facebook
+import urllib
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render_to_response, redirect
@@ -23,7 +24,7 @@ def _post_index(request):
         settings.FACEBOOK_APP_SECRET)
     if not data.get("user_id"):
         scope = ["user_birthday", "user_location", "friends_birthday,"
-                 "friends_hometown", "friends_location"]
+                 "friends_hometown", "friends_location", "email"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,
                                      settings.FACEBOOK_CANVAS_PAGE,
                                      scope)
@@ -76,6 +77,9 @@ def fetch_me(request):
         profile = FacebookProfile(fb_profile)
         voter = fetch_voter_from_fb_profile(fb_profile)
         user.name = fb_profile["name"]
+        user.first_name = profile.first_name
+        user.last_name = profile.last_name
+        user.email = fb_profile.get("email", "")
         user.birthday = profile.dob
         user.location_name = profile.location or ""
         user.location_state = profile.location_state or ""
@@ -194,6 +198,20 @@ def fetch_updated_batches(request):
     pass
 
 def register_widget(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    widget_qs = { 
+        "first_name": user.first_name,
+        "last_name": user.last_name }
+    if user.email:
+        widget_qs["email"] = user.email
+    if user.location_city:
+        widget_qs["city"] = user.location_city
+        widget_qs["state"] = user.location_state
+    if user.birthday:
+        widget_qs["dob_month"] = user.birthday.month
+        widget_qs["dob_day"] = user.birthday.day
+        widget_qs["dob_year"] = user.birthday.year
     return render_to_response(
         "register_widget.html",
+        { "widget_qs": urllib.urlencode(widget_qs) },
         context_instance=RequestContext(request))
