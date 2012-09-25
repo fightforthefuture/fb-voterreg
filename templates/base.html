@@ -24,17 +24,15 @@
     <div id="fb-root"></div>
     <header>
       <a class="logo" href="{% url 'main:index' %}"><span>Vote for the Internet</span></a>
-      {% if user %}
+      {% comment %}
       <ul>
         <li><a href="{% url 'main:pledge' %}">Promise</a></li>
         <li><a href="{% url 'main:register' %}">Register</a></li>
         <li><a href="{% url 'main:invite_friends' %}">Add Friends</a></li>
-        {% comment %}
         <li><a href="">Notifications</a></li>
         <li><a href="">High Score</a></li>
-        {% endcomment %}
       </ul>
-      {% endif %}
+      {% endcomment %}
     </header>
     <div class="content cf">
       {% block content %}{% endblock %}

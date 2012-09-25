@@ -13,6 +13,7 @@ from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User
 from forms import WontVoteForm
 from datetime import datetime
+from fb_utils import FacebookProfile
 
 def _post_index(request):
     signed_request = request.POST["signed_request"]
@@ -70,15 +71,17 @@ def fetch_me(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if not user.data_fetched:
         graph = facebook.GraphAPI(request.facebook["access_token"])
-        profile = graph.get_object("me")
-        voter = fetch_voter_from_fb_profile(profile)
-        # possibly save other data here in future, e.g. years voted
-        # in past
-        user.name = profile["name"]
-        user.data_fetched = True
+        fb_profile = graph.get_object("me")
+        profile = FacebookProfile(fb_profile)
+        voter = fetch_voter_from_fb_profile(fb_profile)
+        user.name = fb_profile["name"]
+        user.birthday = profile.dob
+        user.location_name = profile.location or ""
+        user.far_from_home = profile.far_from_home()
         if voter:
             user.votizen_id = voter.id
             user.registered = voter.registered
+        user.data_fetched = True
         user.save()
         if user.registered:
             update_friends_of.delay(

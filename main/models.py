@@ -1,6 +1,7 @@
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+from datetime import date
 
 WONT_VOTE_REASONS = (
     ("not_17", "Won't be 17 yet"),
@@ -9,25 +10,37 @@ WONT_VOTE_REASONS = (
     ("rather_not_say", "I'd rather not say")
 )
 
+BATCH_BARELY_LEGAL = 1
+BATCH_FAR_FROM_HOME = 2
+BATCH_NEARBY = 3
+BATCH_REGULAR = 4
+BATCH_TYPES = (
+    (BATCH_BARELY_LEGAL, "Barely legal"),
+    (BATCH_FAR_FROM_HOME, "Far from home"),
+    (BATCH_NEARBY, "Nearby"),
+    (BATCH_REGULAR, "Not registered"))
+
 class User(models.Model):
     fb_uid = models.CharField(max_length=32, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=128, blank=True)
+    birthday = models.DateTimeField(null=True)
+    far_from_home = models.BooleanField(default=False)
+    location_name = models.CharField(max_length=128, blank=True, default="")
     registered = models.BooleanField(default=False)
     used_registration_widget = models.BooleanField(default=False)
     wont_vote_reason = models.CharField(
-        max_length=18, choices=WONT_VOTE_REASONS, blank=True)
+        max_length=18, choices=WONT_VOTE_REASONS, blank=True, default="")
     date_pledged = models.DateTimeField(null=True)
     date_invited_friends = models.DateTimeField(null=True)
     # number of invited friends who have pledged
     invited_pledge_count = models.IntegerField(default=0)
     # have we asked votizen api for my data yet?
     data_fetched = models.BooleanField(default=False)
-    votizen_id = models.CharField(max_length=132, blank=True)
+    votizen_id = models.CharField(max_length=132, blank=True, default="")
     friends_fetch_started = models.BooleanField(default=False)
-    # whether or not we've filled in Friendship models for this user yet.
+    # whether or not we've filled in all Friendship models for this user yet.
     friends_fetched = models.BooleanField(default=False)
-
 
     @property
     def wont_vote(self):
@@ -44,15 +57,27 @@ class User(models.Model):
     def is_admirable(self):
         return self.registered or self.pledged or self.invited_friends
 
+class FriendshipBatch(models.Model):
+    user = models.ForeignKey(User)
+    count = models.IntegerField(default=0)
+    regular_batch_no = models.IntegerField(default=1)
+    type = models.IntegerField(choices=BATCH_TYPES)
+    invite_date = models.DateTimeField(null=True)
+    completely_fetched = models.BooleanField(default=False)
+
 class Friendship(models.Model):
     class Meta:
         unique_together = (("user", "fb_uid",),)
     user = models.ForeignKey(User)
+    batch = models.ForeignKey(FriendshipBatch, null=True)
     user_fb_uid = models.CharField(max_length=32, db_index=True)
     fb_uid = models.CharField(max_length=32, db_index=True)
     name = models.CharField(max_length=128)
     # registered * 1 + pledged * 1
     display_ordering = models.IntegerField(default=0, db_index=True)
+    birthday = models.DateTimeField(null=True)
+    far_from_home = models.BooleanField(default=False)
+    location_name = models.CharField(max_length=128, blank=True, default="")
     votizen_id = models.CharField(max_length=132, blank=True)
     registered = models.BooleanField(default=False)
     date_pledged = models.DateTimeField(null=True)
@@ -78,7 +103,16 @@ class Friendship(models.Model):
             name=name, 
             **kwargs)
 
+    @classmethod
+    def create_from(cls, user, friend):
+        f = Friendship.create(user, friend.fb_uid, friend.name)
+        f.update_from(friend)
+        return f
+
     def update_from(self, user):
+        self.birthday = user.birthday
+        self.location_name = user.location_name
+        self.far_from_home = user.far_from_home
         self.votizen_id = user.votizen_id
         self.registered = user.registered
         self.date_pledged = user.date_pledged
@@ -89,10 +123,42 @@ class Friendship(models.Model):
         return "https://graph.facebook.com/{0}/picture?type=large".format(
             self.fb_uid)
 
-def fill_in_display_ordering(sender, instance, **kwargs):
+def _fill_in_display_ordering(sender, instance, **kwargs):
     instance.display_ordering = \
         (1 if instance.registered else 0) + \
         (1 if instance.pledged else 0)
+    if not instance.registered and not instance.batch:
+        today = date.today()
+        user = instance.user
+        batch_type = None
+        if instance.birthday and today.year - instance.birthday.year < 23:
+            batch_type = BATCH_BARELY_LEGAL
+        elif instance.far_from_home:
+            batch_type = BATCH_FAR_FROM_HOME
+        elif instance.location_name and \
+                instance.location_name == user.location_name:
+            batch_type = BATCH_NEARBY
+        else:
+            batch_type = BATCH_REGULAR
+        batch, created = FriendshipBatch.objects.get_or_create(
+            user=user,
+            type=batch_type,
+            completely_fetched=False)
+        instance.batch = batch
 
-pre_save.connect(fill_in_display_ordering, sender=Friendship, 
+def _update_batch(sender, instance, **kwargs):
+    if not instance.batch:
+        return
+    batch = instance.batch
+    batch.count = Friendship.objects.filter(batch=batch).count()
+    if batch.count >= 50:
+        batch.completely_fetched = True
+        batch.regular_batch_no = FriendshipBatch.objects.filter(
+            user=batch.user, type=batch.type).count()
+    batch.save()
+
+pre_save.connect(_fill_in_display_ordering, sender=Friendship, 
                  dispatch_uid="fill_in_display_ordering")
+
+post_save.connect(_update_batch, sender=Friendship,
+                  dispatch_uid="update_batch")
