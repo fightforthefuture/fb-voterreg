@@ -1,4 +1,5 @@
 import os
+import sys
 from os import environ
 
 DEBUG = True
@@ -96,8 +97,7 @@ LOGGING = {
     'handlers': {
         'console': {
             'level': 'ERROR',
-            'class':'logging.StreamHandler',
-            'strm': sys.stdout
+            'class':'logging.StreamHandler'
         }
     },
     'loggers': {
