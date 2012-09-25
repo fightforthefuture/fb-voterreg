@@ -560,6 +560,7 @@ div.content {
     padding:1px;
     width: 660px;
     margin: 0 auto;
+    display: block;
 }
 
 .blackbar .title {
@@ -634,24 +635,53 @@ div.content {
     box-shadow:  0px 2px 6px 0px rgba(0, 0, 0, 0.26);
 }
 
-.friend-boxes {
+.boxes {
+    display: block;
     width: 738px;
     margin: 2px auto 0;
-    padding: 0;
+    padding: 20px 0 0 0;
     min-height: 269px;
     background: transparent url(../img/friends-back.png) 50% 0 no-repeat;
-
 }
 
-.friend-box {
-    width: 660px;
-    margin: 0 auto;
-    padding: 30px 0;
+.boxes .box {
+    width: 600px;
+    margin: 30px auto 0;
+    padding: 30px;
     background: white;
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,white), color-stop(100%,#E6E8EC));
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e6e8ec',GradientType=0 );
     -webkit-border-radius: 5px;
     border-radius: 5px;
-    -webkit-box-shadow: 5px 5px 18px 0px #999;
-    box-shadow: 5px 5px 18px 0px #999;
+    -webkit-box-shadow: 0px 7px 12px 0px #999;
+    box-shadow: 0px 7px 12px 0px #999;
+}
+
+.boxes .box .friends  {
+    float: left;
+    width: 330px;
+    height: 132px;
+}
+
+.boxes .box .friends img {
+    margin: 0 0 1px 1px;
+    float: left;
+}
+
+.boxes .box .text {
+    float: left;
+    width: 240px;
+    margin: 0 0 0 30px;
+}
+
+.boxes .box .text h2 {
+    color: #3d3d3d;
+    margin: 0;
+    font-size: 18px;
+}
+
+.boxes .box .text p {
+    color: #3d3d3d;
+    margin: 10px 0;
+    font-size: 13px;
 }
