@@ -72,7 +72,7 @@ def fetch_voter(**kwargs):
     params = kwargs.copy()
     params["api_key"] = settings.VOTIZEN_API_KEY
     response = requests.get(_URL, params=params).json
-    if len(response["objects"]) > 0:
+    if response and "objects" in response and len(response["objects"]) > 0:
         obj = response["objects"][0]
         return Voter(obj["id"], obj["is_registered_voter"])
     else:

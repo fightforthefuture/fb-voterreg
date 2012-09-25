@@ -18,12 +18,17 @@ def _create_from_existing_users(user, fb_friends):
                 pass
     return found_uids
 
-def _create(user, access_token, fb_friends, found_uids):
+def _create(user_id, access_token, fb_friends, found_uids):
     graph = facebook.GraphAPI(access_token)
     for fb_friend in fb_friends:
+        user = User.objects.get(id=user_id)
         uid = fb_friend["id"]
         if uid in found_uids:
             continue
+        if Friendship.objects.filter(user=user, fb_uid=uid).count() > 0:
+            continue
+        user.update_friends_fetch()
+        user.save()
         fb_profile = graph.get_object(uid)
         profile = FacebookProfile(fb_profile)
         voter = fetch_voter_from_fb_profile(fb_profile)
@@ -42,10 +47,13 @@ def _create(user, access_token, fb_friends, found_uids):
         except IntegrityError:
             pass
 
-def _make_friendships(user, access_token, fb_friends):
+def _make_friendships(user_id, access_token, fb_friends):
+    user = User.objects.get(id=user_id)
     found_uids = _create_from_existing_users(user, fb_friends)
+    user = User.objects.get(id=user_id)
+    user.update_friends_fetch()
     user.save()
-    _create(user, access_token, fb_friends, found_uids)
+    _create(user_id, access_token, fb_friends, found_uids)
 
 def get_friends(access_token, limit=5000, offset=0):
     graph = facebook.GraphAPI(access_token)
@@ -54,14 +62,13 @@ def get_friends(access_token, limit=5000, offset=0):
     return connections["data"]
 
 def fetch_friends(fb_uid, access_token):
-    user = User.objects.get(fb_uid=fb_uid)
-    if user.friends_fetch_started:
-        return
-    user.friends_fetch_started = True
-    user.save()
     friends = get_friends(access_token)
+    user = User.objects.get(fb_uid=fb_uid)
+    user.update_friends_fetch()
     user.num_friends = len(friends)
-    _make_friendships(user, access_token, friends)
+    user.save()
+    _make_friendships(user.id, access_token, friends)
+    user = User.objects.get(fb_uid=fb_uid)
     user.friends_fetched = True
     user.save()
     user.friendshipbatch_set.all().update(completely_fetched=True)

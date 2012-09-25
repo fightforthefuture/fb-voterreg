@@ -1,7 +1,8 @@
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from datetime import date
+from datetime import date, datetime
+from django.utils import timezone
 
 WONT_VOTE_REASONS = (
     ("not_17", "Won't be 17 yet"),
@@ -46,9 +47,27 @@ class User(models.Model):
     # have we asked votizen api for my data yet?
     data_fetched = models.BooleanField(default=False)
     votizen_id = models.CharField(max_length=132, blank=True, default="")
-    friends_fetch_started = models.BooleanField(default=False)
-    # whether or not we've filled in all Friendship models for this user yet.
+    friends_fetch_last_activity = models.DateTimeField(null=True)
+    # whether or not the friend fetch completed.
     friends_fetched = models.BooleanField(default=False)
+
+    def update_friends_fetch(self):
+        self.friends_fetch_last_activity = datetime.now()
+
+    def friends_need_fetching(self):
+        if self.friends_fetched:
+            return False
+        if not self.friends_fetch_last_activity:
+            return True # process hasn't started yet
+        now = timezone.now()
+        now.astimezone(timezone.utc).replace(tzinfo=None)
+        time_since_last_fetch = \
+            self.friends_fetch_last_activity - now
+        if time_since_last_fetch.days > 0:
+            return True
+        if time_since_last_fetch.seconds > 30:
+            return True
+        return False # process is still running.
 
     @property
     def wont_vote(self):

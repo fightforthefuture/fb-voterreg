@@ -54,7 +54,11 @@ def _index_redirect(user):
 def _fetch_fb_friends(request):
     fb_uid = request.facebook["uid"]
     access_token = request.facebook["access_token"]
-    fetch_fb_friends.delay(fb_uid, access_token)
+    user = User.objects.get(fb_uid=fb_uid)
+    if user.friends_need_fetching():
+        user.update_friends_fetch()
+        user.save()
+        fetch_fb_friends.delay(fb_uid, access_token)
 
 @csrf_exempt
 def index(request):
@@ -187,6 +191,7 @@ def im_actually_registered(request):
 
 @render_json
 def fetch_updated_batches(request):
+    _fetch_fb_friends(request)
     batch_ids = request.GET["batchids"]
     if batch_ids == "":
         batch_ids = []
