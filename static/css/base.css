@@ -326,6 +326,35 @@ div.content {
     text-align: center;
 }
 
+.main-content-message h2, h3 {
+    font-family: montserrat;
+    font-weight: normal;
+    letter-spacing: -0.05em;
+}
+
+.main-content-message h2 {
+    color: #3b5597;
+    margin: 0 40px;
+}
+
+.main-content-message h3 {
+    color: #444;
+    margin: 8px 40px 0 40px;
+
+}
+
+.main-content-message p {
+    color: #666;
+    margin: 10px 40px 0 40px;
+    font-size: 15px;
+}
+
+.main-content-right {
+    text-align: right;
+    margin: 0px 40px 0 40px;
+    font-size: 13px;
+}
+
 .main-content-message .happy,
 .main-content-message .sad {
     text-align: left;
@@ -348,7 +377,7 @@ div.content {
 
 .main-content-buttons {
     text-align: center;
-    margin: 30px 0 16px 0;
+    margin: 30px 0 8px 0;
 }
 
 .main-content-buttons .or {
@@ -371,8 +400,10 @@ div.content {
 }
 
 .main-content-extra {
-    margin: 26px 0 0 0;
+    margin: 26px 40px 0 40px;
     text-align: center;
+    color: #666;
+    font-size: 15px;
 }
 
 .main-friends {

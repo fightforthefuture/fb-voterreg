@@ -34,7 +34,13 @@
       </ul>
       {% endcomment %}
     </header>
-    {% block post_header %}{% endblock %}
+    {% if messages %}
+    <div class="notification">
+        {% for message in messages %}
+        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div class="content cf">
         {% block content %}{% endblock %}
     </div>
