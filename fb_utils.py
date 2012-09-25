@@ -98,6 +98,6 @@ class FacebookProfile(object):
                                 self.dob_day)
 
     def far_from_home(self):
-        return self.location_state and \
-            self.hometown_state and \
+        return self.location_state is not None and \
+            self.hometown_state is not None and \
             self.location_state != self.hometown_state
