@@ -24,7 +24,7 @@
     <div id="fb-root"></div>
     <header>
       <a class="logo" href="{% url 'main:index' %}"><span>Vote for the Internet</span></a>
-      {% if user %}
+      {% if user and False %}
       <ul>
         <li><a href="{% url 'main:pledge' %}">Promise</a></li>
         <li><a href="{% url 'main:register' %}">Register</a></li>
@@ -36,8 +36,9 @@
       </ul>
       {% endif %}
     </header>
+    {% block post_header %}{% endblock %}
     <div class="content cf">
-      {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
     </div>
     {% block modals %}{% endblock %}
     <script src="{% static 'js/jquery.js' %}"></script>
