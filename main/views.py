@@ -131,6 +131,13 @@ def pledge(request):
 
 def invite_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    if request.GET.get("from_widget", False):
+        user.registered = True
+        user.used_registration_widget = True
+        user.save()
+        messages.add_message(
+            request, messages.INFO,
+            "Thank you for registering to vote!")
     f_mgr = user.friendship_set
     context = {
         "num_registered": f_mgr.filter(registered=True).count(),

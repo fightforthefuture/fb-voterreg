@@ -9,19 +9,19 @@
 </script>
 <div class="main-content cf">
   <div class="main-content-message">
-    <h2>Are you registered?</h2>
-    <a href="javascript:void(0)">Yes, I'm already registered.</a>
+    <h2>Register to vote right now!</h2>
+    <p>We've already filled out half the form for you. It couldn't be easier!</p>
   </div>
   <div class="main-content-message">
     <script src="//widget.internetvotes.org/widget/include.js" type="text/javascript" async="async" defer="defer"></script>
     <div id="voterreg_placeholder"></div>
   </div>
-  <div class="main-content-buttons">
-    
+  <div class="main-content-message">
+    <a href="{% url 'main:invite_friends' %}">Skip registration and start registering friends &gt;</a>
   </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-
+<script type="text/javascript" src="{% static 'js/register_widget.js' %}"></script>
 {% endblock %}
