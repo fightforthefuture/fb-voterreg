@@ -1,33 +1,23 @@
 $(function() {
-    console.log("running");
-    $("#i-wont-vote").click(
+    $("#not-eligible").click(
         function() {
-            $("#wont-vote-modal").modal("show")
+            if (confirm("Are you sure you're not eligible?")) {
+                $.getJSON(WONT_VOTE_URL,
+                          function(result) {
+                              window.location.assign(result["next"]);
+                          });
+            }
             return false;
         });
 
-    $("#records-are-wrong").click(
+    $("#already-registered").click(
         function() {
-            $("#whoops-modal").modal("show")
+            if (confirm("Are you sure you're already registered?")) {
+                $.getJSON(ACTUALLY_REGISTERED_URL,
+                          function(result) {
+                              window.location.assign(result["next"]);
+                          });
+            }
             return false;
         });
-
-    $(document).on(
-        "click", "#whoops-modal .btn-green",
-        function() {
-            $.getJSON(
-                ACTUALLY_REGISTERED_URL,
-                function(response) {
-                    window.location.assign(response["next"]);
-                });
-            return false;
-        });
-
-    $(document).on(
-        "click", "#whoops-modal .btn-cancel",
-        function() {
-            $("#whoops-modal").modal("hide");
-            return false;
-        });
-
 });

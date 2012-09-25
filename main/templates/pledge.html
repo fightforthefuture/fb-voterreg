@@ -5,11 +5,14 @@
 
 {% block topcontent %}
 <div class="main-content-message">
-  <i class="icon-happy"></i><span class="happy">You're registered to vote this year! Congratulations!</span>
-  <i class="icon-sad"></i><span class="sad">You haven't pledged to vote!</span>
+  <h2>Will you pledge to vote in this election?</h2>
 </div>
 <div class="main-content-buttons">
-  <a id="pledge-to-vote" href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Pledge to Vote This Year</a>
+  <a id="pledge" href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Yes, I pledge to vote</a>
+  <a href="{% url 'main:invite_friends' %}" class="btn btn-large"><i class="icon-cancel"></i> No, not ready to pledge yet</a>
+</div>
+<div class="main-content-message">
+  <p><strong>Why does pledging matter?</strong> Because your friends will see that you've pledged. So just by pledging, you're encouraging your friends to vote.</p>
 </div>
 {% endblock %}
 

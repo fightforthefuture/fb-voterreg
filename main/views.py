@@ -1,4 +1,5 @@
 import facebook
+from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render_to_response, redirect
 from django.template.loader import render_to_string
@@ -92,8 +93,9 @@ def fetch_me(request):
         else reverse("main:register")
     return HttpResponse(redirect_url, content_type="text/plain")
 
-def _friend_listing_page(request, template, additional_context={}):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
+def _friend_listing_page(request, template, additional_context={}, user=None):
+    if not user:
+        user = User.objects.get(fb_uid=request.facebook["uid"])
     context = { "user": user }
     context.update(additional_context)
     if user.friendship_set.filter(registered=True).count() >= 4:
@@ -106,9 +108,15 @@ def _friend_listing_page(request, template, additional_context={}):
         context_instance=RequestContext(request))
 
 def register(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    context = { "name": user.name }
+    if user.location_city:
+        context["location"] = "{0}, {1}".format(
+            user.location_city, user.location_state)
+    if user.birthday:
+        context["birthday"] = user.birthday.strftime("%b %d, %Y")
     return _friend_listing_page(
-        request, "register.html", 
-        { "wont_vote_form": WontVoteForm() })
+        request, "register.html", additional_context=context, user=user)
 
 def pledge(request):
     return _friend_listing_page(request, "pledge.html")
@@ -132,7 +140,10 @@ def submit_pledge(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     user.date_pledged = datetime.now()
     user.save()
-    return { "response": "ok" }
+    messages.add_message(
+        request, messages.INFO,
+        "Thank you for pledging to vote!")
+    return { "next": reverse("main:invite_friends") }
 
 @render_json
 def fetch_friends(request):
@@ -156,17 +167,15 @@ def friend_invite_list(request):
     fb_uids = [f["id"] for f in fb_friends if f["id"] not in dont_invite_list]
     return HttpResponse(",".join(fb_uids), content_type="text/plain")
 
-def wont_vote(request):
-    form = WontVoteForm(request.POST)
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    if form.is_valid():
-        user.wont_vote_reason = form.cleaned_data["wont_vote_reason"]
-        user.save()
-        return redirect("main:invite_friends")
-
 @render_json
-def fetch_updated_batches(request):
-    pass
+def wont_vote(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    user.wont_vote_reason = "rather_not_say"
+    user.save()
+    messages.add_message(
+        request, messages.INFO, 
+        "Thank you! Even though you can't vote, you can still invite your friends.")
+    return { "next": reverse("main:invite_friends") }
 
 @render_json
 def im_actually_registered(request):
@@ -174,7 +183,15 @@ def im_actually_registered(request):
     user.registered = True
     user.save()
     correct_voter(user.fb_uid)
+    messages.add_message(
+        request, messages.INFO,
+        "You're now marked as registered to vote.")
     return { "next": reverse("main:pledge") }
+
+
+@render_json
+def fetch_updated_batches(request):
+    pass
 
 def register_widget(request):
     return render_to_response(

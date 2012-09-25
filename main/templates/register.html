@@ -11,14 +11,14 @@
 <div class="main-content-message">
     <h2>We can't find any registration matching your Facebook information.</h2>
     <h3>Do you want to register to vote now?</h3>
-    <p>(We searched for: Holmes Wilson / Worcester, MY / Born: NOV. 25, 1979)</p>
+    <p>(We searched for: {{ name }}{% if location %} / {{location}}{% endif %}{% if birthday %} / {{birthday}}{% endif %})</p>
 </div>
 <div class="main-content-buttons">
   <a href="{% url 'main:register_widget' %}" class="btn btn-large btn-green"><i class="icon-ok"></i> Register Now</a>
-  <a id="i-wont-vote" href="javascript:void(0)" class="btn btn-large"><i class="icon-cancel"></i> No, I'm sure I'm already registered</a>
+  <a id="already-registered" href="javascript:void(0)" class="btn btn-large"><i class="icon-cancel"></i> No, I'm sure I'm already registered</a>
 </div>
 <div class="main-content-right">
-    <a href="/">No, I am not eligible to vote</a>
+  <a id="not-eligible" href="javascript:void(0)">No, I am not eligible to vote</a>
 </div>
 <div class="main-content-extra">
   Note: Even if you think you might be registered, it's always best to re-register with your most recent information.
@@ -26,15 +26,11 @@
 </div>
 {% endblock %}
 
-{% block modals %}
-{% include "_wont_vote_modal.html" with modal_id="wont-vote-modal" %}
-{% include "_whoops_registered_modal.html" with modal_id="whoops-modal" %}
-{% endblock %}
-
 {% block scripts %}
 {{ block.super }}
 <script>
   var ACTUALLY_REGISTERED_URL = "{% url 'main:actually_registered' %}";
+  var WONT_VOTE_URL = "{% url 'main:wont_vote' %}";
 </script>
 <script type="text/javascript" src="{% static 'js/register.js' %}"></script>
 {% endblock %}
