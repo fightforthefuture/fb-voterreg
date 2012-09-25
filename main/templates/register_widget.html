@@ -3,6 +3,10 @@
 {% load static from staticfiles %}
 {% load url from future %}
 
+{% block css %}
+<link rel="stylesheet" href="https://voterreg-prod.s3.amazonaws.com/widget/include.css">
+{% endblock %}
+
 {% block content %}
 <script type="text/javascript">
   _voterreg_qs = "_fb_prefill&{{ widget_qs|safe }}";
