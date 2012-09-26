@@ -16,6 +16,6 @@
       <p>{{ batch.short_description }} haven't pledged to vote yet. Help get them pledged!</p>
     {% endif %}
     </p>
-    <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Register them</a>
+    <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> {% if batch.type == 5 %}Invite them{% else %}Register them{% endif %}</a>
   </div>
 </div>
