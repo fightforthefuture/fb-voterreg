@@ -1,4 +1,6 @@
 $(function() {
+    var UPDATE_INTERVAL = 5000;
+
     function showFriendRequestDialog(friendList, batchID) {
         FB.ui(
             {
@@ -33,15 +35,19 @@ $(function() {
     });
 
     function batchesLoaded(response) {
+        var numProcessed = response["num_processed"];
+        var numFriends = response["num_friends"];
         $(".num-registered").text(response["num_registered"]);
         $(".num-pledged").text(response["num_pledged"]);
-        $(".num-friends").text(response["num_friends"]);
+        $(".num-friends").text(numFriends);
+        var percentDone = Math.min(100, Math.max(0, Math.floor(100.0 * numProcessed / numFriends)));
+        $(".progress-bar span").css("width", percentDone + "%");
         var newBoxes = response["boxes"];
         for (var i = 0; i < newBoxes.length; i++) {
             $(".boxes .loadingbox").before(newBoxes[i]);
         }
         if (!response["finished"]) {
-            setTimeout(loadBatches, 2000);
+            setTimeout(loadBatches, UPDATE_INTERVAL);
         }
         else {
             $(".boxes .loadingBox").remove();
@@ -60,6 +66,6 @@ $(function() {
     }
 
     if (stillLoading) {
-        setTimeout(loadBatches, 5000);
+        setTimeout(loadBatches, UPDATE_INTERVAL);
     }
 });

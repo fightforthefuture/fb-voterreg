@@ -4,6 +4,7 @@
 {% load url from future %}
 
 {% block css %}
+<link rel="stylesheet" href="{% static 'css/progressbar.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,10 +17,12 @@
   {% include "_batch.html" with batch=batch %}
 {% endfor %}
 {% if still_loading %}
-  <div class="loadingbox">
-    <div class="spinner"></div>
-    <span>Searching your friends' voting records</span>
+<div class="loadingbox">
+  <div class="progress-bar orange stripes">
+    <span style="width: 0%"></span>
   </div>
+  <p>Searching your friends' voting records</p>
+</div>
 {% endif %}
 </div>
 {% endblock %}

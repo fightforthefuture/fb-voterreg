@@ -675,30 +675,6 @@ div.content {
     background: transparent url(../img/friends-back.png) 50% 0 no-repeat;
 }
 
-.boxes .loadingbox {
-   width: 400px;
-   padding: 30px;
-   margin: 50px auto;
-   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,white), color-stop(100%,#E6E8EC));
-   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e6e8ec',GradientType=0 );
-   -webkit-border-radius: 5px;
-   border-radius: 5px;
-   -webkit-box-shadow: 0px 7px 12px 0px #999;
-   box-shadow: 0px 7px 12px 0px #999;
-   text-align: center;
-}
-
-.boxes .loadingbox .spinner {
-   width: 40px;
-   height: 40px;
-   margin: 0px auto 10px;
-   background: #ffffff url(../img/loading.gif) 50% 0px no-repeat;
-}
-
-.boxes .loadingbox span {
-
-}
-
 .boxes .box {
     width: 600px;
     margin: 30px auto 0;

@@ -225,6 +225,7 @@ def fetch_updated_batches(request):
         "num_registered": f_mgr.filter(registered=True).count(),
         "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
         "num_friends": user.num_friends,
+        "num_processed": f_mgr.all().count(),
         "boxes": htmls,
         "finished": user.friends_fetched }
 
