@@ -114,15 +114,15 @@ class FriendshipBatch(models.Model):
     def short_description(self):
         f = self.friendship_set.all()[:3]
         if self.count == 1:
-            return "{0} is".format(f[0].name)
+            return u"{0} is".format(f[0].name)
         elif self.count == 2:
-            return "{0} and {1} are".format(
+            return u"{0} and {1} are".format(
                 f[0].name, f[1].name)
         elif self.count == 3:
-            return "{0}, {1}, and {2} are".format(
+            return u"{0}, {1}, and {2} are".format(
                 f[0].name, f[1].name, f[2].name)
         else:
-            return "{0}, {1}, and {2} others are".format(
+            return u"{0}, {1}, and {2} others are".format(
                 f[0].name, f[1].name, self.count - 2)
 
 class Friendship(models.Model):
