@@ -58,11 +58,9 @@ class User(models.Model):
         if self.friends_fetched:
             return False
         if not self.friends_fetch_last_activity:
-            return True # process hasn't started yet
-        now = timezone.now()
-        now.astimezone(timezone.utc).replace(tzinfo=None)
+            return True # process hasn't started yet        
         time_since_last_fetch = \
-            self.friends_fetch_last_activity - now
+            datetime.now() - self.friends_fetch_last_activity
         if time_since_last_fetch.days > 0:
             return True
         if time_since_last_fetch.seconds > 30:

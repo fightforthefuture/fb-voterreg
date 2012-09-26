@@ -56,6 +56,7 @@ def _fetch_fb_friends(request):
     access_token = request.facebook["access_token"]
     user = User.objects.get(fb_uid=fb_uid)
     if user.friends_need_fetching():
+        print("Queueing task to fetch friends for {0}".format(user.id))
         user.update_friends_fetch()
         user.save()
         fetch_fb_friends.delay(fb_uid, access_token)
@@ -132,6 +133,8 @@ def pledge(request):
         user.registered = True
         user.used_registration_widget = True
         user.save()
+        update_friends_of.delay(
+            user.id, request.facebook["access_token"])
         messages.add_message(
             request, messages.INFO,
             "Thank you for registering to vote!")
@@ -157,6 +160,8 @@ def submit_pledge(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     user.date_pledged = datetime.now()
     user.save()
+    update_friends_of.delay(
+        user.id, request.facebook["access_token"])
     messages.add_message(
         request, messages.INFO,
         "Thank you for pledging to vote!")
