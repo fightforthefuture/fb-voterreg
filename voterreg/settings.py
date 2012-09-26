@@ -84,6 +84,7 @@ INSTALLED_APPS = (
     'south',
     'main',
     'voterapi',
+    'staticpages',
 )
 
 LOGGING = {
@@ -145,8 +146,6 @@ if environ.get("RACK_ENV", None) == "production":
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/220561354738022/"
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https',)
-else:
-    INSTALLED_APPS += ("staticpages",)
 
 try:
     from settings_local import *
