@@ -4,7 +4,6 @@ $(function() {
             FETCH_FRIENDS_URL,
             function(response) {
                 if (response["fetched"]) {
-                    $("#loading-friends").hide();
                     $("#main-friends").html(response["html"]);
                 }
                 else {

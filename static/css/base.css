@@ -45,6 +45,7 @@ body {
     font-size: 15px;
     background: transparent url(../img/body-back.png) 0 116px no-repeat;
     min-height: 900px;
+   padding-bottom: 300px;
 }
 
 a {

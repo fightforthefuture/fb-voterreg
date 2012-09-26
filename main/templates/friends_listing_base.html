@@ -7,11 +7,6 @@
 <div class="main-content cf">
   {% block topcontent %}{% endblock %}
 </div>
-<div id="loading-friends" {% if not friends%}style="display: block"{% endif %}>
-  <div class="main-friends cf">
-    <div id="loading-friends-spinner"></div>
-  </div>
-</div>
 <div id="main-friends">
 {% if friends %}
   {% include "_friends.html" %}
