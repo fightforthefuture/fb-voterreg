@@ -48,13 +48,14 @@ def fetch_voter_from_fb_profile(fb_profile):
     if not voter:
         params = _params_from_fb_profile(fb_profile, True)
         voter = fetch_voter(**params)
-    if voter:
-        try:
-            VoterRecord(fb_uid=fb_uid,
-                        votizen_id=voter.id,
-                        registered=voter.registered).save()
-        except IntegrityError:
-            pass
+    votizen_id = "" if not voter else voter.id
+    registered = False if not voter else voter.registered
+    try:
+        VoterRecord(fb_uid=fb_uid,
+                    votizen_id=votizen_id,
+                    registered=registered).save()
+    except IntegrityError:
+        pass
     return voter
 
 def fetch_voter(**kwargs):
@@ -84,3 +85,11 @@ def correct_voter(fb_uid):
         v = voter_records[0]
         v.registered = True
         v.save()
+    else:
+        try:
+            VoterRecord(
+                fb_uid=fb_uid,
+                votizen_id="",
+                registered=True).save()
+        except IntegrityError:
+            pass
