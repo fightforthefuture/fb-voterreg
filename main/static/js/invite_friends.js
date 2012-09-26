@@ -60,6 +60,6 @@ $(function() {
     }
 
     if (stillLoading) {
-        setTimeout(loadBatches, 2000);
+        setTimeout(loadBatches, 5000);
     }
 });

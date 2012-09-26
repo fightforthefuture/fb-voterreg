@@ -3,7 +3,7 @@ $(function() {
         if (event.origin != "widget.internetvotes.org") {
             return;
         }
-        window.location.assign("/invite_friends?from_widget=true")
+        window.location.assign("/pledge?from_widget=true")
     }
 
     if (window.addEventListener) {

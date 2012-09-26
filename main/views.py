@@ -127,9 +127,6 @@ def register(request):
         request, "register.html", additional_context=context, user=user)
 
 def pledge(request):
-    return _friend_listing_page(request, "pledge.html")
-
-def invite_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if request.GET.get("from_widget", False):
         user.registered = True
@@ -138,6 +135,10 @@ def invite_friends(request):
         messages.add_message(
             request, messages.INFO,
             "Thank you for registering to vote!")
+    return _friend_listing_page(request, "pledge.html")
+
+def invite_friends(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
     f_mgr = user.friendship_set
     context = {
         "num_registered": f_mgr.filter(registered=True).count(),
