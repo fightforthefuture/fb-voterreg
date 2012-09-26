@@ -149,7 +149,8 @@ def invite_friends(request):
         "num_friends": user.num_friends,
         "uninvited_batches": user.friendshipbatch_set.filter(
             completely_fetched=True, invite_date__isnull=True),
-        "still_loading": not user.friends_fetched }
+        "still_loading": not user.friends_fetched,
+        "my_city": user.location_city }
     return render_to_response(
         "invite_friends.html",
         context,

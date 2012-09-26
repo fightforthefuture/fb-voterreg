@@ -32,6 +32,7 @@
   var stillLoading = {% if still_loading %}true{% else %}false{% endif %};
   var FETCH_UPDATED_BATCHES_URL = "{% url 'main:fetch_updated_batches' %}";
   var MARK_BATCH_INVITED_URL = "{% url 'main:mark_batch_invited' %}";
+  var MY_CITY = {% if my_city %}"{{ my_city }}"{% else %}"my city"{% endif %};
 </script>
 <script src="{% static 'js/invite_friends.js' %}"></script>
 {% endblock %}
