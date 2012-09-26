@@ -4,7 +4,7 @@ $(function() {
     var InviteMessages = {
         1: "I'm sending this to all my friends who have turned 18 since the last presidential election. It's really important that you guys register and promise to vote.",
         2: "I'm sending this to all my friends who have moved out of state. It's really important that you guys register and promise to vote.",
-        4: "I just searched state voting records and it looks like you're not registered yet. Use this app to register, it only takes two minutes.",
+        4: "I just searched state voting records and it looks like you're not registered yet. Use this app to register -- it only takes two minutes.",
         5: "Are you voting in this election? Use this app to check your registration status and promise to vote."
     };
 
