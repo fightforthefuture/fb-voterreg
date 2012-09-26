@@ -11,15 +11,19 @@ WONT_VOTE_REASONS = (
     ("rather_not_say", "I'd rather not say")
 )
 
+BATCH_SIZE = 32
+
 BATCH_BARELY_LEGAL = 1
 BATCH_FAR_FROM_HOME = 2
 BATCH_NEARBY = 3
 BATCH_REGULAR = 4
+BATCH_RANDOM = 5
 BATCH_TYPES = (
     (BATCH_BARELY_LEGAL, "Barely legal"),
     (BATCH_FAR_FROM_HOME, "Far from home"),
     (BATCH_NEARBY, "Nearby"),
-    (BATCH_REGULAR, "Not registered"))
+    (BATCH_REGULAR, "Not registered"),
+    (BATCH_RANDOM, "Not pledged"))
 
 BATCH_MAP = dict(BATCH_TYPES)
 
@@ -92,7 +96,7 @@ class FriendshipBatch(models.Model):
 
     @property
     def friendships(self):
-        return self.friendship_set.all()[:32]
+        return self.friendship_set.all()[:BATCH_SIZE]
 
     @property
     def title(self):
@@ -129,6 +133,7 @@ class Friendship(models.Model):
     user_fb_uid = models.CharField(max_length=32, db_index=True)
     fb_uid = models.CharField(max_length=32, db_index=True)
     name = models.CharField(max_length=128)
+    is_random = models.BooleanField(default=False)
     # registered * 1 + pledged * 1
     display_ordering = models.IntegerField(default=0, db_index=True)
     birthday = models.DateTimeField(null=True)
@@ -187,7 +192,9 @@ def _fill_in_display_ordering(sender, instance, **kwargs):
         today = date.today()
         user = instance.user
         batch_type = None
-        if instance.birthday and today.year - instance.birthday.year < 22:
+        if instance.is_random:
+            batch_type = BATCH_RANDOM
+        elif instance.birthday and today.year - instance.birthday.year < 22:
             batch_type = BATCH_BARELY_LEGAL
         elif instance.far_from_home:
             batch_type = BATCH_FAR_FROM_HOME
@@ -207,7 +214,7 @@ def _update_batch(sender, instance, **kwargs):
         return
     batch = instance.batch
     batch.count = Friendship.objects.filter(batch=batch).count()
-    if batch.count >= 32:
+    if batch.count >= BATCH_SIZE:
         batch.completely_fetched = True
         batch.regular_batch_no = FriendshipBatch.objects.filter(
             user=batch.user, type=batch.type).count()

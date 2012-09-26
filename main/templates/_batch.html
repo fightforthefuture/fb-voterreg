@@ -1,4 +1,4 @@
-<div class="box cf friend-box" data-batch-id="{{batch.id}}">
+<div class="box cf friend-box" data-batch-id="{{batch.id}}" data-batch-type="{{batch.type}}">
   <div class="friends">
     {% for f in batch.friendships %}<img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}
   </div>
@@ -10,8 +10,10 @@
       <p>These friends are living far from their hometown. They might not be registered yet in their new home!</p>
     {% elif batch.type == 3 %}
       <p>If you get a ton of {{ batch.city }} friends registered, who knows? Maybe you could elect one of them mayor!</p>
-    {% else %}
+    {% elif batch.type == 4 %}
       <p>{{ batch.short_description }} are not registered to vote! Help them out!</p>
+    {% elif batch.type == 5 %}
+      <p>{{ batch.short_description }} haven't pledged to vote yet. Help get them pledged!</p>
     {% endif %}
     </p>
     <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Register them</a>

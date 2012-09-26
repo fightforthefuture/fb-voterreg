@@ -1,6 +1,6 @@
 import facebook
 from voterapi import fetch_voter_from_fb_profile
-from main.models import User, Friendship
+from main.models import User, Friendship, BATCH_SIZE, BATCH_RANDOM
 from django.db import IntegrityError
 from fb_utils import FacebookProfile
 
@@ -18,7 +18,28 @@ def _create_from_existing_users(user, fb_friends):
                 pass
     return found_uids
 
-def _create(user_id, access_token, fb_friends, found_uids):
+def _make_random_batches(user, fb_friends, found_uids):
+    newly_found_uids = set()
+    END_COUNT = BATCH_SIZE * 3
+    count = 0
+    for fb_friend in fb_friends:
+        uid = fb_friend["id"]
+        if uid in found_uids:
+            continue
+        newly_found_uids.add(uid)
+        f = Friendship.create(user, uid, fb_friend["name"])
+        f.is_random = True
+        try:
+            f.save()
+            count += 1
+        except IntegrityError:
+            pass
+        if count >= END_COUNT:
+            break
+    user.friendshipbatch_set.filter(type=BATCH_RANDOM).update(completely_fetched=True)
+    return newly_found_uids
+
+def _make_main_batches(user_id, access_token, fb_friends, found_uids):
     graph = facebook.GraphAPI(access_token)
     for fb_friend in fb_friends:
         user = User.objects.get(id=user_id)
@@ -50,10 +71,16 @@ def _create(user_id, access_token, fb_friends, found_uids):
 def _make_friendships(user_id, access_token, fb_friends):
     user = User.objects.get(id=user_id)
     found_uids = _create_from_existing_users(user, fb_friends)
+    _update_friends_fetch(user_id)
+    found_uids = found_uids.union(
+        _make_random_batches(user, fb_friends, found_uids))
+    _update_friends_fetch(user_id)
+    _make_main_batches(user_id, access_token, fb_friends, found_uids)
+
+def _update_friends_fetch(user_id):
     user = User.objects.get(id=user_id)
     user.update_friends_fetch()
     user.save()
-    _create(user_id, access_token, fb_friends, found_uids)
 
 def get_friends(access_token, limit=5000, offset=0):
     graph = facebook.GraphAPI(access_token)
@@ -67,10 +94,13 @@ def fetch_friends(fb_uid, access_token):
     user.update_friends_fetch()
     user.num_friends = len(friends)
     user.save()
+
     _make_friendships(user.id, access_token, friends)
+
     user = User.objects.get(fb_uid=fb_uid)
     user.friends_fetched = True
     user.save()
+
     user.friendshipbatch_set.all().update(completely_fetched=True)
 
 def update_friends_of(user_id, access_token):
