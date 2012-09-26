@@ -1,11 +1,19 @@
 $(function() {
     var UPDATE_INTERVAL = 5000;
 
-    function showFriendRequestDialog(friendList, batchID) {
+    var InviteMessages = {
+        1: "I'm sending this to all my friends who have turned 18 since the last presidential election. It's really important that you guys register and promise to vote.",
+        2: "I'm sending this to all my friends who have moved out of state. It's really important that you guys register and promise to vote.",
+        3: "I'm sending this to all my friends in Cambridge who aren't registered to vote yet. It's really important that you guys register and promise to vote.",
+        4: "I just searched state voting records and it looks like you're not registered yet. Use this app to register, it only takes two minutes.",
+        5: "Are you voting in this election? Use this app to check your registration status and promise to vote."
+    };
+
+    function showFriendRequestDialog(friendList, batchID, batchType) {
         FB.ui(
             {
                 "method": "apprequests",
-                "message": "Please join me to register and pledge to vote in the upcoming election!",
+                "message": InviteMessages[batchType],
                 "to": friendList
             },
             function(response) {
@@ -30,7 +38,10 @@ $(function() {
         friendBox.find(".friends img").each(function() {
             fbuids.push($(this).data("uid"));
         });
-        showFriendRequestDialog(fbuids.join(","), parseInt(friendBox.data("batch-id")));
+        showFriendRequestDialog(
+            fbuids.join(","), 
+            parseInt(friendBox.data("batch-id")),
+            parseInt(friendBox.data("batch-type")));
         return false;
     });
 
