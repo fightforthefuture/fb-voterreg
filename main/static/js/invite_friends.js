@@ -21,7 +21,7 @@ $(function() {
         FB.ui(
             {
                 "method": "apprequests",
-                "message": InviteMessages[batchType],
+                "message": message,
                 "to": friendList
             },
             function(response) {
