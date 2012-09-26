@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script type="text/javascript">
+  _voterreg_qs = "_fb_prefill&city=Cambridge&first_name=Adam&last_name=Duston&dob_month=8&dob_day=8&state=MA&dob_year=1976&email=adam%408planes.com";
+</script>
+<div class="main-content cf">
+  <div class="main-content-message">
+    <h2>Register to vote right now!</h2>
+    <p>We've already filled out half the form for you. It couldn't be easier!</p>
+  </div>
+  <div class="main-content-message">
+    <script src="//widget.internetvotes.org/widget/include.js" type="text/javascript" async="async" defer="defer"></script>
+    <div id="voterreg_placeholder"></div>
+  </div>
+</div>
+{% endblock %}
