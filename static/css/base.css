@@ -78,13 +78,12 @@ header:after {
     box-shadow:  0px 1px 2px 0px rgba(0, 0, 0, 0.5);
 }
 
-header a.logo {
+header .logo {
     height: 184px;
-    display: block;
     background: transparent url(../img/header-logo-back.png) 50% 50% no-repeat;
 }
 
-header a.logo span {
+header .logo span {
     height: 184px;
     display: block;
     text-indent: -9000px;
@@ -279,6 +278,13 @@ div.content {
     width: 32px;
     line-height: 24px;
     background-position: -64px 0;
+}
+
+.icon-invite {
+   height: 24px;
+   width: 24px;
+   line-height: 24px;
+   background-position: -95px 0;
 }
 
 .icon-notification {
@@ -723,4 +729,30 @@ div.content {
     color: #3d3d3d;
     margin: 10px 0;
     font-size: 13px;
+}
+
+.invite-friends {
+   text-align: center;
+   display: block;
+   padding: 10px;
+   position: fixed;
+   top: 0px;
+   right: 60px;
+   background-color: #AB185E;
+   color: #fdfdfd;
+   -webkit-border-bottom-right-radius: 2px;
+   -webkit-border-bottom-left-radius: 2px;
+   -moz-border-radius-bottomright: 2px;
+   -moz-border-radius-bottomleft: 2px;
+   border-bottom-right-radius: 2px;
+   border-bottom-left-radius: 2px;
+   -webkit-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+   -moz-box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.25);
+   text-decoration: none;
+}
+
+.invite-friends span {
+   display: block;
+   margin: 4px 0 0;
 }
