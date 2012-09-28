@@ -1,3 +1,12 @@
 .wont_vote li {
    list-style-type: none;
 }
+
+span.note {
+   color: #666;
+   font-size: 12px;
+}
+
+#already-registered {
+   line-height: 24px;
+}

@@ -9,19 +9,20 @@
 
 {% block topcontent %}
 <div class="main-content-message">
-    <h2>We can't find any registration matching your Facebook information. Do you want to register to vote now?</h2>
+    <h2>Are you registered to vote?  We can't find a registration for you based on your Facebook info.</h2>
     <p>(We searched for: {{ name }}{% if location %} / {{location}}{% endif %}{% if birthday %} / {{birthday}}{% endif %})</p>
 </div>
 <div class="main-content-buttons">
-  <a href="{% url 'main:register_widget' %}" class="btn btn-large btn-green"><i class="icon-ok"></i> Register Now</a>
-  <a id="already-registered" href="javascript:void(0)" class="btn btn-large"><i class="icon-cancel"></i> No, I'm sure I'm already registered</a>
+  <a id="already-registered" href="javascript:void(0)" class="btn btn-large btn-blue">I'm Registered</a>
+  <a href="http://www.theinternetvotes.org" target="internetvotes" class="btn btn-large btn-green"><i class="icon-ok"></i> Register Now</a>
+  <br/>
+  <span class="note">(Opens in a new window)</span>
 </div>
-<div class="main-content-right">
-  <a id="not-eligible" href="javascript:void(0)">No, I am not eligible to vote</a>
+<div class="main-content-message">
+  <a id="not-eligible" href="javascript:void(0)">I'm not eligible</a>
 </div>
 <div class="main-content-extra">
-  Note: Even if you think you might be registered, it's always best to re-register with your most recent information.
-  You can enter your correct info in the next step.
+  <span>Not sure if you are registered?   If you're unsure, It’s always best to re-register to update your address and info.  Note: we match user information with voter records.  This information may not be up-to-date, and we may not have enough data to make a match.</span>
 </div>
 {% endblock %}
 
