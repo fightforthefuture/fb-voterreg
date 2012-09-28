@@ -67,7 +67,10 @@ def index(request):
         response = _post_index(request)
         if response:
             return response
-    user = User.objects.get(fb_uid=request.facebook["uid"])
+    try:
+        user = User.objects.get(fb_uid=request.facebook["uid"])
+    except TypeError:
+        return redirect('https://apps.facebook.com/258722907563918/')
     if user.data_fetched:
         return _index_redirect(user)
     return render_to_response(
