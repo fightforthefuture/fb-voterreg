@@ -170,6 +170,14 @@ class Friendship(models.Model):
         f.update_from(friend)
         return f
 
+    @classmethod
+    def create_from_fb_profile(cls, user, fb_profile):
+        f = Friendship.create(user, fb_profile.uid, fb_profile.name)
+        f.birthday = fb_profile.dob
+        f.location_name = fb_profile.location or ""
+        f.far_from_home = fb_profile.far_from_home()
+        return f
+
     def update_from(self, user):
         self.birthday = user.birthday
         self.location_name = user.location_name

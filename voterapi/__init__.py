@@ -5,6 +5,7 @@ import facebook
 from fb_utils import FacebookProfile
 from django.db import IntegrityError
 from random import choice
+import time
 import string
 
 MAX_API_HITS = 100000
@@ -21,8 +22,7 @@ class Voter(object):
 def _requests_exhausted():
     return False
 
-def _params_from_fb_profile(fb_profile, include_address):
-    profile = FacebookProfile(fb_profile)
+def _params_from_fb_profile(profile, include_address):
     params = {
         "first_name": profile.first_name,
         "last_name": profile.last_name }
@@ -37,7 +37,7 @@ def _params_from_fb_profile(fb_profile, include_address):
     return params
 
 def fetch_voter_from_fb_profile(fb_profile):
-    fb_uid = fb_profile["id"]
+    fb_uid = fb_profile.uid
     existing_records = VoterRecord.objects.filter(fb_uid=fb_uid)[:1]
     if len(existing_records) > 0:
         existing_record = existing_records[0]
@@ -60,6 +60,7 @@ def fetch_voter_from_fb_profile(fb_profile):
 
 def fetch_voter(**kwargs):
     if settings.USE_FAKE_VOTIZEN_API:
+        time.sleep(0.3)
         if choice([True, True, False]):
             return Voter("".join([choice(string.letters) for i in range(10)]),
                          choice([True, False]))

@@ -71,8 +71,24 @@ def _location_parts(location):
 
 class FacebookProfile(object):
     def __init__(self, profile):
-        self.first_name = profile["first_name"]
-        self.last_name = profile["last_name"]
+        if "id" in profile:
+            self._init_from_profile(profile)
+        else:
+            self._init_from_fql(profile)
+
+    def _init_from_fql(self, record):
+        self.uid = record["uid"]
+        location = record.get("current_location", None) or {}
+        self.location = location.get("name", None)
+        self.location_city = location.get("city", None)
+        self.location_state = location.get("state", None)
+        location = record.get("hometown_location", None) or {}
+        self.hometown_city = location.get("city", None)
+        self.hometown_state = location.get("state", None)
+        self._init(record)
+
+    def _init_from_profile(self, profile):
+        self.uid = profile["id"]
         location = profile.get("location", None)
         if location and location.get("name", False):
             self.location = location.get("name")
@@ -82,11 +98,17 @@ class FacebookProfile(object):
             _location_parts(location)
         self.hometown_city, self.hometown_state = \
             _location_parts(profile.get("hometown", None))
+        self._init(profile)
+
+    def _init(self, profile):
+        self.name = profile["name"]
+        self.first_name = profile["first_name"]
+        self.last_name = profile["last_name"]
         self.dob_month = None
         self.dob_day = None
         self.dob_year = None
         self.dob = None
-        birthday = profile.get("birthday", None)        
+        birthday = profile.get("birthday", profile.get("birthday_date", None))
         if birthday:
             parts = birthday.split("/")
             self.dob_month = int(parts[0])

@@ -80,7 +80,7 @@ def fetch_me(request):
         graph = facebook.GraphAPI(request.facebook["access_token"])
         fb_profile = graph.get_object("me")
         profile = FacebookProfile(fb_profile)
-        voter = fetch_voter_from_fb_profile(fb_profile)
+        voter = fetch_voter_from_fb_profile(profile)
         user.name = fb_profile["name"]
         user.first_name = profile.first_name
         user.last_name = profile.last_name
