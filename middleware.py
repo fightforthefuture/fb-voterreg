@@ -36,6 +36,7 @@ class FacebookMiddleware(object):
         if fb_user:
             user, created = User.objects.get_or_create(fb_uid=fb_user["uid"])
             request.session["fb_user"] = fb_user
+            request.session.modified = True
         else:
             request.facebook = request.session.get("fb_user", None)
         return None

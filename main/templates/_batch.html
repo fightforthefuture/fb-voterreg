@@ -5,9 +5,9 @@
   <div class="text">
     <h2>{{ batch.title }}</h2>
     {% if batch.type == 1 %}
-      <p>These friends look like they were younger than 18 during the last election, so they've never voted before. Make sure they're registered!</p>
+      <p>I'm sending this to all my friends who were too young to vote in '08, but are old enough now.  Click here to register and pledge to vote!</p>
     {% elif batch.type == 2 %}
-      <p>These friends are living far from their hometown. They might not be registered yet in their new home!</p>
+      <p>I'm sending this to all my friends who moved out of state. Use this to make sure you're registered and pledged to vote this year!</p>
     {% elif batch.type == 3 %}
       <p>If you get a ton of {{ batch.city }} friends registered, who knows? Maybe you could elect one of them mayor!</p>
     {% elif batch.type == 4 %}
@@ -16,6 +16,6 @@
       <p>{{ batch.short_description }} haven't pledged to vote yet. Help get them pledged!</p>
     {% endif %}
     </p>
-    <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> {% if batch.type == 5 %}Invite them{% else %}Register them{% endif %}</a>
+    <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> {% if batch.type == 5 %}Invite them{% else %}Invite them{% endif %}</a>
   </div>
 </div>
