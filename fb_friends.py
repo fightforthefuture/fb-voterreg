@@ -88,13 +88,22 @@ def _update_friends_fetch(user_id):
     user.update_friends_fetch()
     user.save()
 
+def _definitely_foreign(fb_record):
+    hometown = fb_record.get("hometown_location", None)
+    location = fb_record.get("current_location", None)
+    if not hometown or not location:
+        return False
+    return hometown["country"] != "United States" and \
+        location["country"] != "United States"
+
 def get_friends(access_token, limit=5000, offset=0):
     graph = facebook.GraphAPI(access_token)
     q = ("SELECT uid, name, first_name, last_name, "
              "birthday_date, hometown_location, current_location "
          "FROM user "
          "WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = me())")
-    return graph.fql(q)
+    results = graph.fql(q)
+    return [result for result in results if not _definitely_foreign(result)]
 
 def fetch_friends(fb_uid, access_token):
     friends = get_friends(access_token)
