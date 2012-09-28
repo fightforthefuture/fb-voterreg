@@ -121,7 +121,7 @@ def _friend_listing_page(request, template, additional_context={}, user=None):
 
 def register(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    context = { "name": user.name }
+    context = { "name": user.name, "page": "register" }
     if user.location_city:
         context["location"] = "{0}, {1}".format(
             user.location_city, user.location_state)
@@ -141,12 +141,15 @@ def pledge(request):
         messages.add_message(
             request, messages.INFO,
             "Thank you for registering to vote!")
-    return _friend_listing_page(request, "pledge.html")
+    return _friend_listing_page(
+        request, "pledge.html", 
+        additional_context={ "page": "pledge" })
 
 def invite_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_mgr = user.friendship_set
     context = {
+        "page": "friends",
         "num_registered": f_mgr.filter(registered=True).count(),
         "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
         "num_friends": user.num_friends,
@@ -257,5 +260,6 @@ def register_widget(request):
         widget_qs["dob_year"] = user.birthday.year
     return render_to_response(
         "register_widget.html",
-        { "widget_qs": urllib.urlencode(widget_qs) },
+        { "widget_qs": urllib.urlencode(widget_qs),
+          "page": "register" },
         context_instance=RequestContext(request))
