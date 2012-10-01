@@ -22,8 +22,8 @@ BATCH_TYPES = (
     (BATCH_BARELY_LEGAL, "Barely legal"),
     (BATCH_FAR_FROM_HOME, "Far from home"),
     (BATCH_NEARBY, "Nearby"),
-    (BATCH_REGULAR, "Not pledged"),
-    (BATCH_RANDOM, "Not pledged"))
+    (BATCH_REGULAR, "Not pledged yet"),
+    (BATCH_RANDOM, "Not pledged yet"))
 
 BATCH_MAP = dict(BATCH_TYPES)
 
