@@ -1,9 +1,12 @@
 $(function() {
-    function requestCallback() {
-        
+    function requestCallback(response) {
+        if (response) {
+            _gaq.push(["_trackPageview", "/friends_invited"]);
+        }
     }
 
     $(".invite-friends").click(function() {
+        _gaq.push(["_trackPageview", "/show_invite_friends"]);
         FB.ui(
             {
                 method: 'apprequests',
