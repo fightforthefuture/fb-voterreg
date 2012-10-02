@@ -6,7 +6,7 @@ class Command(BaseCommand):
         name = args[0]
         try:
             user = models.User.objects.get(name=name)
-        except models.User.ObjectDoesNotExist:
+        except models.User.DoesNotExist:
             print("No user named {0} found".format(name))
             return
         proceed = raw_input(
