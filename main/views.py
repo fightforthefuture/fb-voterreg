@@ -12,7 +12,7 @@ from fb_friends import get_friends
 from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
-from models import User, FriendshipBatch
+from models import User, FriendshipBatch, BATCH_REGULAR
 from forms import WontVoteForm
 from datetime import datetime
 from fb_utils import FacebookProfile
@@ -240,6 +240,18 @@ def mark_batch_invited(request):
     batch.invite_date = datetime.now()
     batch.save()
     return { "response": "ok" }
+
+def unregistered_friends_list(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    batches = user.friendshipbatch_set.filter(
+        completely_fetched=True, type=BATCH_REGULAR)
+    friendships = []
+    for batch in batches:
+        friendships.extend(list(batch.friendship_set.all()))
+    return render_to_response(
+        "unregistered_friends_list.html",
+        { "friendships": friendships },
+        context_instance=RequestContext(request))
 
 def register_widget(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])

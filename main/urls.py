@@ -14,4 +14,5 @@ urlpatterns = patterns(
     url(r"^invite_friends$", "invite_friends", name="invite_friends"),
     url(r"^fetch_updated_batches$", "fetch_updated_batches", name="fetch_updated_batches"),
     url(r"^mark_batch_invited$", "mark_batch_invited", name="mark_batch_invited"),
+    url(r"^unregistered_friends_list$", "unregistered_friends_list", name="unregistered_friends_list"),
 )
