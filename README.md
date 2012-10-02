@@ -21,5 +21,7 @@ Want to develop locally? Easy! Here are the steps:
 
         ./manage.py clearuser "Holmes Wilson"
 
-  Username must match one from Facebook.
+  Username must match one from Facebook. From Heroku, this is:
+
+        heroku run 'python manage.py clearuser "Holmes Wilson"'
 
