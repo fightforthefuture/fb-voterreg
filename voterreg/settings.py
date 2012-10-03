@@ -145,7 +145,7 @@ if environ.get("RACK_ENV", None) == "production":
 
     FACEBOOK_APP_ID = "220561354738022"
     FACEBOOK_APP_SECRET = environ.get("FACEBOOK_APP_SECRET", "")
-    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/220561354738022/"
+    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends/"
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https',)
 
