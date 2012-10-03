@@ -149,8 +149,11 @@ if environ.get("RACK_ENV", None) == "production":
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https',)
 
     BASE_URL = "https://voterreg-facebook.herokuapp.com"
+
+    KM_CODE = "8be66fb91e7ca782ba39688f6448862be1698c4e"
 else:
     BASE_URL = "http://local.voterreg.org:8000"
+    KM_CODE = "cccb2596f575fe692e22013c8329c5dbf98e4db7"
 
 try:
     from settings_local import *
