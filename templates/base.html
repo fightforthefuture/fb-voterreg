@@ -23,11 +23,18 @@
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-35232596-1']);
       _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
+      var _kmq = _kmq || [];
+      var _kmk = _kmk || '{{ KM_CODE }}';
+      setTimeout(function() {
+          function addScript(src) {
+            var sc = document.createElement('script'); sc.type = 'text/javascript'; sc.async = true; sc.src = src;
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sc, s);
+          }
+          addScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js');
+          addScript('//i.kissmetrics.com/i.js');
+          addScript('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+        }, 1);
+      {% if my_uid %}_kmq.push(['identify', '{{ my_uid }}']);{% endif %}
     </script>
   </head>
   <body>
@@ -59,6 +66,7 @@
     <script src="{% static 'js/bootstrap.modal.js' %}"></script>
     <script src="https://connect.facebook.net/en_US/all.js"></script>
     <script>
+      var VOTERREG_INVITE_URL = "{{ BASE_URL }}{% url 'main:voterreg_invite' %}";
       FB.init({
         appId  : '{{FACEBOOK_APP_ID}}',
         frictionlessRequests: true

@@ -9,9 +9,11 @@ $(function() {
         _gaq.push(["_trackPageview", "/show_invite_friends"]);
         FB.ui(
             {
-                method: 'apprequests',
-                message: 'The 2012 election is almost here-- join my voting network to see which of our friends are registered to vote!'
-            }, requestCallback);
+                method: 'send',
+                name: 'Vote. And help me get all our friends to vote.',
+                link: VOTERREG_INVITE_URL
+            },
+            requestCallback);
         return false;
     });
 });

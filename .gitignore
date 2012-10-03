@@ -6,3 +6,4 @@ settings_local.py
 db.sqlite
 celerybeat-schedule.db
 env
+.DS_Store

@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.views.generic import TemplateView
 
 urlpatterns = patterns(
     "main.views",
@@ -14,4 +15,12 @@ urlpatterns = patterns(
     url(r"^invite_friends$", "invite_friends", name="invite_friends"),
     url(r"^fetch_updated_batches$", "fetch_updated_batches", name="fetch_updated_batches"),
     url(r"^mark_batch_invited$", "mark_batch_invited", name="mark_batch_invited"),
+    url(r"^unregistered_friends_list$", "unregistered_friends_list", name="unregistered_friends_list"),
+)
+
+urlpatterns += patterns(
+    "",
+    url(r"^voterreg_invite$", 
+        TemplateView.as_view(template_name="voterreg_invite.html"), 
+        name="voterreg_invite"),
 )
