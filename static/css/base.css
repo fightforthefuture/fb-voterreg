@@ -80,24 +80,39 @@ header:after {
 
 header .logo {
     height: 184px;
-    background: transparent url(../img/header-logo-back.png) 50% 50% no-repeat;
+    background: url(../img/header-logo-back.png) 50% 50% no-repeat;
 }
 
-header .logo span {
-    height: 184px;
+header .logo h1 {
+    height: 144px;
     display: block;
     text-indent: -9000px;
-    background: rgba(0, 59, 104, 0.70) url(../img/header-logo.png) 50% 50% no-repeat;
+    background: rgba(0, 59, 104, 0.8) url(../img/logo.png) 50% 20% no-repeat;
+    margin: 0 auto;
+    padding: 20px 0;
 }
+    header .logo p{
+        width: 650px;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: -60px;
+        color: #fbda39;
+        font-size: 12px;
+        line-height: 1.59;
+    }
+    header .logo strong{
+        display: block;
+        font: bold 13px/1.54 'Montserrat', sans-serif;
+    }
 
 header ul {
     display: block;
-    width: 450px;
+    width: 600px;
     height: 40px;
     line-height: 40px;
     text-align: center;
     position: absolute;
-    margin: -5px 0 0 -225px;
+    margin: -5px 0 0 -300px;
     padding: 0;
     left: 50%;
     border-bottom: 1px solid #37559f;
@@ -138,6 +153,26 @@ header ul li a {
    text-shadow: 0px 1px 1px #000000;
    filter: dropshadow(color=#000000, offx=0, offy=1);
    text-decoration: none;
+}
+
+header ul li a.invite{
+    border-bottom: 1px solid #AC1960;
+    background: rgb(174,28,99);
+    background: -moz-linear-gradient(top, rgba(174,28,99,1) 0%, rgba(144,13,66,1) 6%, rgba(181,37,111,1) 50%, rgba(181,37,111,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(174,28,99,1)), color-stop(6%,rgba(144,13,66,1)), color-stop(50%,rgba(181,37,111,1)), color-stop(100%,rgba(181,37,111,1)));
+    background: -webkit-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+    background: -o-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+    background: -ms-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+    background: linear-gradient(to bottom, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+}
+header ul li a.invite:hover{
+    background: rgb(174,28,99);
+    background: -moz-linear-gradient(top, rgba(174,28,99,1) 0%, rgba(172,25,96,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(174,28,99,1)), color-stop(100%,rgba(172,25,96,1)));
+    background: -webkit-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
+    background: -o-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
+    background: -ms-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
+    background: linear-gradient(to bottom, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
 }
 
 header ul a:hover, header ul a.selected {
@@ -736,6 +771,7 @@ div.content {
    display: block;
    padding: 10px;
    position: fixed;
+   font-family: 'Montserrat', sans-serif;
    top: 0px;
    right: 60px;
    background-color: #AB185E;

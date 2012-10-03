@@ -5,7 +5,7 @@ $(function() {
         }
     }
 
-    $(".invite-friends").click(function() {
+    $(".invite-friends, header ul li a.invite").click(function() {
         _gaq.push(["_trackPageview", "/show_invite_friends"]);
         FB.ui(
             {
