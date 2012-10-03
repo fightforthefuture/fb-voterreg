@@ -92,12 +92,12 @@ header .logo span {
 
 header ul {
     display: block;
-    width: 450px;
+    width: 600px;
     height: 40px;
     line-height: 40px;
     text-align: center;
     position: absolute;
-    margin: -5px 0 0 -225px;
+    margin: -5px 0 0 -300px;
     padding: 0;
     left: 50%;
     border-bottom: 1px solid #37559f;
@@ -138,6 +138,26 @@ header ul li a {
    text-shadow: 0px 1px 1px #000000;
    filter: dropshadow(color=#000000, offx=0, offy=1);
    text-decoration: none;
+}
+
+header ul li a.invite{
+    border-bottom: 1px solid #AC1960;
+    background: rgb(174,28,99);
+    background: -moz-linear-gradient(top, rgba(174,28,99,1) 0%, rgba(144,13,66,1) 6%, rgba(181,37,111,1) 50%, rgba(181,37,111,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(174,28,99,1)), color-stop(6%,rgba(144,13,66,1)), color-stop(50%,rgba(181,37,111,1)), color-stop(100%,rgba(181,37,111,1)));
+    background: -webkit-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+    background: -o-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+    background: -ms-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+    background: linear-gradient(to bottom, rgba(174,28,99,1) 0%,rgba(144,13,66,1) 6%,rgba(181,37,111,1) 50%,rgba(181,37,111,1) 100%);
+}
+header ul li a.invite:hover{
+    background: rgb(174,28,99);
+    background: -moz-linear-gradient(top, rgba(174,28,99,1) 0%, rgba(172,25,96,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(174,28,99,1)), color-stop(100%,rgba(172,25,96,1)));
+    background: -webkit-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
+    background: -o-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
+    background: -ms-linear-gradient(top, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
+    background: linear-gradient(to bottom, rgba(174,28,99,1) 0%,rgba(172,25,96,1) 100%);
 }
 
 header ul a:hover, header ul a.selected {
