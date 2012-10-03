@@ -80,15 +80,30 @@ header:after {
 
 header .logo {
     height: 184px;
-    background: transparent url(../img/header-logo-back.png) 50% 50% no-repeat;
+    background: url(../img/header-logo-back.png) 50% 50% no-repeat;
 }
 
-header .logo span {
-    height: 184px;
+header .logo h1 {
+    height: 144px;
     display: block;
     text-indent: -9000px;
-    background: rgba(0, 59, 104, 0.70) url(../img/header-logo.png) 50% 50% no-repeat;
+    background: rgba(0, 59, 104, 0.8) url(../img/logo.png) 50% 20% no-repeat;
+    margin: 0 auto;
+    padding: 20px 0;
 }
+    header .logo p{
+        width: 650px;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: -60px;
+        color: #fbda39;
+        font-size: 12px;
+        line-height: 1.59;
+    }
+    header .logo strong{
+        display: block;
+        font: bold 13px/1.54 'Montserrat', sans-serif;
+    }
 
 header ul {
     display: block;

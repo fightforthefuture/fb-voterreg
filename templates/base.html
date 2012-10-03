@@ -40,7 +40,13 @@
   <body>
     <div id="fb-root"></div>
     <header>
-      <div class="logo" href="{% url 'main:index' %}"><span>Vote for the Internet</span></div>
+      <div class="logo" href="{% url 'main:index' %}">
+        <h1>Vote for the Internet</h1>
+        <p>
+            <strong>Get more of your friends to vote than you ever thought possible.</strong>
+            Track who is registered, see who has voted early, and see who actually votes on election day.
+        </p>
+      </div>
       <ul>
         <li><a href="{% url 'main:invite_friends' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
         <li><a href="{% url 'main:pledge' %}" {% if page == "pledge" %}class="selected"{% endif %}>PLEDGE TO VOTE</a></li>
