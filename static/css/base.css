@@ -771,6 +771,7 @@ div.content {
    display: block;
    padding: 10px;
    position: fixed;
+   font-family: 'Montserrat', sans-serif;
    top: 0px;
    right: 60px;
    background-color: #AB185E;
