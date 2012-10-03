@@ -81,10 +81,12 @@ class FacebookProfile(object):
         location = record.get("current_location", None) or {}
         self.location = location.get("name", None)
         self.location_city = location.get("city", None)
-        self.location_state = location.get("state", None)
+        self.location_state = \
+            _STATES.get(location.get("state", "none"), None)
         location = record.get("hometown_location", None) or {}
         self.hometown_city = location.get("city", None)
-        self.hometown_state = location.get("state", None)
+        self.hometown_state = \
+            _STATES.get(location.get("state", "none"), None)
         self._init(record)
 
     def _init_from_profile(self, profile):
