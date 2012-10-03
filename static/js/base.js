@@ -2,11 +2,13 @@ $(function() {
     function requestCallback(response) {
         if (response) {
             _gaq.push(["_trackPageview", "/friends_invited"]);
+            _kmq.push(["record", "Invited friends"]);
         }
     }
 
     $(".invite-friends, header ul li a.invite").click(function() {
         _gaq.push(["_trackPageview", "/show_invite_friends"]);
+        _kmq.push(["record", "Opened friend invite dialog"]);
         FB.ui(
             {
                 method: 'send',
