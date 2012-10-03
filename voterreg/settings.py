@@ -70,7 +70,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    "context_processors.add_fb_info" )
+    "context_processors.add_settings" )
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -147,6 +147,10 @@ if environ.get("RACK_ENV", None) == "production":
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/220561354738022/"
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https',)
+
+    BASE_URL = "https://voterreg-facebook.herokuapp.com"
+else:
+    BASE_URL = "http://local.voterreg.org:8000"
 
 try:
     from settings_local import *
