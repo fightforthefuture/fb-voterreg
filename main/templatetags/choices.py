@@ -37,14 +37,20 @@ def _get_weight(split_token):
     try:
         return int(weight)
     except ValueError:
-        raise TemplateSyntaxError('The value of the weight argument must be an integer')
+        raise TemplateSyntaxError(
+            'The value of the weight argument must be an integer'
+        )
 
 
 class ChoiceNode(Node):
-
+    """
+    Template node for a block of {% choice %} tags terminating in
+    {% endchoice %}
+    """
     def __init__(self, choices):
         weights = [choice[0] for choice in choices]
-        self.random = choices[_weighted_random(weights)]
+        random_index = _weighted_random(weights)
+        self.random = choices[random_index]
 
     def __repr__(self):
         return "<ChoiceNode>"
@@ -82,7 +88,9 @@ def choice(parser, token):
             if(len(split) < 2):
                 weight = None
             else:
-                raise TemplateSyntaxError('{% choice %} must have a weight argument')
+                raise TemplateSyntaxError(
+                    '{% choice %} must have a weight argument'
+                )
 
         weight = _get_weight(weight)
         nodelist = parser.parse(('choice', 'endchoice',))
