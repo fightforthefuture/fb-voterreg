@@ -34,6 +34,7 @@
           addScript('//i.kissmetrics.com/i.js');
           addScript('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
         }, 1);
+      {% if my_uid %}_kmq.push(['identify', '{{ my_uid }}']);{% endif %}
     </script>
   </head>
   <body>
