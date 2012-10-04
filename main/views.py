@@ -21,7 +21,7 @@ def _post_index(request):
     data = facebook.parse_signed_request(
         signed_request,
         settings.FACEBOOK_APP_SECRET)
-    if not data.get("user_id"):
+    if not data.get("user_id") or not hasattr(request, 'facebook'):
         scope = ["user_birthday", "user_location", "friends_birthday,"
                  "friends_hometown", "friends_location", "email"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,
@@ -75,16 +75,9 @@ def index(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if user.data_fetched:
         return _index_redirect(user)
-<<<<<<< HEAD
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
-=======
-    else:
-        return render_to_response(
-            "loading.html", 
-            context_instance=RequestContext(request))
->>>>>>> 0f33e79b571df74396bab51c0022ec994939580a
 
 
 def fetch_me(request):
