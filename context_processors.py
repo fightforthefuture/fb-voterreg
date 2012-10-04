@@ -8,6 +8,8 @@ def add_settings(request):
 def add_fbuid(request):
     if hasattr(request, "facebook") and request.facebook is not None:
         return { "my_uid": request.facebook["uid"] }
+    else:
+        return {}
 
 def add_source(request):
     if request.session.get("source", False):
@@ -15,3 +17,5 @@ def add_source(request):
         del request.session["source"]
         request.session.modified = True
         return { "traffic_source": source }
+    else:
+        return {}
