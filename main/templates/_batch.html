@@ -17,7 +17,7 @@
     {% elif batch.type == 4 %}
       {% choice %}
         <h2>Are they registered?</h2>
-        <p>Based on our data, {{ batch.short_description }} might not be registered. Ask them if they are!</p>
+        <p>Based on our data, {{ batch.unknown_description }} might not be registered. Ask them if they are!</p>
       {% choice weight=4 %}
         <h2>{{ batch.title }}</h2>
         <p>{{ batch.short_description }} haven't pledged to vote yet. Help get them pledged!</p>
