@@ -58,7 +58,6 @@ def _fetch_fb_friends(request):
     access_token = request.facebook["access_token"]
     user = User.objects.get(fb_uid=fb_uid)
     if user.friends_need_fetching():
-        print("Queueing task to fetch friends for {0}".format(user.id))
         user.update_friends_fetch()
         user.save()
         fetch_fb_friends.delay(fb_uid, access_token)
@@ -67,15 +66,25 @@ def _fetch_fb_friends(request):
 @csrf_exempt
 def index(request):
     if request.method == "POST":
+        if request.GET.get("source", False):
+            request.session["source"] = request.GET["source"]
+            request.session.modified = True
         response = _post_index(request)
         if response:
             return response
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if user.data_fetched:
         return _index_redirect(user)
+<<<<<<< HEAD
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
+=======
+    else:
+        return render_to_response(
+            "loading.html", 
+            context_instance=RequestContext(request))
+>>>>>>> 0f33e79b571df74396bab51c0022ec994939580a
 
 
 def fetch_me(request):

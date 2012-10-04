@@ -10,6 +10,7 @@ $(function() {
 
     function showFriendRequestDialog(friendList, batchID, batchType) {
         _gaq.push(["_trackPageview", "/show_batch_invite"]);
+        _kmq.push(["record", "Opened batch invite dialog"]);
         var message = null;
         if (batchType == 3) {
             message = "I'm sending this to all my friends in " + MY_CITY + 
@@ -28,6 +29,7 @@ $(function() {
             function(response) {
                 if (response) {
                     _gaq.push(["_trackPageview", "/batch_invited"]);
+                    _kmq.push(["record", "Invited a batch"]);
                     friendsInvited(batchID);
                 }
             });

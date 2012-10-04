@@ -705,7 +705,7 @@ div.content {
     font-weight: bold;
     text-align: center;
     font-size: 18px;
-    padding: 10px 0;
+    padding: 37px 0 10px;
     border: 1px solid #579465;
     text-shadow: 1px 1px 0px #555555;
     filter: dropshadow(color=#555555, offx=1, offy=1);

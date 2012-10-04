@@ -35,6 +35,7 @@
           addScript('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
         }, 1);
       {% if my_uid %}_kmq.push(['identify', '{{ my_uid }}']);{% endif %}
+      {% if traffic_source %}_kmq.push(['record', 'Traffic source: {{ traffic_source }}']);{% endif %}
     </script>
   </head>
   <body>
