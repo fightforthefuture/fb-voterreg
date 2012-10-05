@@ -18,7 +18,7 @@ from fb_utils import FacebookProfile
 
 
 class SafariView(TemplateView):
-    template_name = 'safari.txt'
+    template_name = 'safari.html'
 
 
 def _post_index(request):
