@@ -5,6 +5,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response, redirect
 from django.template.loader import render_to_string
 from django.template.context import RequestContext
+from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -14,6 +15,10 @@ from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime
 from fb_utils import FacebookProfile
+
+
+class SafariView(TemplateView):
+    template_name = 'safari.txt'
 
 
 def _post_index(request):

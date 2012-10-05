@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
+from main.views import SafariView
 
 urlpatterns = patterns(
     "main.views",
@@ -24,7 +25,7 @@ urlpatterns += patterns(
         TemplateView.as_view(template_name="voterreg_invite.html"), 
         name="voterreg_invite"),
     url(r"^safari$",
-        TemplateView.as_view(template_name="safari.html"),
+        SafariView.as_view(),
         name="safari"
     ),
 )
