@@ -54,6 +54,8 @@ class User(models.Model):
     friends_fetch_last_activity = models.DateTimeField(null=True)
     # whether or not the friend fetch completed.
     friends_fetched = models.BooleanField(default=False)
+    # unsubscribed from emails?
+    unsubscribed = models.BooleanField(default=False)
 
     def update_friends_fetch(self):
         self.friends_fetch_last_activity = datetime.now()

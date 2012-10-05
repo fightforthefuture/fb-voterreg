@@ -3,7 +3,8 @@ from django.conf import settings
 def add_settings(request):
     return { "FACEBOOK_APP_ID": settings.FACEBOOK_APP_ID,
              "BASE_URL": settings.BASE_URL,
-             "KM_CODE": settings.KM_CODE }
+             "KM_CODE": settings.KM_CODE,
+             "FACEBOOK_CANVAS_PAGE": settings.FACEBOOK_CANVAS_PAGE }
 
 def add_fbuid(request):
     if hasattr(request, "facebook") and request.facebook is not None:
@@ -12,10 +13,7 @@ def add_fbuid(request):
         return {}
 
 def add_source(request):
-    if request.session.get("source", False):
-        source = request.session["source"]
-        del request.session["source"]
-        request.session.modified = True
-        return { "traffic_source": source }
+    if request.GET.get("source", False):
+        return { "traffic_source": request.GET["source"] }
     else:
         return {}

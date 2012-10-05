@@ -13,8 +13,9 @@ from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User, FriendshipBatch, BATCH_REGULAR
-from datetime import datetime
+from datetime import datetime, date
 from fb_utils import FacebookProfile
+from django.core.mail import EmailMessage
 
 
 class SafariView(TemplateView):
@@ -22,6 +23,10 @@ class SafariView(TemplateView):
 
 
 def _post_index(request):
+    query_string = request.META["QUERY_STRING"]
+    redirect_uri = settings.FACEBOOK_CANVAS_PAGE
+    if query_string:
+        redirect_uri += ("?" + query_string)
     signed_request = request.POST["signed_request"]
     data = facebook.parse_signed_request(
         signed_request,
@@ -30,8 +35,7 @@ def _post_index(request):
         scope = ["user_birthday", "user_location", "friends_birthday,"
                  "friends_hometown", "friends_location", "email"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,
-                                     settings.FACEBOOK_CANVAS_PAGE,
-                                     scope)
+                                     redirect_uri, scope)
         markup = ('<script type="text/javascript">'
                   'top.location.href="%s"</script>' % auth_url)
         return HttpResponse(markup)
@@ -46,16 +50,18 @@ def _main_content_context(user):
     }
 
 
-def _index_redirect(user):
+def _index_redirect(user, query_string=""):
+    if query_string:
+        query_string = "?" + query_string
     if user.wont_vote:
-        return redirect("main:invite_friends")
+        return redirect(reverse("main:invite_friends") + query_string)
     elif user.registered:
         if user.pledged:
-            return redirect("main:invite_friends")
+            return redirect(reverse("main:invite_friends") + query_string)
         else:
-            return redirect("main:pledge")
+            return redirect(reverse("main:pledge") + query_string)
     else:
-        return redirect("main:register")
+        return redirect(reverse("main:register") + query_string)
 
 
 def _fetch_fb_friends(request):
@@ -71,15 +77,17 @@ def _fetch_fb_friends(request):
 @csrf_exempt
 def index(request):
     if request.method == "POST":
-        if request.GET.get("source", False):
-            request.session["source"] = request.GET["source"]
-            request.session.modified = True
         response = _post_index(request)
         if response:
             return response
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    query_string = request.META["QUERY_STRING"]
     if user.data_fetched:
-        return _index_redirect(user)
+        target_url = request.GET.get("target", None)
+        if target_url:
+            return redirect(target_url)
+        else:
+            return _index_redirect(user, query_string)
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
@@ -106,6 +114,7 @@ def fetch_me(request):
             user.registered = voter.registered
         user.data_fetched = True
         user.save()
+        _send_join_email(user, request)
         if user.registered:
             update_friends_of.delay(
                 user.id, request.facebook["access_token"])
@@ -113,6 +122,21 @@ def fetch_me(request):
         else reverse("main:register")
     return HttpResponse(redirect_url, content_type="text/plain")
 
+def _send_join_email(user, request):
+    today = date.today()
+    num_days = (date(2012, 11, 6) - today).days
+    email_body = render_to_string(
+        "join_email.html",
+        { "num_days": num_days },
+        context_instance=RequestContext(request))
+    if user.email:
+        msg = EmailMessage(
+            "Re: Vote with Friends",
+            email_body,
+            "info@votewithfriends.net",
+            [user.email])
+        msg.content_subtype = "html"
+        msg.send(fail_silently=True)
 
 def _friend_listing_page(request, template, additional_context={}, user=None):
     if not user:
@@ -297,3 +321,12 @@ def register_widget(request):
         {"widget_qs": urllib.urlencode(widget_qs),
           "page": "register"},
         context_instance=RequestContext(request))
+
+def unsubscribe(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    user.unsubscribed = True
+    user.save()
+    messages.add_message(
+        request, messages.INFO,
+        "Email notifications are turned off")
+    return _index_redirect(user)
