@@ -152,7 +152,7 @@ def invite_friends(request):
         "page": "friends",
         "num_registered": f_mgr.filter(registered=True).count(),
         "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
-        "num_friends": user.num_friends,
+        "num_friends": user.num_friends or 0,
         "uninvited_batches": user.friendshipbatch_set.filter(
             completely_fetched=True, invite_date__isnull=True),
         "still_loading": not user.friends_fetched,
