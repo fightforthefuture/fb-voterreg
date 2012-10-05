@@ -766,6 +766,18 @@ div.content {
     font-size: 13px;
 }
 
+.feedback{
+    display: block;
+    position: fixed;
+    top: 275px;
+    right: 0;
+    width: 31px;
+    height: 120px;
+    text-indent: -999em;
+    overflow: hidden;
+    background: url(../img/feedback.png);
+}
+
 .invite-friends {
    text-align: center;
    display: block;
