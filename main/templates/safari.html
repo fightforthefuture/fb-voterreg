@@ -3,6 +3,8 @@
 {% load static %}
 {% load url from future %}
 
+{% block nav %}{% endblock nav %}
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/safari.css' %}">
 {% endblock %}
@@ -10,18 +12,15 @@
 {% block content %}
     <div class="main-content cf">
         <div class="main-content-message">
-            <h2>Hello, Safari user!</h2>
+            <h2>Help us get more Americans to vote than ever before.</h2>
         </div>
         <div class="main-content-message">
-            <p>One thing before we can get this Facebook app working for you&mdash;we need you to change your settings. Safari is blocking third-party cookies, including ones from Facebook applications.</p>
-            <p>So, please turn on third-party cookies please. Go to Safari's preferences, then the Privacy tab and choose "Never". That's it!</p>
-            <figure>
-                <figcaption>
-                    <img src="{% static 'img/block.png' %}" alt="" />
-                </figcaption>
-            </figure>
-            <p>We could do a workaround, but we don't want to compromise your security. But, we do want you to be able to register to vote, pledge, and see which of your friends are voting.</p>
-            <p><a href="{% url 'main:register' %}" class="btn btn-large btn-green"><i class="icon-ok"></i> Use the app now!</a></p>
+            <form action="{% url 'main:index' %}" method="post">
+                <input type="hidden" name="uid" value="{{ fb_uid }}" />
+                <input type="hidden" name="signed_request" value="{{ signed_request }}" />
+                <input type="hidden" name="access_token" value="{{ access_token }}" />
+                <input type="submit" name="safari" class="btn btn-large btn-green" value="Get started!" />
+            </form>
         </div>
     </div>
 {% endblock %}

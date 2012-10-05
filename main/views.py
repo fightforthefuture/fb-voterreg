@@ -26,7 +26,7 @@ def _post_index(request):
     data = facebook.parse_signed_request(
         signed_request,
         settings.FACEBOOK_APP_SECRET)
-    if not data.get("user_id") or not hasattr(request, 'facebook'):
+    if not data.get("user_id"):
         scope = ["user_birthday", "user_location", "friends_birthday,"
                  "friends_hometown", "friends_location", "email"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,
@@ -71,6 +71,12 @@ def _fetch_fb_friends(request):
 @csrf_exempt
 def index(request):
     if request.method == "POST":
+        if request.POST.get("safari", False):
+            request.session['fb_user'] = {
+                'method': 'safari',
+                'uid': request.POST['uid'],
+                'access_token': request.POST['access_token']
+            }
         if request.GET.get("source", False):
             request.session["source"] = request.GET["source"]
             request.session.modified = True

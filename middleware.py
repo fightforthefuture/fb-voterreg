@@ -1,7 +1,7 @@
 import facebook
 from django.conf import settings
-from django.core.urlresolvers import resolve
-from django.shortcuts import redirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from main.models import User
 
 
@@ -38,17 +38,21 @@ class FacebookMiddleware(object):
         request.facebook = fb_user
         if fb_user:
             user, created = User.objects.get_or_create(fb_uid=fb_user["uid"])
-            request.session["fb_user"] = fb_user
-            request.session.modified = True
-        else:
-            request.facebook = request.session.get("fb_user", None)
 
-        # Safari blocks third-party cookies by default.
-        ua = request.META['HTTP_USER_AGENT']
-        missing_data = not request.facebook or 'uid' not in request.facebook
-        is_safari = 'Safari' in ua and not 'Chrome' in ua
-        is_safari_view = resolve(request.path)[0].func_name == 'SafariView'
-        if missing_data and is_safari and not is_safari_view:
-            return redirect("main:safari")
+            # Safari blocks third-party cookies by default.
+            if 'fb_user' not in request.session and 'safari' not in request.POST:
+                ua = request.META['HTTP_USER_AGENT']
+                if 'Safari' in ua and not 'Chrome' in ua:
+                    return render_to_response('safari.html', {
+                        'fb_uid': fb_user['uid'],
+                        'signed_request': request.POST['signed_request'],
+                        'access_token': fb_user['access_token']
+                    }, RequestContext(request))
+
+            request.session["fb_user"] = fb_user
+            print 'setting fb_user session var'
+            request.session.modified = True
+
+        request.facebook = request.session.get("fb_user", None)
 
         return None

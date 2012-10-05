@@ -48,12 +48,14 @@
             Track who is registered, see who has voted early, and see who actually votes on election day.
         </p>
       </div>
-      <ul>
-        <li><a href="{% url 'main:invite_friends' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
-        <li><a href="{% url 'main:pledge' %}" {% if page == "pledge" %}class="selected"{% endif %}>PLEDGE TO VOTE</a></li>
-        <li><a href="{% url 'main:register_widget' %}" {% if page == "register" %}class="selected"{% endif %}>REGISTER</a></li>
-        <li><a href="javascript:void(0);" class="invite">INVITE FRIENDS</a></li>
-      </ul>
+      {% block nav %}
+          <ul>
+            <li><a href="{% url 'main:invite_friends' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
+            <li><a href="{% url 'main:pledge' %}" {% if page == "pledge" %}class="selected"{% endif %}>PLEDGE TO VOTE</a></li>
+            <li><a href="{% url 'main:register_widget' %}" {% if page == "register" %}class="selected"{% endif %}>REGISTER</a></li>
+            <li><a href="javascript:void(0);" class="invite">INVITE FRIENDS</a></li>
+          </ul>
+      {% endblock nav %}
     </header>
     {% if messages %}
     <div class="notification">
