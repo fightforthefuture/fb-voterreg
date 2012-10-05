@@ -6,21 +6,21 @@
 {% block nav %}{% endblock nav %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'css/safari.css' %}">
+<link rel="stylesheet" href="{% static 'css/safari.css' %}">
 {% endblock %}
 
 {% block content %}
-    <div class="main-content cf">
-        <div class="main-content-message">
-            <h2>Help us get more Americans to vote than ever before.</h2>
-        </div>
-        <div class="main-content-message">
-            <form action="{% url 'main:index' %}" method="post">
-                <input type="hidden" name="uid" value="{{ fb_uid }}" />
-                <input type="hidden" name="signed_request" value="{{ signed_request }}" />
-                <input type="hidden" name="access_token" value="{{ access_token }}" />
-                <input type="submit" name="safari" class="btn btn-large btn-green" value="Get started!" />
-            </form>
-        </div>
-    </div>
+<div class="main-content cf">
+  <div class="main-content-message">
+    <h2>Help us get more Americans to vote than ever before.</h2>
+  </div>
+  <div class="main-content-message">
+    <form action="{% url 'main:index' %}" method="post">
+      <input type="hidden" name="uid" value="{{ fb_uid }}" />
+      <input type="hidden" name="signed_request" value="{{ signed_request }}" />
+      <input type="hidden" name="access_token" value="{{ access_token }}" />
+      <input type="submit" name="safari" class="btn btn-large btn-green" value="Get started!" />
+    </form>
+  </div>
+</div>
 {% endblock %}
