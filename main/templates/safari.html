@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load url from future %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/safari.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="main-content cf">
+        <div class="main-content-message">
+            <h2>Hello, Safari user!</h2>
+        </div>
+        <div class="main-content-message">
+            <p>By default, Safari blocks cookies set by third parties. This is a good thing&mdash;it prevents you from being tracked by advertisers&mdash;but Facebook applications are unfortunately considered third parties.</p>
+            <p>We <em>could</em> work around the restriction, but that would involve exposing your data in a way that could violate your expectations of privacy. We don't want to do that, but we <em>do</em> want you to register to vote and get your friends to do the same.</p>
+            <p>Would you mind enabling third-party cookies for the time being? It's really easy. </p>
+            <figure>
+                <img src="{% static 'img/preferences.png' %}" alt="" />
+                <figcaption>
+                    <p>First, go to Safari's preferences.</p>
+                </figcaption>
+            </figure>
+            <figure>
+                <figcaption>
+                    <img src="{% static 'img/block.png' %}" alt="" />
+                    <p>Then go to the 'Privacy' tab and choose 'Never' for the 'Block Cookies' setting.</p>
+                </figcaption>
+            </figure>
+            <p>That's it! Are you ready to vote?</p>
+            <p><a href="{% url 'main:register' %}" class="btn btn-large btn-green"><i class="icon-ok"></i> Register Now</a></p>
+        </div>
+    </div>
+{% endblock %}

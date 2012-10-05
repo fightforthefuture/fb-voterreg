@@ -23,4 +23,8 @@ urlpatterns += patterns(
     url(r"^voterreg_invite$", 
         TemplateView.as_view(template_name="voterreg_invite.html"), 
         name="voterreg_invite"),
+    url(r"^safari$",
+        TemplateView.as_view(template_name="safari.html"),
+        name="safari"
+    ),
 )

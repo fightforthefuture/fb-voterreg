@@ -1,5 +1,6 @@
 import facebook
 from django.conf import settings
+from django.shortcuts import redirect
 from main.models import User
 
 class FacebookMiddleware(object):
@@ -39,4 +40,11 @@ class FacebookMiddleware(object):
             request.session.modified = True
         else:
             request.facebook = request.session.get("fb_user", None)
+
+        # Safari blocks third-party cookies by default.
+        ua = request.META['HTTP_USER_AGENT']
+        is_safari = 'Safari' in ua and not 'Chrome' in ua
+        if 'uid' not in request.facebook and is_safari:
+            return redirect("main:safari")
+
         return None
