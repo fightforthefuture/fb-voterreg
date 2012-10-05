@@ -125,6 +125,22 @@ class FriendshipBatch(models.Model):
             return u"{0}, {1}, and {2} others are".format(
                 f[0].name, f[1].name, self.count - 2)
 
+    @property
+    def unknown_description(self):
+        f = self.friendship_set.all()[:3]
+        if self.count == 1:
+            return u"{0} is".format(f[0].name)
+        elif self.count == 2:
+            return u"{0} and {1}".format(
+                f[0].name, f[1].name)
+        elif self.count == 3:
+            return u"{0}, {1}, and {2}".format(
+                f[0].name, f[1].name, f[2].name)
+        else:
+            return u"{0}, {1}, and {2} others".format(
+                f[0].name, f[1].name, self.count - 2)
+
+
 class Friendship(models.Model):
     class Meta:
         unique_together = (("user", "fb_uid",),)
