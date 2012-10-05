@@ -31,7 +31,7 @@ def _post_index(request):
     data = facebook.parse_signed_request(
         signed_request,
         settings.FACEBOOK_APP_SECRET)
-    if not data.get("user_id") or not hasattr(request, 'facebook'):
+    if not data.get("user_id"):
         scope = ["user_birthday", "user_location", "friends_birthday,"
                  "friends_hometown", "friends_location", "email"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,

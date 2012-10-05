@@ -1,7 +1,7 @@
 import facebook
 from django.conf import settings
-from django.core.urlresolvers import resolve
-from django.shortcuts import redirect
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from main.models import User
 
 
@@ -28,27 +28,40 @@ class FacebookMiddleware(object):
         return fb_user
 
     def _get_fb_user(self, request):
+        if request.POST.get("safari", False):
+            fb_user = { "method": "safari",
+                        "uid": request.POST["uid"],
+                        "access_token": request.POST["access_token"] }
+            return fb_user
         fb_user = self._get_fb_user_cookie(request)
         if fb_user:
             return fb_user
         return self._get_fb_user_canvas(request)
+
+    def _is_initial_safari_post(self, request):
+        if 'fb_user' not in request.session and \
+                'safari' not in request.POST:
+            ua = request.META['HTTP_USER_AGENT']
+            if 'Safari' in ua and not 'Chrome' in ua:
+                return True
+        return False
 
     def process_request(self, request):
         fb_user = self._get_fb_user(request)
         request.facebook = fb_user
         if fb_user:
             user, created = User.objects.get_or_create(fb_uid=fb_user["uid"])
+            # Safari blocks third-party cookies by default.
+            if self._is_initial_safari_post(request):
+                return render_to_response(
+                    'safari.html', 
+                    { 'fb_uid': fb_user['uid'],
+                      'signed_request': request.POST['signed_request'],
+                      'access_token': fb_user['access_token']}, 
+                    RequestContext(request))
             request.session["fb_user"] = fb_user
             request.session.modified = True
-        else:
-            request.facebook = request.session.get("fb_user", None)
 
-        # Safari blocks third-party cookies by default.
-        ua = request.META['HTTP_USER_AGENT']
-        missing_data = not request.facebook or 'uid' not in request.facebook
-        is_safari = 'Safari' in ua and not 'Chrome' in ua
-        is_safari_view = resolve(request.path)[0].func_name == 'SafariView'
-        if missing_data and is_safari and not is_safari_view:
-            return redirect("main:safari")
+        request.facebook = request.session.get("fb_user", None)
 
         return None
