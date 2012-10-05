@@ -123,6 +123,11 @@ def fetch_me(request):
     return HttpResponse(redirect_url, content_type="text/plain")
 
 def _send_join_email(user, request):
+    DEV_HAS_PERMISSION_TO_SET_UP_SENDGRID = False
+    if not DEV_HAS_PERMISSION_TO_SET_UP_SENDGRID:
+        # should be changed after SENDGRID_USERNAME and SENDGRID_PASSWORD
+        # are specified in heroku config vars.
+        return
     today = date.today()
     num_days = (date(2012, 11, 6) - today).days
     email_body = render_to_string(
@@ -133,7 +138,7 @@ def _send_join_email(user, request):
         msg = EmailMessage(
             "Re: Vote with Friends",
             email_body,
-            "info@votewithfriends.net",
+            EMAIL_SENDER,
             [user.email])
         msg.content_subtype = "html"
         msg.send(fail_silently=True)

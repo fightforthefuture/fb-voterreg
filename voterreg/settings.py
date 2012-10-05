@@ -122,6 +122,10 @@ FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/258722907563918/"
 VOTIZEN_API_KEY = "" # secret
 USE_FAKE_VOTIZEN_API = False
 
+# change this whenever someone with sufficient permission
+# changes it in heroku/sendgrid.
+EMAIL_SENDER = "app7299205@heroku.com"
+
 if environ.get("RACK_ENV", None) == "production":
     import dj_database_url
 
