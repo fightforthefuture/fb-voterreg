@@ -167,7 +167,7 @@ if environment in ["production", "staging"]:
     if environment == 'staging':
         DEBUG = True
         FACEBOOK_APP_ID = "381227845280044"
-        FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends/"
+        FACEBOOK_CANVAS_PAGE = "http://apps.facebook.com/381227845280044/"
         USE_FAKE_VOTIZEN_API = True
 
 if environment == 'dev':
