@@ -128,8 +128,12 @@ EMAIL_SENDER = "app7299205@heroku.com"
 
 if environ.get("RACK_ENV", None) == "production":
     import dj_database_url
+    from sendgrifiy import sendgridify
 
     DEBUG = False
+
+    EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT, \
+        EMAIL_USE_TLS = sendgridify()
 
     DATABASES = {
         'default': dj_database_url.config(default='postgres://localhost') 
