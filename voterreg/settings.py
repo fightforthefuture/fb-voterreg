@@ -143,12 +143,6 @@ if environment in ["production", "staging"]:
 
     INSTALLED_APPS += ("gunicorn", "storages",)
 
-    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-
-    AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
-    AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
-    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
-    AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
     STATIC_URL = 'https://s3.amazonaws.com/voterreg.fb/'
     INSTALLATION = "production"
 
@@ -164,11 +158,19 @@ if environment in ["production", "staging"]:
 
     KM_CODE = "8be66fb91e7ca782ba39688f6448862be1698c4e"
 
-    if environment == 'staging':
-        DEBUG = True
-        FACEBOOK_APP_ID = "381227845280044"
-        FACEBOOK_CANVAS_PAGE = "http://apps.facebook.com/381227845280044/"
-        USE_FAKE_VOTIZEN_API = True
+if environment == 'staging':
+    DEBUG = True
+    FACEBOOK_APP_ID = "381227845280044"
+    FACEBOOK_CANVAS_PAGE = "http://apps.facebook.com/381227845280044/"
+    USE_FAKE_VOTIZEN_API = True
+
+if environment == 'production':
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
+    AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
+    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
+    AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
+
 
 if environment == 'dev':
     BASE_URL = "http://local.voterreg.org:8000"
