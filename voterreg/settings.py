@@ -126,16 +126,19 @@ USE_FAKE_VOTIZEN_API = False
 # changes it in heroku/sendgrid.
 EMAIL_SENDER = "app7299205@heroku.com"
 
-if environ.get("RACK_ENV", None) == "production":
+environment = environ.get("RACK_ENV", 'dev')
+
+if environment in ["production", "staging"]:
     import dj_database_url
+    from sendgridify import sendgridify
 
     DEBUG = False
 
-    #EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT, \
-    #    EMAIL_USE_TLS = sendgridify()
+    EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT, \
+        EMAIL_USE_TLS = sendgridify()
 
     DATABASES = {
-        'default': dj_database_url.config(default='postgres://localhost') 
+        'default': dj_database_url.config(default='postgres://localhost')
         }
 
     INSTALLED_APPS += ("gunicorn", "storages",)
@@ -146,7 +149,7 @@ if environ.get("RACK_ENV", None) == "production":
     AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
     AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
-    STATIC_URL= 'https://s3.amazonaws.com/voterreg.fb/'
+    STATIC_URL = 'https://s3.amazonaws.com/voterreg.fb/'
     INSTALLATION = "production"
 
     VOTIZEN_API_KEY = environ.get("VOTIZEN_API_KEY", "")
@@ -161,12 +164,13 @@ if environ.get("RACK_ENV", None) == "production":
 
     KM_CODE = "8be66fb91e7ca782ba39688f6448862be1698c4e"
 
-    EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', "")
-    EMAIL_HOST = 'smtp.sendgrid.net'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', "")
-else:
+    if environment == 'staging':
+        DEBUG = True
+        FACEBOOK_APP_ID = "381227845280044"
+        FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends/"
+        USE_FAKE_VOTIZEN_API = True
+
+if environment == 'dev':
     BASE_URL = "http://local.voterreg.org:8000"
     KM_CODE = "cccb2596f575fe692e22013c8329c5dbf98e4db7"
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
