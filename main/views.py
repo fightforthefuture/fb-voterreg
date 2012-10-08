@@ -114,7 +114,6 @@ def fetch_me(request):
             user.registered = voter.registered
         user.data_fetched = True
         user.save()
-        _send_join_email(user, request)
         if user.registered:
             update_friends_of.delay(
                 user.id, request.facebook["access_token"])
@@ -123,11 +122,6 @@ def fetch_me(request):
     return HttpResponse(redirect_url, content_type="text/plain")
 
 def _send_join_email(user, request):
-    DEV_HAS_PERMISSION_TO_SET_UP_SENDGRID = False
-    if not DEV_HAS_PERMISSION_TO_SET_UP_SENDGRID:
-        # should be changed after SENDGRID_USERNAME and SENDGRID_PASSWORD
-        # are specified in heroku config vars.
-        return
     today = date.today()
     num_days = (date(2012, 11, 6) - today).days
     email_body = render_to_string(
