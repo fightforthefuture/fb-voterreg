@@ -29,4 +29,7 @@ urlpatterns += patterns(
         SafariView.as_view(),
         name="safari"
     ),
+    url(r"^safari2$", 
+        TemplateView.as_view(template_name="safari2.html"), 
+        name="safari2"),
 )

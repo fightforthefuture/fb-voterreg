@@ -1,0 +1,16 @@
+{% load static from staticfiles %}
+<!doctype html>
+<html>
+  <head>
+    <script src="{% static 'js/jquery.js' %}"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      $(function() {
+          window.opener.location.reload();
+          window.close();
+      });
+    </script>
+    This window will close automatically in a moment.
+  </body>
+</html>
