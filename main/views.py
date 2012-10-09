@@ -16,7 +16,9 @@ from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime, date
 from fb_utils import FacebookProfile
 from django.core.mail import EmailMessage
+import logging
 
+logger = logging.getLogger("main.views")
 
 class SafariView(TemplateView):
     template_name = 'safari.html'
@@ -114,6 +116,10 @@ def fetch_me(request):
             user.registered = voter.registered
         user.data_fetched = True
         user.save()
+        try:
+            _send_join_email(user, request)
+        except:
+            logger.exception("error sending join email")
         if user.registered:
             update_friends_of.delay(
                 user.id, request.facebook["access_token"])
