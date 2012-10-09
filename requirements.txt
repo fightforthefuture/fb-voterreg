@@ -11,3 +11,5 @@ pytz==2012d
 requests==0.14.0
 newrelic==1.5.0.103
 django-heroku-sendgridify==0.1.1
+django-rosetta==0.6.8
+django-heroku-memcacheify==0.3

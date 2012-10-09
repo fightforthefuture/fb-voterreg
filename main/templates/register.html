@@ -1,5 +1,6 @@
 {% extends "friends_listing_base.html" %}
 
+{% load i18n %}
 {% load static from staticfiles %}
 {% load url from future %}
 
@@ -9,20 +10,39 @@
 
 {% block topcontent %}
 <div class="main-content-message">
+
+    {% comment %}Translators: tagline of page where users are told we can't find a voter registration record for them{% endcomment %}
     <h2>Are you registered to vote?  We can't find a registration for you based on your Facebook info.</h2>
-    <p>(We searched for: {{ name }}{% if location %} / {{location}}{% endif %}{% if birthday %} / {{birthday}}{% endif %})</p>
+
+    {% comment %}Translators: description of the data we used to see if the user was registered to vote{% endcomment %}
+    <p>({% trans "We searched for:" %} {{ name }}{% if location %} / {{location}}{% endif %}{% if birthday %} / {{birthday}}{% endif %})</p>
+
 </div>
 <div class="main-content-buttons">
-  <a id="already-registered" href="javascript:void(0)" class="btn btn-large btn-blue">I'm Registered</a>
+
+  {% comment %}Translators: text of button users click to confirm that they are registered to vote, despite our records saying otherwise{% endcomment %}
+  <a id="already-registered" href="javascript:void(0)" class="btn btn-large btn-blue">{% trans "I'm Registered" %}</a>
+
+  {% comment %}Translators: text of button users click to visit internetvotes.org to register to vote{% endcomment %}
   <a href="http://www.theinternetvotes.org" target="internetvotes" class="btn btn-large btn-green"><i class="icon-ok"></i> Register Now</a>
+
   <br/>
-  <span class="note">(Opens in a new window)</span>
+
+  {% comment %}Translators: explanation that a link opens in a new window{% endcomment %}
+  <span class="note">{% trans "(Opens in a new window)" %}</span>
+
 </div>
 <div class="main-content-message">
+
+  {% comment %}Translators: text of button users click to say they aren't eligible to vote{% endcomment %}
   <a id="not-eligible" href="javascript:void(0)">I'm not eligible</a>
+
 </div>
 <div class="main-content-extra">
-  <span>Not sure if you are registered?   If you're unsure, It’s always best to re-register to update your address and info.  Note: we match user information with voter records.  This information may not be up-to-date, and we may not have enough data to make a match.</span>
+
+  {% comment %}Translators: explanation that it's okay if users re-register to vote if they are unsure{% endcomment %}
+  <span>{% blocktrans %}Not sure if you are registered? If you're unsure, It’s always best to re-register to update your address and info. Note: we match user information with voter records. This information may not be up-to-date, and we may not have enough data to make a match.{% endblocktrans %}</span>
+
 </div>
 {% endblock %}
 

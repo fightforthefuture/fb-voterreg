@@ -1,16 +1,21 @@
 {% extends "_base_modal.html" %}
 
-{% block title %}Gah! You're registered?{% endblock %}
+{% load i18n %}
+
+{% comment %}Translators: title of modal displayed when users say they are registered, but Votizen says they are not.{% endcomment %}
+{% block title %}{% trans "Gah! You're registered?" %}{% endblock %}
 
 {% block body %}
-<p>
-  Our records show that you haven't registered to vote this year. 
-  But even the best of us make mistakes sometimes :P. 
-  Just to be sure, are you <em>really</em> registered?
-</p>
+    {% comment %}Translators: body text of modal displayed when users say they are registered, but Votizen says they are not.{% endcomment %}
+    <p>{% blocktrans %}Our records show that you haven't registered to vote this year. But even the best of us make mistakes sometimes :P. Just to be sure, are you <em>really</em> registered?{% endblocktrans %}</p>
 {% endblock %}
 
 {% block footer %}
-<button class="btn btn-large btn-green"><i class="icon-ok"></i> Yes, I'm registered</button>
-<button class="btn btn-large btn-cancel"><i class="icon-cancel"></i> Nope, not registered</button>
+
+    {% comment %}Translators: text of confirmation button when users say they are registered, but Votizen says they are not.{% endcomment %}
+    <button class="btn btn-large btn-green"><i class="icon-ok"></i> {% trans "Yes, I'm registered" %}</button>
+
+    {% comment %}Translators:  text of cancellation button when users say they are registered, but Votizen says they are not.{% endcomment %}
+    <button class="btn btn-large btn-cancel"><i class="icon-cancel"></i> {% trans "Nope, not registered" %}</button>
+
 {% endblock %}

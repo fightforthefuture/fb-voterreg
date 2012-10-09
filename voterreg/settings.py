@@ -22,11 +22,21 @@ DATABASES = {
     }
 }
 
+
+# Localization and internationalization
 TIME_ZONE = 'America/Chicago'
-LANGUAGE_CODE = 'en-us'
-USE_I18N = True
-USE_L10N = True
 USE_TZ = False
+USE_I18N = True
+USE_L10N = False
+LANGUAGE_CODE = 'en'
+LANGUAGES = (
+    ('en', 'English'),
+)
+LOCALE_PATHS = (
+    rel('main', 'locale'),
+)
+
+
 MEDIA_ROOT = rel('media')
 MEDIA_URL = '/media/'
 STATIC_ROOT = rel('collected')
@@ -88,6 +98,7 @@ INSTALLED_APPS = (
     'main',
     'voterapi',
     'staticpages',
+    'rosetta',
 )
 
 LOGGING = {
@@ -130,12 +141,15 @@ environment = environ.get("RACK_ENV", 'dev')
 
 if environment in ["production", "staging"]:
     import dj_database_url
-    from sendgridify import sendgridify
 
     DEBUG = False
 
+    from sendgridify import sendgridify
     EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_PORT, \
         EMAIL_USE_TLS = sendgridify()
+
+    from memcacheify import memcacheify
+    CACHES = memcacheify()
 
     DATABASES = {
         'default': dj_database_url.config(default='postgres://localhost')

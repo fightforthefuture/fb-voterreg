@@ -1,0 +1,366 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-10-09 16:37-0500\n"
+"PO-Revision-Date: 2012-10-09 12:26\n"
+"Last-Translator:   <c@c.cc>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Translated-Using: django-rosetta 0.6.8\n"
+
+#. Translators: Not voting because I will not be old enough
+#: models.py:11
+msgid "Won't be 17 yet"
+msgstr ""
+
+#. Translators: Not voting because I am not an American citizen
+#: models.py:14
+msgid "Not a citizen"
+msgstr ""
+
+#. Translators: Not voting because I do not want to
+#: models.py:17
+msgid "I don't want to"
+msgstr ""
+
+#. Translators: Not voting for undisclosed reasons
+#: models.py:20
+msgid "I'd rather not say"
+msgstr ""
+
+#. Translators: Group name for friends too young to vote in 2008
+#: models.py:34
+msgid "Barely legal"
+msgstr ""
+
+#. Translators: Group name for friends with different hometowns than current towns
+#: models.py:37
+msgid "Far from home"
+msgstr ""
+
+#. Translators: Group name for friends who live close to the user
+#: models.py:40
+msgid "Nearby"
+msgstr ""
+
+#. Translators: Group name for friends Votizen says are unregistered (80% of the time)
+#: models.py:43
+msgid "Not registered yet"
+msgstr "Not pledged yet"
+
+#. Translators: Group name for friends we randomly select to quickly fill out the invite friends page
+#: models.py:46
+msgid "Not pledged yet"
+msgstr ""
+
+#. Translators: subject of email sent to users when they join the app
+#: views.py:154
+msgid "Re: Vote with Friends"
+msgstr ""
+
+#. Translators: message displayed to users in green bar when they register to vote
+#: views.py:203
+msgid "Thank you for registering to vote!"
+msgstr ""
+
+#. Translators: message displayed to users in green bar when they pledge to vote
+#: views.py:239
+msgid "Thank you for pledging to vote!"
+msgstr ""
+
+#. Translators: message displayed to users in green bar when they say they are ineligible to vote
+#: views.py:267
+msgid ""
+"Thank you! Even though you can't vote, you can still invite your friends."
+msgstr ""
+
+#. Translators: message displayed to users in green bar when they are found to already be registered to vote
+#: views.py:282
+msgid "You're now marked as registered to vote."
+msgstr ""
+
+#. Translators: message displayed to users in green bar when they unsubscribe from emails
+#: views.py:365
+msgid "Email notifications are turned off"
+msgstr ""
+
+#. Translators: Invite text sent to friends too young to vote in 2008
+#: templates/_batch.html:12
+msgid ""
+"I'm sending this to all my friends who were too young to vote in '08, but "
+"are old enough now. Click here to register and pledge to vote!"
+msgstr ""
+
+#. Translators: Invite text sent to friends who have moved out of state
+#: templates/_batch.html:17
+msgid ""
+"I'm sending this to all my friends who moved out of state. Use this to make "
+"sure you're registered and pledged to vote this year!"
+msgstr ""
+
+#. Translators: Invite text sent to friends who live in the same city as the user
+#: templates/_batch.html:22
+#, python-format
+msgid ""
+"If you get a ton of %(batch.city)s friends registered, who knows? Maybe you "
+"could elect one of them mayor!"
+msgstr ""
+
+#. Translators: Group name for friends Votizen says are unregistered (20% of the time)
+#: templates/_batch.html:27
+msgid "Are they registered?"
+msgstr ""
+
+#. Translators: Invite text sent to friends Votizen says are unregistered (20% of the time)
+#: templates/_batch.html:29
+#, python-format
+msgid ""
+"Based on our data, %(batch.unknown_description)s might not be registered. "
+"Ask them if they are!"
+msgstr ""
+
+#. Translators: Invite text sent to friends Votizen says are unregistered (80% of the time)
+#: templates/_batch.html:33
+#, python-format
+msgid ""
+"%(batch.short_description)s haven't registered to vote yet. Help get them "
+"registered!"
+msgstr ""
+"%(batch.short_description)s haven't pledged to vote yet. Help get them "
+"pledged!"
+
+#. Translators: Invite text sent to friends we randomly select to quickly fill out the invite friends page
+#: templates/_batch.html:39
+#, python-format
+msgid ""
+"%(batch.short_description)s haven't pledged to vote yet. Help get them "
+"pledged!"
+msgstr ""
+
+#. Translators: Text of invitation button for a group of ried
+#: templates/_batch.html:43
+msgid "Invite them"
+msgstr ""
+
+#. Translators: message to user if they've invited 0 friends
+#: templates/_friends.html:15
+msgid "Invited 0 friends"
+msgstr ""
+
+#. Translators: message to user if they've invited more than 0 friends
+#: templates/_friends.html:18
+#, python-format
+msgid ""
+"Invited %(f.invited_pledge_count)s friend%(f.invited_pledge_count|pluralize)s"
+msgstr ""
+
+#. Translators: message on main index to users who are registered but not pledged
+#: templates/_main_content.html:8
+msgid "You are registered but you have not pledged!"
+msgstr ""
+
+#. Translators: message on main index to users who are both registered and pledged
+#: templates/_main_content.html:11
+msgid "You need to invite your friends to this thing!"
+msgstr ""
+
+#. Translators: title of modal asking users to pledge to vote
+#: templates/_pledge_modal.html:6
+msgid "Pledge to Vote"
+msgstr ""
+
+#. Translators: in modal, asks users to pledge to vote
+#: templates/_pledge_modal.html:11
+msgid "Do you promise to vote in this year's election?"
+msgstr ""
+
+#. Translators: in modal, thanks users for pledging to vote
+#: templates/_pledge_modal.html:15
+msgid "Awesome, thank you for your pledge to vote."
+msgstr ""
+
+#. Translators: in modal, text of confirmation button asking users to pledge to vote
+#: templates/_pledge_modal.html:24
+msgid "Yes! I will vote!"
+msgstr ""
+
+#. Translators: title of modal displayed when users say they are registered, but Votizen says they are not.
+#: templates/_whoops_registered_modal.html:6
+msgid "Gah! You're registered?"
+msgstr ""
+
+#. Translators: body text of modal displayed when users say they are registered, but Votizen says they are not.
+#: templates/_whoops_registered_modal.html:10
+msgid ""
+"Our records show that you haven't registered to vote this year. But even the "
+"best of us make mistakes sometimes :P. Just to be sure, are you <em>really</"
+"em> registered?"
+msgstr ""
+
+#. Translators: text of confirmation button when users say they are registered, but Votizen says they are not.
+#: templates/_whoops_registered_modal.html:16
+msgid "Yes, I'm registered"
+msgstr ""
+
+#. Translators:  text of cancellation button when users say they are registered, but Votizen says they are not.
+#: templates/_whoops_registered_modal.html:19
+#, fuzzy
+msgid "Nope, not registered"
+msgstr "Not pledged yet"
+
+#. Translators: title of modal asking users why they aren't voting
+#: templates/_wont_vote_modal.html:7
+msgid "Why not vote?"
+msgstr ""
+
+#. Translators: introduction to list of reasons the user might not be voting
+#: templates/_wont_vote_modal.html:12
+msgid "I won't vote because:"
+msgstr ""
+
+#. Translators: submit button when user is giving a reason for not voting
+#: templates/_wont_vote_modal.html:19
+msgid "This is why I'm not voting"
+msgstr ""
+
+#. Translators: title of page where users are asked to invite their friends to vote.
+#: templates/invite_friends.html:15
+msgid "Now, ask friends to register and pledge to vote!"
+msgstr ""
+
+#. Translators: HTML version of the email sent after the user joins the app
+#: templates/join_email.html:4
+#, python-format
+msgid ""
+"\n"
+"<p>Thanks for trying out Vote with Friends!  Before you do anything else, "
+"invite your closest friends to pledge to vote!</p>\n"
+"<p>There's only %(num_days)s days until election day!</p>\n"
+"<p>%(FACEBOOK_CANVAS_PAGE)s?target=%(invite_friends_url)s</p>\n"
+"<p>Thanks for being a part of this!</p>\n"
+"<p>Sincerely,<br/>Center for Rights & Vote with Friends</p>\n"
+"<p>--<br/><br/></p>\n"
+"<p><a href=\"%(FACEBOOK_CANVAS_PAGE)s?target=%(unsubscribe_url)s\">No emails "
+"please</a></p>\n"
+msgstr ""
+
+#. Translators: text version of the email sent after the user joins the app
+#: templates/join_email.txt:5
+#, python-format
+msgid ""
+"\n"
+"Thanks for trying out Vote with Friends!  Before you do anything else, "
+"invite your closest friends to pledge to vote!\n"
+"\n"
+"There's only %(num_days)s days until election day!\n"
+"\n"
+"%(FACEBOOK_CANVAS_PAGE)s?target=%(invite_friends_url)s\n"
+"\n"
+"Thanks for being a part of this!\n"
+"\n"
+"Sincerely,\n"
+"Center for Rights & Vote with Friends\n"
+"\n"
+"--\n"
+"\n"
+"To stop receiving these emails, please visit %(FACEBOOK_CANVAS_PAGE)s?target="
+"%(unsubscribe_url)s.\n"
+msgstr ""
+
+#. Translators: title of page where users are asked to pledge to vote
+#: templates/pledge.html:10
+msgid "Will you pledge to vote in this election?"
+msgstr ""
+
+#. Translators: text of the button a user presses to pledge to vote
+#: templates/pledge.html:15
+msgid "Yes, I pledge to vote"
+msgstr ""
+
+#. Translators: text of the button a user presses declining to pledge to vote
+#: templates/pledge.html:18
+msgid "No, not ready to pledge yet"
+msgstr ""
+
+#. Translators: tagline of page where users are asked to pledge to vote
+#: templates/pledge.html:23
+msgid ""
+"<strong>Why does pledging matter?</strong> Because your friends will see "
+"that you've pledged. So just by pledging, you're encouraging your friends to "
+"vote."
+msgstr ""
+
+#. Translators: description of the data we used to see if the user was registered to vote
+#: templates/register.html:18
+msgid "We searched for:"
+msgstr ""
+
+#. Translators: text of button users click to confirm that they are registered to vote, despite our records saying otherwise
+#: templates/register.html:24
+#, fuzzy
+msgid "I'm Registered"
+msgstr "Not pledged yet"
+
+#. Translators: explanation that a link opens in a new window
+#: templates/register.html:32
+msgid "(Opens in a new window)"
+msgstr ""
+
+#. Translators: explanation that it's okay if users re-register to vote if they are unsure
+#: templates/register.html:44
+msgid ""
+"Not sure if you are registered? If you're unsure, It’s always best to re-"
+"register to update your address and info. Note: we match user information "
+"with voter records. This information may not be up-to-date, and we may not "
+"have enough data to make a match."
+msgstr ""
+
+#. Translators: title of page where users are shown the registration widget
+#: templates/register_widget.html:19
+msgid "You can register now. It will just take a few minutes."
+msgstr ""
+
+#. Translators: text of link to registration widget
+#: templates/register_widget.html:25
+msgid "Register Now (opens in a new window)"
+msgstr ""
+
+#. Translators: text of button where user indicates they are finished with the registration widget
+#: templates/register_widget.html:31
+msgid "I am done registering"
+msgstr ""
+
+#. Translators: text of button where user indicates they want to skip the registration widget
+#: templates/register_widget.html:37
+msgid "Skip registration and start registering friends"
+msgstr ""
+
+#. Translators: title on page displayed to Safari users that forces them to interact with the page
+#: templates/safari.html:18
+msgid "Help us get more Americans to vote than ever before."
+msgstr ""
+
+#. Translators: text of button on page displayed to Safari users that forces them to interact with the page
+#: templates/safari.html:23
+msgid "Get started!"
+msgstr ""
+
+#. Translators: message displayed in popup loaded by Safari interstitial
+#: templates/safari2.html:16
+msgid "This window will close automatically in a moment."
+msgstr ""
+
+#. Translators: title of entry page when coming from an invitation
+#: templates/voterreg_invite.html:8
+msgid "Vote. And help me get all our friends to vote."
+msgstr ""

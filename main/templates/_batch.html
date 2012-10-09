@@ -1,32 +1,46 @@
-{% load choices %}
+{% load choices i18n %}
 
 <div class="box cf friend-box" data-batch-id="{{batch.id}}" data-batch-type="{{batch.type}}">
-  <div class="friends">
-    {% for f in batch.friendships %}<img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}
-  </div>
-  <div class="text">
-    {% if batch.type == 1 %}
-      <h2>{{ batch.title }}</h2>
-      <p>I'm sending this to all my friends who were too young to vote in '08, but are old enough now.  Click here to register and pledge to vote!</p>
-    {% elif batch.type == 2 %}
-      <h2>{{ batch.title }}</h2>
-      <p>I'm sending this to all my friends who moved out of state. Use this to make sure you're registered and pledged to vote this year!</p>
-    {% elif batch.type == 3 %}
-      <h2>{{ batch.title }}</h2>
-      <p>If you get a ton of {{ batch.city }} friends registered, who knows? Maybe you could elect one of them mayor!</p>
-    {% elif batch.type == 4 %}
-      {% choice %}
-        <h2>Are they registered?</h2>
-        <p>Based on our data, {{ batch.unknown_description }} might not be registered. Ask them if they are!</p>
-      {% choice weight=4 %}
-        <h2>{{ batch.title }}</h2>
-        <p>{{ batch.short_description }} haven't pledged to vote yet. Help get them pledged!</p>
-      {% endchoice %}
-    {% elif batch.type == 5 %}
-      <h2>{{ batch.title }}</h2>
-      <p>{{ batch.short_description }} haven't pledged to vote yet. Help get them pledged!</p>
-    {% endif %}
-    </p>
-    <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Invite them</a>
-  </div>
+    <div class="friends">
+        {% for f in batch.friendships %}<img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}
+    </div>
+    <div class="text">
+
+        {% if batch.type == 1 %}
+            <h2>{{ batch.title }}</h2>
+            {% comment %}Translators: Invite text sent to friends too young to vote in 2008{% endcomment %}
+            <p>{% blocktrans %}I'm sending this to all my friends who were too young to vote in '08, but are old enough now. Click here to register and pledge to vote!{% endblocktrans %}</p>
+
+        {% elif batch.type == 2 %}
+            <h2>{{ batch.title }}</h2>
+            {% comment %}Translators: Invite text sent to friends who have moved out of state{% endcomment %}
+            <p>{% blocktrans %}I'm sending this to all my friends who moved out of state. Use this to make sure you're registered and pledged to vote this year!{% endblocktrans %}</p>
+
+        {% elif batch.type == 3 %}
+            <h2>{{ batch.title }}</h2>
+            {% comment %}Translators: Invite text sent to friends who live in the same city as the user{% endcomment %}
+            <p>{% blocktrans %}If you get a ton of {{ batch.city }} friends registered, who knows? Maybe you could elect one of them mayor!{% endblocktrans %}</p>
+
+        {% elif batch.type == 4 %}
+            {% choice %}
+                {% comment %}Translators: Group name for friends Votizen says are unregistered (20% of the time){% endcomment %}
+                <h2>{% blocktrans %}Are they registered?{% endblocktrans %}</h2>
+                {% comment %}Translators: Invite text sent to friends Votizen says are unregistered (20% of the time){% endcomment %}
+                <p>{% blocktrans %}Based on our data, {{ batch.unknown_description }} might not be registered. Ask them if they are!{% endblocktrans %}</p>
+            {% choice weight=4 %}
+                <h2>{{ batch.title }}</h2>
+                {% comment %}Translators: Invite text sent to friends Votizen says are unregistered (80% of the time){% endcomment %}
+                <p>{% blocktrans %}{{ batch.short_description }} haven't registered to vote yet. Help get them registered!{% endblocktrans %}</p>
+            {% endchoice %}
+
+        {% elif batch.type == 5 %}
+            <h2>{{ batch.title }}</h2>
+            {% comment %}Translators: Invite text sent to friends we randomly select to quickly fill out the invite friends page{% endcomment %}
+            <p>{% blocktrans %}{{ batch.short_description }} haven't pledged to vote yet. Help get them pledged!{% endblocktrans %}</p>
+        {% endif %}
+
+        {% comment %}Translators: Text of invitation button for a group of ried{% endcomment %}
+        <a href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> {% trans "Invite them" %}</a>
+
+    </div>
 </div>

@@ -3,12 +3,22 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from datetime import date, datetime
 from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 WONT_VOTE_REASONS = (
-    ("not_17", "Won't be 17 yet"),
-    ("not_citizen", "Not a citizen"),
-    ("dont_want_to", "I don't want to"),
-    ("rather_not_say", "I'd rather not say")
+
+    # Translators: Not voting because I will not be old enough
+    ("not_17", _("Won't be 17 yet")),
+
+    # Translators: Not voting because I am not an American citizen
+    ("not_citizen", _("Not a citizen")),
+
+    # Translators: Not voting because I do not want to
+    ("dont_want_to", _("I don't want to")),
+
+    # Translators: Not voting for undisclosed reasons
+    ("rather_not_say", _("I'd rather not say")),
+
 )
 
 BATCH_SIZE = 32
@@ -19,13 +29,25 @@ BATCH_NEARBY = 3
 BATCH_REGULAR = 4
 BATCH_RANDOM = 5
 BATCH_TYPES = (
-    (BATCH_BARELY_LEGAL, "Barely legal"),
-    (BATCH_FAR_FROM_HOME, "Far from home"),
-    (BATCH_NEARBY, "Nearby"),
-    (BATCH_REGULAR, "Not pledged yet"),
-    (BATCH_RANDOM, "Not pledged yet"))
+
+    # Translators: Group name for friends too young to vote in 2008
+    (BATCH_BARELY_LEGAL, _("Barely legal")),
+
+    # Translators: Group name for friends with different hometowns than current towns
+    (BATCH_FAR_FROM_HOME, _("Far from home")),
+
+    # Translators: Group name for friends who live close to the user
+    (BATCH_NEARBY, _("Nearby")),
+
+    # Translators: Group name for friends Votizen says are unregistered (80% of the time)
+    (BATCH_REGULAR, _("Not registered yet")),
+
+    # Translators: Group name for friends we randomly select to quickly fill out the invite friends page
+    (BATCH_RANDOM, _("Not pledged yet")),
+)
 
 BATCH_MAP = dict(BATCH_TYPES)
+
 
 class User(models.Model):
     fb_uid = models.CharField(max_length=32, unique=True)

@@ -1,14 +1,22 @@
 {% extends "_base_modal.html" %}
 
+{% load i18n %}
 {% load url from future %}
 
-{% block title %}Why not vote?{% endblock %}
+{% comment %}Translators: title of modal asking users why they aren't voting{% endcomment %}
+{% block title %}{% trans "Why not vote?" %}{% endblock %}
 
 {% block body %}
-<p>I won't because:</p>
-<form class="wont_vote" action="{% url 'main:wont_vote' %}" method="POST">
-  {% csrf_token %}
-  {{ wont_vote_form.wont_vote_reason }}
-  <button class="btn btn-large btn-green"><i class="icon-ok"></i> OK</button>
-</form>
+
+    {% comment %}Translators: introduction to list of reasons the user might not be voting{% endcomment %}
+    <p>{% trans "I won't vote because:" %}</p>
+    <form class="wont_vote" action="{% url 'main:wont_vote' %}" method="POST">
+        {% csrf_token %}
+        {{ wont_vote_form.wont_vote_reason }}
+        <button class="btn btn-large btn-green">
+            <i class="icon-ok"></i> 
+            {% comment %}Translators: submit button when user is giving a reason for not voting{% endcomment %}
+            {% trans "This is why I'm not voting" %}
+        </button>
+    </form>
 {% endblock %}

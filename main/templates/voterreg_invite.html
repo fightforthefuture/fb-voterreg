@@ -1,9 +1,11 @@
+{% load i18n %}
 {% load static from staticfiles %}
 
 <!doctype html>
 <html>
   <head>
-    <title>Vote. And help me get all our friends to vote.</title>
+    {% comment %}Translators: title of entry page when coming from an invitation{% endcomment %}
+    <title>{% trans "Vote. And help me get all our friends to vote." %}</title>
     <meta property="og:title" content="Vote.  And help me get all our friends to vote."/>
     <meta property="og:type" content="cause"/>
     <meta property="og:url" content="https://apps.facebook.com/votewithfriends/"/>

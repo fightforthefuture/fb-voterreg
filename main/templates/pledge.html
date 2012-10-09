@@ -1,18 +1,26 @@
 {% extends "friends_listing_base.html" %}
 
+{% load i18n %}
 {% load static from staticfiles %}
 {% load url from future %}
 
 {% block topcontent %}
 <div class="main-content-message">
-  <h2>Will you pledge to vote in this election?</h2>
+  {% comment %}Translators: title of page where users are asked to pledge to vote{% endcomment %}
+  <h2>{% trans "Will you pledge to vote in this election?" %}</h2>
 </div>
 <div class="main-content-buttons">
-  <a id="pledge" href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> Yes, I pledge to vote</a>
-  <a href="{% url 'main:invite_friends' %}" class="btn btn-large"><i class="icon-cancel"></i> No, not ready to pledge yet</a>
+
+  {% comment %}Translators: text of the button a user presses to pledge to vote{% endcomment %}
+  <a id="pledge" href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> {% trans "Yes, I pledge to vote" %}</a>
+
+  {% comment %}Translators: text of the button a user presses declining to pledge to vote{% endcomment %}
+  <a href="{% url 'main:invite_friends' %}" class="btn btn-large"><i class="icon-cancel"></i> {% trans "No, not ready to pledge yet" %}</a>
+
 </div>
 <div class="main-content-message">
-  <p><strong>Why does pledging matter?</strong> Because your friends will see that you've pledged. So just by pledging, you're encouraging your friends to vote.</p>
+  {% comment %}Translators: tagline of page where users are asked to pledge to vote{% endcomment %}
+  <p>{% blocktrans %}<strong>Why does pledging matter?</strong> Because your friends will see that you've pledged. So just by pledging, you're encouraging your friends to vote.{% endblocktrans %}</p>
 </div>
 {% endblock %}
 

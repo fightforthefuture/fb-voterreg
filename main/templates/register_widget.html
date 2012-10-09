@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load i18n %}
 {% load static from staticfiles %}
 {% load url from future %}
 
@@ -13,16 +14,28 @@
 </script>
 <div class="main-content cf">
   <div class="main-content-message">
-    <h2>You can register now. It will just take a few minutes.</h2>
+
+    {% comment %}Translators: title of page where users are shown the registration widget{% endcomment %}
+    <h2>{% trans "You can register now. It will just take a few minutes." %}</h2>
+
   </div>
   <div class="main-content-buttons">
-    <a href="http://www.theinternetvotes.org" target="internetvotes" class="btn btn-large btn-large-no-icon btn-blue">Register Now (opens in a new window)</a>
+
+    {% comment %}Translators: text of link to registration widget{% endcomment %}
+    <a href="http://www.theinternetvotes.org" target="internetvotes" class="btn btn-large btn-large-no-icon btn-blue">{% trans "Register Now (opens in a new window)" %}</a>
+
   </div>
   <div class="main-content-buttons">
-    <a id="registered" href="{% url 'main:pledge' %}?from_widget=true" class="btn btn-large btn-green"><i class="icon-ok"></i> I am done registering</a>
+
+    {% comment %}Translators: text of button where user indicates they are finished with the registration widget{% endcomment %}
+    <a id="registered" href="{% url 'main:pledge' %}?from_widget=true" class="btn btn-large btn-green"><i class="icon-ok"></i> {% trans "I am done registering" %}</a>
+
   </div>
   <div class="main-content-message">
-    <a href="{% url 'main:invite_friends' %}">Skip registration and start registering friends &gt;</a>
+
+    {% comment %}Translators: text of button where user indicates they want to skip the registration widget{% endcomment %}
+    <a href="{% url 'main:invite_friends' %}">{% trans "Skip registration and start registering friends" %}</a>
+
   </div>
 </div>
 {% endblock %}

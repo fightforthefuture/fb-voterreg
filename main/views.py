@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from django.template.context import RequestContext
 from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from tasks import fetch_fb_friends, update_friends_of
@@ -129,17 +130,28 @@ def fetch_me(request):
 def _send_join_email(user, request):
     today = date.today()
     num_days = (date(2012, 11, 6) - today).days
+    invite_friends_url = reverse('main:invite_friends')
+    unsubscribe_url = reverse('main:unsubscribe')
     html_body = render_to_string(
         "join_email.html",
-        { "num_days": num_days },
+        {
+            "num_days": num_days,
+            "invite_friends_url": invite_friends_url,
+            "unsubscribe_url": unsubscribe_url,
+        },
         context_instance=RequestContext(request))
     text_body = render_to_string(
         "join_email.txt",
-        { "num_days": num_days },
+        {
+            "num_days": num_days,
+            "invite_friends_url": invite_friends_url,
+            "unsubscribe_url": unsubscribe_url,
+        },
         context_instance=RequestContext(request))
     if user.email:
         msg = EmailMultiAlternatives(
-            "Re: Vote with Friends",
+            # Translators: subject of email sent to users when they join the app
+            _("Re: Vote with Friends"),
             text_body,
             settings.EMAIL_SENDER,
             [user.email])
@@ -186,7 +198,10 @@ def pledge(request):
             user.id, request.facebook["access_token"])
         messages.add_message(
             request, messages.INFO,
-            "Thank you for registering to vote!")
+
+            # Translators: message displayed to users in green bar when they register to vote
+            _("Thank you for registering to vote!")
+        )
     return _friend_listing_page(
         request, "pledge.html",
         additional_context={"page": "pledge"})
@@ -219,7 +234,10 @@ def submit_pledge(request):
         user.id, request.facebook["access_token"])
     messages.add_message(
         request, messages.INFO,
-        "Thank you for pledging to vote!")
+
+        # Translators: message displayed to users in green bar when they pledge to vote
+        _("Thank you for pledging to vote!")
+    )
     return {"next": reverse("main:invite_friends")}
 
 
@@ -244,7 +262,10 @@ def wont_vote(request):
     user.save()
     messages.add_message(
         request, messages.INFO,
-        "Thank you! Even though you can't vote, you can still invite your friends.")
+
+        # Translators: message displayed to users in green bar when they say they are ineligible to vote
+        _("Thank you! Even though you can't vote, you can still invite your friends.")
+    )
     return {"next": reverse("main:invite_friends")}
 
 
@@ -256,7 +277,10 @@ def im_actually_registered(request):
     correct_voter(user.fb_uid)
     messages.add_message(
         request, messages.INFO,
-        "You're now marked as registered to vote.")
+
+        # Translators: message displayed to users in green bar when they are found to already be registered to vote
+        _("You're now marked as registered to vote.")
+    )
     return {"next": reverse("main:pledge")}
 
 
@@ -342,5 +366,8 @@ def unsubscribe(request):
     user.save()
     messages.add_message(
         request, messages.INFO,
-        "Email notifications are turned off")
+
+        # Translators: message displayed to users in green bar when they unsubscribe from emails
+        _("Email notifications are turned off")
+    )
     return _index_redirect(user)

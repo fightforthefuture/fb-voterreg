@@ -1,18 +1,27 @@
 {% extends "_base_modal.html" %}
 
-{% block title %}Plege to Vote{% endblock %}
+{% load i18n %}
+
+{% comment %}Translators: title of modal asking users to pledge to vote{% endcomment %}
+{% block title %}{% trans "Pledge to Vote" %}{% endblock %}
 
 {% block body %}
 <div class="prepledge">
-  <span>Do you promise to vote in this year's election?</span>
+  {% comment %}Translators: in modal, asks users to pledge to vote{% endcomment %}
+  <span>{% trans "Do you promise to vote in this year's election?" %}</span>
 </div>
 <div class="postpledge" style="display: none">
-  <span>Awesome, thank you for your pledge to vote.</span>
+    {% comment %}Translators: in modal, thanks users for pledging to vote{% endcomment %}
+    <span>{% trans "Awesome, thank you for your pledge to vote." %}</span>
 </div>
 {% endblock %}
 
 {% block footer %}
 <div class="prepledge">
-  <button id="yes-will-vote" class="btn btn-large btn-green"><i class="icon-ok"></i> <span class="button-text">Yes! I will vote!</span></button>
+  <button id="yes-will-vote" class="btn btn-large btn-green">
+    <i class="icon-ok"></i>
+    {% comment %}Translators: in modal, text of confirmation button asking users to pledge to vote{% endcomment %}
+    <span class="button-text">{% trans "Yes! I will vote!" %}</span>
+  </button>
 </div>
 {% endblock %}

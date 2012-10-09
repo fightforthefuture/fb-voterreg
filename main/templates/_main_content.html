@@ -1,9 +1,14 @@
+{% load i18n %}
 {% load url from future %}
+
 <div class="main-content cf">
-{% if not registered %}
-{% elif not pledged %}
-  You're registered but you have not pledged!
-{% else %}
-  You need to invite your friends to this thing!
-{% endif %}
+    {% if not registered %}
+    {% elif not pledged %}
+        {% comment %}Translators: message on main index to users who are registered but not pledged{% endcomment %}
+        {% trans "You are registered but you have not pledged!" %}
+    {% else %}
+        {% comment %}Translators: message on main index to users who are both registered and pledged{% endcomment %}
+        {% trans "You need to invite your friends to this thing!" %}
+    {% endif %}
 </div>
+

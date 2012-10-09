@@ -11,9 +11,11 @@
     {% friend_progress f.registered "Registered" %}
     {% friend_progress f.pledged "Pledged" %}
     {% if f.invited_pledge_count == 0 %}
-    <span class="progress progress-inactive"><i class="icon-mini-empty"></i> Invited 0 friends</span>
+        {% comment %}Translators: message to user if they've invited 0 friends{% endcomment %}
+        <span class="progress progress-inactive"><i class="icon-mini-empty"></i> {% blocktrans %}Invited 0 friends{% endblocktrans %}</span>
     {% else %}
-    <span class="progress progress-active"><i class="icon-mini-ok"></i> Invited {{f.invited_pledge_count}} friend{{f.invited_pledge_count|pluralize}}</span>
+        {% comment %}Translators: message to user if they've invited more than 0 friends{% endcomment %}
+        <span class="progress progress-active"><i class="icon-mini-ok"></i> {% blocktrans %}Invited {{ f.invited_pledge_count }} friend{{ f.invited_pledge_count|pluralize }}{% endblocktrans %}</span>
     {% endif %}
   </div>
 {% endfor %}
