@@ -85,6 +85,11 @@ class User(models.Model):
     def invited_friends(self):
         return self.date_invited_friends is not None
 
+    def save_invited_friends(self):
+        if not self.date_invited_friends:
+            self.date_invited_friends = datetime.now()
+            self.save()
+
     def is_admirable(self):
         return self.registered or self.pledged or self.invited_friends
 

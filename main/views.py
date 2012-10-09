@@ -294,8 +294,14 @@ def mark_batch_invited(request):
     batch = FriendshipBatch.objects.get(id=batch_id)
     batch.invite_date = datetime.now()
     batch.save()
-    return {"response": "ok"}
+    batch.user.save_invited_friends()
+    return { "response": "ok" }
 
+@render_json
+def single_user_invited(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    user.save_invited_friends()
+    return { "response": "ok" }
 
 def unregistered_friends_list(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])

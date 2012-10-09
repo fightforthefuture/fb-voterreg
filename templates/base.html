@@ -78,6 +78,7 @@
     <script src="https://connect.facebook.net/en_US/all.js"></script>
     <script>
       var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
+      var SINGLE_USER_INVITED_URL = "{% url 'main:single_user_invited' %}";
       FB.init({
         appId  : '{{FACEBOOK_APP_ID}}',
         frictionlessRequests: true

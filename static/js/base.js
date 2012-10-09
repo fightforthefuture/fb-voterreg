@@ -4,6 +4,7 @@ $(function() {
             _gaq.push(["_trackPageview", "/friends_invited"]);
             _kmq.push(["record", "Invited friends"]);
         }
+        $.getJSON(SINGLE_USER_INVITED_URL);
     }
 
     $(".invite-friends, header ul li a.invite").click(function() {
