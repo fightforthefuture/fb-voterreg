@@ -118,7 +118,7 @@ def fetch_me(request):
         user.save()
         try:
             _send_join_email(user, request)
-        except:
+        except Exception, e:
             logger.exception("error sending join email")
         if user.registered:
             update_friends_of.delay(
@@ -141,7 +141,7 @@ def _send_join_email(user, request):
             EMAIL_SENDER,
             [user.email])
         msg.content_subtype = "html"
-        msg.send(fail_silently=True)
+        msg.send(fail_silently=False)
 
 def _friend_listing_page(request, template, additional_context={}, user=None):
     if not user:

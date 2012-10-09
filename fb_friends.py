@@ -66,9 +66,6 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
         if voter and voter.registered:
             f.registered = True
             f.votizen_id = voter.id
-            print("registered")
-        else:
-            print("unregistered")
         try:
             f.save()
         except IntegrityError:
