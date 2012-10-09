@@ -16,7 +16,7 @@ from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime, date
 from fb_utils import FacebookProfile
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 import logging
 
 class SafariView(TemplateView):
@@ -129,17 +129,21 @@ def fetch_me(request):
 def _send_join_email(user, request):
     today = date.today()
     num_days = (date(2012, 11, 6) - today).days
-    email_body = render_to_string(
+    html_body = render_to_string(
         "join_email.html",
         { "num_days": num_days },
         context_instance=RequestContext(request))
+    text_body = render_to_string(
+        "join_email.txt",
+        { "num_days": num_days },
+        context_instance=RequestContext(request))
     if user.email:
-        msg = EmailMessage(
+        msg = EmailMultiAlternatives(
             "Re: Vote with Friends",
-            email_body,
+            text_body,
             settings.EMAIL_SENDER,
             [user.email])
-        msg.content_subtype = "html"
+        msg.attach_alternative(html_body, "text/html")
         msg.send(fail_silently=False)
 
 def _friend_listing_page(request, template, additional_context={}, user=None):

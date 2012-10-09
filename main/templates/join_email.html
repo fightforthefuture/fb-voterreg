@@ -1,16 +1,14 @@
 {% load url from future %}
 
-Thanks for trying out Vote with Friends!  Before you do anything else, invite your closest friends to pledge to vote!
+<p>Thanks for trying out Vote with Friends!  Before you do anything else, invite your closest friends to pledge to vote!</p>
+<p>There's only {{num_days}} days until election day!</p>
+<p>{{ FACEBOOK_CANVAS_PAGE }}?target={% url 'main:invite_friends' %}</p>
+<p>Thanks for being a part of this!</p>
 
-There's only {{num_days}} days until election day!
-
-{{ FACEBOOK_CANVAS_PAGE }}?target={% url 'main:invite_friends' %}
-
-Thanks for being a part of this!  
-
-Sincerely, 
+<p>
+Sincerely,<br/>
 Center for Rights & Vote with Friends
+</p>
 
---
-
+--<br/><br/>
 <a href="{{ FACEBOOK_CANVAS_PAGE }}?target={% url 'main:unsubscribe' %}">No emails please</a>
