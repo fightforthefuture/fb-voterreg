@@ -13,7 +13,7 @@ $(function() {
             {
                 method: 'send',
                 name: 'Vote. And help me get all our friends to vote.',
-                link: VOTERREG_INVITE_URL
+                link: FACEBOOK_CANVAS_PAGE
             },
             requestCallback);
         return false;
