@@ -137,7 +137,7 @@ def _send_join_email(user, request):
         msg = EmailMessage(
             "Re: Vote with Friends",
             email_body,
-            EMAIL_SENDER,
+            settings.EMAIL_SENDER,
             [user.email])
         msg.content_subtype = "html"
         msg.send(fail_silently=False)
