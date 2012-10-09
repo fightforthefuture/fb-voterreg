@@ -1,5 +1,6 @@
 import facebook
 import urllib
+import sys
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render_to_response, redirect
@@ -118,7 +119,8 @@ def fetch_me(request):
         user.save()
         try:
             _send_join_email(user, request)
-        except Exception, e:
+        except Exception as e:
+            print(sys.exc_info()[0])
             logger.exception("error sending join email")
         if user.registered:
             update_friends_of.delay(
@@ -134,6 +136,7 @@ def _send_join_email(user, request):
         "join_email.html",
         { "num_days": num_days },
         context_instance=RequestContext(request))
+    print("send email to: {0}".format(user.email))
     if user.email:
         msg = EmailMessage(
             "Re: Vote with Friends",
