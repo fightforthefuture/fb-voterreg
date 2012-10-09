@@ -19,8 +19,6 @@ from fb_utils import FacebookProfile
 from django.core.mail import EmailMessage
 import logging
 
-logger = logging.getLogger("main.views")
-
 class SafariView(TemplateView):
     template_name = 'safari.html'
 
@@ -120,8 +118,7 @@ def fetch_me(request):
         try:
             _send_join_email(user, request)
         except Exception as e:
-            print(sys.exc_info()[0])
-            logger.exception("error sending join email")
+            logging.exception("error sending join email")
         if user.registered:
             update_friends_of.delay(
                 user.id, request.facebook["access_token"])
@@ -136,7 +133,6 @@ def _send_join_email(user, request):
         "join_email.html",
         { "num_days": num_days },
         context_instance=RequestContext(request))
-    print("send email to: {0}".format(user.email))
     if user.email:
         msg = EmailMessage(
             "Re: Vote with Friends",
