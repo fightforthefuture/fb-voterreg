@@ -71,6 +71,21 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
         except IntegrityError:
             pass
 
+def _update_registered_status_of_all(user_id, fb_friends):
+    user = User.objects.get(id=user_id)
+    for fb_friend in fb_friends:
+        f = Friendship.objects.filter(user=user, fb_uid=fb_friend["uid"]).all()[:1]
+        if len(f) == 0:
+            continue
+        f = f[0]
+        if not f.votizen_id:
+            profile = FacebookProfile(fb_friend)
+            voter = fetch_voter_from_fb_profile(profile)
+            if voter:
+                f.votizen_id = voter.id
+                f.registered = voter.registered
+                f.save()
+
 def _make_friendships(user_id, access_token, fb_friends):
     user = User.objects.get(id=user_id)
     found_uids = _create_from_existing_users(user, fb_friends)
@@ -116,6 +131,8 @@ def fetch_friends(fb_uid, access_token):
     user.save()
 
     user.friendshipbatch_set.all().update(completely_fetched=True)
+
+    _update_registered_status_of_all(user_id, friends)
 
 def update_friends_of(user_id, access_token):
     # modify any existing Friendship records that has this User on 
