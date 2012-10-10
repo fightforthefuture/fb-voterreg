@@ -37,6 +37,7 @@ class OGObjectView(TemplateView):
         context = super(OGObjectView, self).get_context_data(**kwargs)
         context['base_url'] = settings.BASE_URL
         context['canvas_url'] = settings.FACEBOOK_CANVAS_PAGE
+        context['facebook_app_id'] = settings.FACEBOOK_APP_ID
         return context
 
 
