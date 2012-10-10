@@ -128,7 +128,8 @@ BROKER_BACKEND = "django"
 
 FACEBOOK_APP_ID = "258722907563918"
 FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
-FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/258722907563918/"
+FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-dev/"
+FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-dev:pledge'
 
 VOTIZEN_API_KEY = "" # secret
 USE_FAKE_VOTIZEN_API = False
@@ -175,7 +176,8 @@ if environment in ["production", "staging"]:
 if environment == 'staging':
     DEBUG = True
     FACEBOOK_APP_ID = "381227845280044"
-    FACEBOOK_CANVAS_PAGE = "http://apps.facebook.com/381227845280044/"
+    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-staging/"
+    BASE_URL = "https://voterreg-facebook-staging.herokuapp.com"
     USE_FAKE_VOTIZEN_API = True
 
 if environment == 'production':

@@ -78,6 +78,9 @@ class User(models.Model):
     friends_fetched = models.BooleanField(default=False)
     # unsubscribed from emails?
     unsubscribed = models.BooleanField(default=False)
+    # User explicitly shared their pledge with friends
+    explicit_share = models.BooleanField(default=False)
+
 
     def update_friends_fetch(self):
         self.friends_fetch_last_activity = datetime.now()

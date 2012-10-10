@@ -11,6 +11,7 @@ urlpatterns = patterns(
     url(r"^register_widget$", "register_widget", name="register_widget"),
     url(r"^pledge$", "pledge", name="pledge"),
     url(r"^submit_pledge$", "submit_pledge", name="submit_pledge"),
+    url(r"^pledge_explicit_share$", "pledge_explicit_share", name="pledge_explicit_share"),
     url(r"^actually_registered$", "im_actually_registered", name="actually_registered"),
     url(r"^wont_vote$", "wont_vote", name="wont_vote"),
     url(r"^invite_friends$", "invite_friends", name="invite_friends"),

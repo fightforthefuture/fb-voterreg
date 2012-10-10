@@ -1,4 +1,5 @@
 import facebook
+import requests
 import urllib
 import sys
 from django.contrib import messages
@@ -20,8 +21,23 @@ from fb_utils import FacebookProfile
 from django.core.mail import EmailMultiAlternatives
 import logging
 
+
 class SafariView(TemplateView):
     template_name = 'safari.html'
+
+
+class OGObjectView(TemplateView):
+    """
+    The view used to serve the OpenGraph objects published whenever a user
+    pledges to vote.
+    """
+    template_name = 'pledge/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(OGObjectView, self).get_context_data(**kwargs)
+        context['base_url'] = settings.BASE_URL
+        context['canvas_url'] = settings.FACEBOOK_CANVAS_PAGE
+        return context
 
 
 def _post_index(request):
@@ -35,7 +51,8 @@ def _post_index(request):
         settings.FACEBOOK_APP_SECRET)
     if not data.get("user_id"):
         scope = ["user_birthday", "user_location", "friends_birthday,"
-                 "friends_hometown", "friends_location", "email"]
+                 "friends_hometown", "friends_location", "email",
+                 "publish_actions"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,
                                      redirect_uri, scope)
         markup = ('<script type="text/javascript">'
@@ -207,6 +224,9 @@ def pledge(request):
         additional_context={"page": "pledge"})
 
 
+
+
+
 def invite_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_mgr = user.friendship_set
@@ -228,6 +248,14 @@ def invite_friends(request):
 @render_json
 def submit_pledge(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    explicit_share = request.GET.get('explicit_share', None) == 'true'
+    if explicit_share:
+        share = requests.post(settings.FACEBOOK_OG_PLEDGE_URL, params={
+            'website': settings.BASE_URL + reverse('pledge_object'),
+            'access_token': request.facebook['access_token'],
+            'fb:explicitly_shared': 'true',
+        })
+    user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
     update_friends_of.delay(
@@ -238,6 +266,13 @@ def submit_pledge(request):
         # Translators: message displayed to users in green bar when they pledge to vote
         _("Thank you for pledging to vote!")
     )
+    return {"next": reverse("main:invite_friends")}
+
+
+def pledge_explicit_share(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    import pdb
+    pdb.set_trace()
     return {"next": reverse("main:invite_friends")}
 
 

@@ -3,6 +3,9 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
+from main.views import OGObjectView
+
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -10,4 +13,5 @@ urlpatterns = patterns('',
     url(r'staticpages/(?P<page_name>.*)', "staticpages.views.index", name="staticpages"),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^rosetta/', include('rosetta.urls')),
+    url(r'^pledge/', OGObjectView.as_view(), name="pledge_object"),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

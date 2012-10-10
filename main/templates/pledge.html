@@ -19,6 +19,10 @@
 
 </div>
 <div class="main-content-message">
+
+  {% comment %}Translators: consent to post action to timeline{% endcomment %}
+  <p><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell my friends I'm voting{% endblocktrans %}</a></p>
+
   {% comment %}Translators: tagline of page where users are asked to pledge to vote{% endcomment %}
   <p>{% blocktrans %}<strong>Why does pledging matter?</strong> Because your friends will see that you've pledged. So just by pledging, you're encouraging your friends to vote.{% endblocktrans %}</p>
 </div>
@@ -31,7 +35,7 @@
 {% block scripts %}
 {{ block.super }}
 <script>
-  var SUBMIT_PLEDGE_URL = "{% url 'main:submit_pledge' %}";
+    var SUBMIT_PLEDGE_URL = "{% url 'main:submit_pledge' %}";
 </script>
 <script type="text/javascript" src="{% static 'js/pledge.js' %}"></script>
 {% endblock %}
