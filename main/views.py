@@ -253,8 +253,7 @@ def submit_pledge(request):
             'access_token': request.facebook['access_token'],
             'fb:explicitly_shared': 'true',
         })
-        if share.response_code != 200:
-            raise Exception(share.content)
+        assert False, share.content
     user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
