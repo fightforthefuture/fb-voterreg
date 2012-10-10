@@ -225,9 +225,6 @@ def pledge(request):
         additional_context={"page": "pledge"})
 
 
-
-
-
 def invite_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_mgr = user.friendship_set
@@ -256,6 +253,8 @@ def submit_pledge(request):
             'access_token': request.facebook['access_token'],
             'fb:explicitly_shared': 'true',
         })
+        if share.response_code != 200:
+            raise Exception(share.content)
     user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
