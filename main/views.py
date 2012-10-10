@@ -253,8 +253,6 @@ def submit_pledge(request):
             'access_token': request.facebook['access_token'],
             'fb:explicitly_shared': 'true',
         })
-        assert False, share.content
-    assert False, request.GET
     user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
