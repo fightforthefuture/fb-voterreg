@@ -188,8 +188,12 @@ if environment == 'staging':
     FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-stag:pledge'
 
 if environment == 'production':
+    FACEBOOK_APP_ID = "220561354738022"
+    BASE_URL = "https://voterreg-facebook.herokuapp.com"
+    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends/"
     AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
+    FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends:pledge'
 
 
 if environment == 'dev':
