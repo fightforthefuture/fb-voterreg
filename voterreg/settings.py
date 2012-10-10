@@ -176,9 +176,10 @@ if environment in ["production", "staging"]:
 if environment == 'staging':
     DEBUG = True
     FACEBOOK_APP_ID = "381227845280044"
-    FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-staging/"
     BASE_URL = "https://voterreg-facebook-staging.herokuapp.com"
+    FACEBOOK_CANVAS_PAGE = BASE_URL + '/'
     USE_FAKE_VOTIZEN_API = True
+    FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-staging:pledge'
 
 if environment == 'production':
     STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
