@@ -182,7 +182,6 @@ if environment == 'staging':
 
 if environment == 'production':
     STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-    STATIC_URL = 'https://s3.amazonaws.com/voterreg.fb/'
     AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
     AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
     AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
