@@ -193,6 +193,10 @@ class Friendship(models.Model):
     wont_vote_reason = models.CharField(
         max_length=18, choices=WONT_VOTE_REASONS, blank=True)
 
+    @property
+    def invited(self):
+        return self.invited_with_batch or self.invited_individually
+
     def needs_invitation(self):
         touched = self.registered or self.pledged or \
             self.invited_pledge_count > 0 or self.wont_vote_reason
