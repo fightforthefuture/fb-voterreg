@@ -1,22 +1,44 @@
-{% load i18n %}
+{% load url from future %}{% load i18n %}{% if friends %}
+    
+    <ul class="cf">
+        {% for friend in friends %}
+            <li>
 
-{% for friend in friends %}
-<span class="friend_to_invite">
-  <img src="{{friend.picture_url}}" alt="{{friend.name}}">
-  <span>{{friend.name}}</span>
-  {% if friend.invited %}
-  <span><i class="icon-smallcheck-green"></i> {% blocktrans %}invited{% endblocktrans %}</span>
-  {% else %}
-  <span class="uninvited"><i class="icon-smallx-gray"></i> {% blocktrans %}not invited{% endblocktrans %}</span>
-  <span style="display: none" class="invited"><i class="icon-smallcheck"></i> {% blocktrans %}invited{% endblocktrans %}</span>
-  {% endif %}
-  <span data-friend-fbuid="{{ friend.fb_uid }}">
-    {% if friend.invited %}
-    <a href="javascript:void(0)" class="invited invite"><i class="icon-smallcheck-white"></i> {% blocktrans %}Send Reminder{% endblocktrans %}</a>
-    {% else %}
-    <a href="javascript:void(0)" class="uninvited invite"><i class="icon-chat-white"></i> {% blocktrans %}Send 1st Message{% endblocktrans %}</a>
-    <a style="display: none" href="javascript:void(0)" class="invited invite"><i class="icon-smallcheck-white"></i> {% blocktrans %}Send Reminder{% endblocktrans %}</a>
-    {% endif %}
-  </span>
-</span>
-{% endfor %}
+                <figure>
+                    <img src="{{friend.picture_url}}" alt="{{friend.name}}" />
+                </figure>
+
+                <h2>{{ friend.name }}</h2>
+
+                {% if friend.invited %}
+                    <div class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
+                {% else %}
+                    <div class="uninvited status">{% blocktrans %}not invited{% endblocktrans %}</div>
+                    <div style="display: none" class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
+                {% endif %}
+
+                <div class="action" data-friend-fbuid="{{ friend.fb_uid }}">
+                    {% if friend.invited %}
+                        <a href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
+                    {% else %}
+                        <a href="javascript:void(0)" class="uninvited invite btn btn-green">{% blocktrans %}Send 1st Message{% endblocktrans %}</a>
+                        <a style="display: none" href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
+                    {% endif %}
+                </div>
+
+            </li>
+        {% endfor %}
+    </ul>
+
+{% else %}{% if not request.is_ajax %}
+        
+    <div class="empty">
+        <p>
+            {% if section == "not_invited" %}You've invited all your friends. Thanks for inviting so many people!</p>{% endif %}
+            {% if section == "invited" %}You haven't invited any friends. Why don't you <a href="{% url 'main:invite_friends_2' 'not_invited' %}">invite some</a>?</p>{% endif %}
+            {% if section == "pledged" %}None of your friends have pledged. <a href="{% url 'main:invite_friends_2' 'not_invited' %}">Invite some more friends</a> to see if they will.</p>{% endif %}
+            {% if section == "registered" %}None of your friends are registered to vote. Do your civic duty and <a href="{% url 'main:invite_friends_2' 'not_invited' %}">make sure they're registered</a>!</p>{% endif %}
+        </p>
+    </div>
+
+{% endif %}{% endif %}

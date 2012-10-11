@@ -28,14 +28,14 @@ urlpatterns = patterns(
 
 urlpatterns += patterns(
     "",
-    url(r"^voterreg_invite$", 
-        TemplateView.as_view(template_name="voterreg_invite.html"), 
+    url(r"^voterreg_invite$",
+        TemplateView.as_view(template_name="voterreg_invite.html"),
         name="voterreg_invite"),
     url(r"^safari$",
         SafariView.as_view(),
         name="safari"
     ),
-    url(r"^safari2$", 
-        TemplateView.as_view(template_name="safari2.html"), 
+    url(r"^safari2$",
+        TemplateView.as_view(template_name="safari2.html"),
         name="safari2"),
 )

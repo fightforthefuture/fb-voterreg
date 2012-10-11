@@ -249,6 +249,10 @@ def invite_friends_2(request, section="not_invited"):
           "section": section,
           "num_registered": f_mgr.filter(registered=True).count(),
           "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
+          "num_invited": f_mgr.filter(
+            Q(invited_with_batch=True) | Q(invited_individually=True)).count(),
+          "num_uninvited": f_mgr.filter(
+            Q(invited_with_batch=False) & Q(invited_individually=False)).count(),
           "num_friends": user.num_friends or 0 },
         context_instance=RequestContext(request))
 

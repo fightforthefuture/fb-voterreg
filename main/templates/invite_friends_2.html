@@ -4,44 +4,49 @@
 {% load static from staticfiles %}
 {% load url from future %}
 
-{% block content %}
-<div class="blackbar">
-  
-  {% comment %}Translators: title of page where users are asked to invite their friends to vote.{% endcomment %}
-  <div class="title">{% trans "Now, ask friends to register and pledge to vote!" %}</div>
 
-  <div class="text">
-    {% comment %}Translators: on the page where users invite friends, the number of the user's friends pledged and registered of the total{% endcomment %}
-    <strong class="primary"><span class="num-registered">{{ num_registered }}</span></strong> registered and <strong class="primary"><span class="num-pledged">{{ num_pledged }}</span></strong> pledged out of <strong><span class="num-friends">{{ num_friends }}</span></strong> friends
-  </div>
-</div>
-<div>
-  <span{% if section == "not_invited" %} class="selected"{% endif %}>
-    <a href="{% url 'main:invite_friends_2' 'not_invited' %}">Not Invited</a>
-  </span>
-  <span{% if section == "invited" %} class="selected"{% endif %}>
-    <a href="{% url 'main:invite_friends_2' 'invited' %}">Invited</a>
-  </span>
-  <span{% if section == "pledged" %} class="selected"{% endif %}>
-    <a href="{% url 'main:invite_friends_2' 'pledged' %}">Pledged</a>
-  </span>
-  <span{% if section == "registered" %} class="selected"{% endif %}>
-    <a href="{% url 'main:invite_friends_2' 'registered' %}">Registered</a>
-  </span>
-</div>
-<div>
-  <div id="friends">
-    {% include "_invite_friends_page.html" %}
-  </div>
-  <a href="javascript:void(0)" id="load_more_friends">LOAD MORE FRIENDS</a>
-</div>
+{% block css %}
+    
+{% endblock css %}
+
+
+{% block content %}
+
+    <ul class="filters">
+
+        {% comment %}Translators: group of friends the user hasn't yet invited to the app{% endcomment %}
+        <li{% if section == "not_invited" %} class="selected"{% endif %} id="uninvited_friends"><a href="{% url 'main:invite_friends_2' 'not_invited' %}">Not Invited <span class="count">(<span class="num">{{ num_uninvited }}</span>)</span></a></li>
+
+        {% comment %}Translators: group of friends the user has invited to the app{% endcomment %}
+        <li{% if section == "invited" %} class="selected"{% endif %} id="invited_friends"><a href="{% url 'main:invite_friends_2' 'invited' %}">Invited <span class="count">(<span class="num">{{ num_invited }}</span>)</span></a></li>
+
+        {% comment %}Translators: group of friends who have pledged to vote{% endcomment %}
+        <li{% if section == "pledged" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'pledged' %}">Pledged <span class="count">({{ num_pledged }})</span></a></li>
+
+        {% comment %}Translators: group of friends the have registered to vote{% endcomment %}
+        <li{% if section == "registered" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'registered' %}">Registered <span class="count">({{ num_registered }})</span></a></li>
+
+    </ul>
+
+    <div class="main-content cf" id="friends">
+
+        {% include "_invite_friends_page.html" %}
+
+        {% if friends %}
+            {% comment %}Translators: text of button that allows user to load more friends{% endcomment %}
+            <a href="javascript:void(0)" id="load_more_friends" class="load-more">Load More Friends</a>     
+        {% endif %}
+
+    </div>
+
 {% endblock %}
 
+
 {% block scripts %}
-<script>
-  var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
-  var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
-  var LOAD_MORE_URL = "{% url 'main:invite_friends_2_page' section %}";
-</script>
-<script src="{% static 'js/invite_friends_2.js' %}"></script>
+    <script>
+        var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
+        var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
+        var LOAD_MORE_URL = "{% url 'main:invite_friends_2_page' section %}";
+    </script>
+    <script src="{% static 'js/invite_friends_2.js' %}"></script>
 {% endblock %}
