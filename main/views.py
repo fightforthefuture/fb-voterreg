@@ -318,6 +318,7 @@ def mark_batch_invited(request):
     batch = FriendshipBatch.objects.get(id=batch_id)
     batch.invite_date = datetime.now()
     batch.save()
+    batch.friendship_set.all().update(invited_with_batch=True)
     batch.user.save_invited_friends()
     return { "response": "ok" }
 
