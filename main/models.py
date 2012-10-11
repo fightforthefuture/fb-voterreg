@@ -190,9 +190,15 @@ class Friendship(models.Model):
     votizen_id = models.CharField(max_length=132, blank=True)
     registered = models.BooleanField(default=False)
     date_pledged = models.DateTimeField(null=True)
+    invited_with_batch = models.BooleanField(default=False)
+    invited_individually = models.BooleanField(default=False)
     invited_pledge_count = models.IntegerField(default=0)
     wont_vote_reason = models.CharField(
         max_length=18, choices=WONT_VOTE_REASONS, blank=True)
+
+    @property
+    def invited(self):
+        return self.invited_with_batch or self.invited_individually
 
     def needs_invitation(self):
         touched = self.registered or self.pledged or \

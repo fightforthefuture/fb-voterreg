@@ -2,6 +2,7 @@ import facebook
 import requests
 import urllib
 import sys
+from django.db.models import Q
 from django.contrib import messages
 from django.conf import settings
 from django.shortcuts import render_to_response, redirect
@@ -224,6 +225,42 @@ def pledge(request):
         request, "pledge.html",
         additional_context={"page": "pledge"})
 
+def _invite_friends_2_qs(user, section, start_index=0):
+    f_qs = user.friendship_set.all()
+    if section == "invited":
+        f_qs = f_qs.filter(
+            Q(invited_with_batch=True) | Q(invited_individually=True))
+    elif section == "not_invited":
+        f_qs = f_qs.filter(
+            invited_with_batch=False, invited_individually=False)
+    elif section == "pledged":
+        f_qs = f_qs.filter(date_pledged__isnull=False)
+    elif section == "registered":
+        f_qs = f_qs.filter(registered=True)
+    return f_qs.order_by("fb_uid")[start_index:(start_index + 16)]
+
+def invite_friends_2(request, section="not_invited"):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    f_qs = _invite_friends_2_qs(user, section)
+    f_mgr = user.friendship_set    
+    return render_to_response(
+        "invite_friends_2.html",
+        { "friends": f_qs,
+          "section": section,
+          "num_registered": f_mgr.filter(registered=True).count(),
+          "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
+          "num_friends": user.num_friends or 0 },
+        context_instance=RequestContext(request))
+
+@csrf_exempt
+def invite_friends_2_page(request, section):
+    start_index = int(request.POST.get("start", 0))
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    f_qs = _invite_friends_2_qs(user, section, start_index)
+    return render_to_response(
+        "_invite_friends_page.html",
+        { "friends": f_qs },
+        context_instance=RequestContext(request))
 
 def invite_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
@@ -351,8 +388,16 @@ def mark_batch_invited(request):
     batch = FriendshipBatch.objects.get(id=batch_id)
     batch.invite_date = datetime.now()
     batch.save()
+    batch.friendship_set.all().update(invited_with_batch=True)
     batch.user.save_invited_friends()
     return { "response": "ok" }
+
+@render_json
+def mark_individual_invited(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    friendship = user.friendship_set.get(fb_uid=request.GET["fbuid"])
+    friendship.invited_individually = True
+    friendship.save()
 
 @render_json
 def single_user_invited(request):
@@ -371,7 +416,6 @@ def unregistered_friends_list(request):
         "unregistered_friends_list.html",
         {"friendships": friendships},
         context_instance=RequestContext(request))
-
 
 def register_widget(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])

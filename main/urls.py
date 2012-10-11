@@ -17,9 +17,13 @@ urlpatterns = patterns(
     url(r"^invite_friends$", "invite_friends", name="invite_friends"),
     url(r"^fetch_updated_batches$", "fetch_updated_batches", name="fetch_updated_batches"),
     url(r"^mark_batch_invited$", "mark_batch_invited", name="mark_batch_invited"),
+    url(r"^mark_individual_invited$", "mark_individual_invited", name="mark_individual_invited"),
     url(r"^single_user_invited$", "single_user_invited", name="single_user_invited"),
     url(r"^unregistered_friends_list$", "unregistered_friends_list", name="unregistered_friends_list"),
     url(r"^unsubscribe", "unsubscribe", name="unsubscribe"),
+    url(r"^invite_friends_2$", "invite_friends_2", name="invite_friends_2"),
+    url(r"^invite_friends_2/(?P<section>\w+)$", "invite_friends_2", name="invite_friends_2"),
+    url(r"^invite_friends_2_page/(?P<section>\w+)$", "invite_friends_2_page", name="invite_friends_2_page"),
 )
 
 urlpatterns += patterns(
