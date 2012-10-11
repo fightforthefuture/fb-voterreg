@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-09 16:37-0500\n"
-"PO-Revision-Date: 2012-10-09 12:26\n"
-"Last-Translator:   <c@c.cc>\n"
+"POT-Creation-Date: 2012-10-11 14:41-0500\n"
+"PO-Revision-Date: 2012-10-10 11:28\n"
+"Last-Translator: <>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -64,33 +64,33 @@ msgid "Not pledged yet"
 msgstr ""
 
 #. Translators: subject of email sent to users when they join the app
-#: views.py:154
+#: views.py:173
 msgid "Re: Vote with Friends"
 msgstr ""
 
 #. Translators: message displayed to users in green bar when they register to vote
-#: views.py:203
+#: views.py:222
 msgid "Thank you for registering to vote!"
 msgstr ""
 
 #. Translators: message displayed to users in green bar when they pledge to vote
-#: views.py:239
+#: views.py:306
 msgid "Thank you for pledging to vote!"
 msgstr ""
 
 #. Translators: message displayed to users in green bar when they say they are ineligible to vote
-#: views.py:267
+#: views.py:341
 msgid ""
 "Thank you! Even though you can't vote, you can still invite your friends."
 msgstr ""
 
 #. Translators: message displayed to users in green bar when they are found to already be registered to vote
-#: views.py:282
+#: views.py:356
 msgid "You're now marked as registered to vote."
 msgstr ""
 
 #. Translators: message displayed to users in green bar when they unsubscribe from emails
-#: views.py:365
+#: views.py:452
 msgid "Email notifications are turned off"
 msgstr ""
 
@@ -107,6 +107,8 @@ msgid ""
 "I'm sending this to all my friends who moved out of state. Use this to make "
 "sure you're registered and pledged to vote this year!"
 msgstr ""
+"Are you pledged to vote this year?  Want to see how many of your friends are "
+"registered and planning to vote? "
 
 #. Translators: Invite text sent to friends who live in the same city as the user
 #: templates/_batch.html:22
@@ -153,15 +155,33 @@ msgid "Invite them"
 msgstr ""
 
 #. Translators: message to user if they've invited 0 friends
-#: templates/_friends.html:15
+#: templates/_friends.html:17
 msgid "Invited 0 friends"
 msgstr ""
 
 #. Translators: message to user if they've invited more than 0 friends
-#: templates/_friends.html:18
+#: templates/_friends.html:20
 #, python-format
 msgid ""
 "Invited %(f.invited_pledge_count)s friend%(f.invited_pledge_count|pluralize)s"
+msgstr ""
+
+#: templates/_invite_friends_page.html:14
+#: templates/_invite_friends_page.html:17
+msgid "invited"
+msgstr ""
+
+#: templates/_invite_friends_page.html:16
+msgid "not invited"
+msgstr ""
+
+#: templates/_invite_friends_page.html:22
+#: templates/_invite_friends_page.html:25
+msgid "Send Reminder"
+msgstr ""
+
+#: templates/_invite_friends_page.html:24
+msgid "Send 1st Message"
 msgstr ""
 
 #. Translators: message on main index to users who are registered but not pledged
@@ -292,8 +312,13 @@ msgstr ""
 msgid "No, not ready to pledge yet"
 msgstr ""
 
+#. Translators: consent to post action to timeline
+#: templates/pledge.html:24
+msgid "Tell my friends I'm voting"
+msgstr ""
+
 #. Translators: tagline of page where users are asked to pledge to vote
-#: templates/pledge.html:23
+#: templates/pledge.html:27
 msgid ""
 "<strong>Why does pledging matter?</strong> Because your friends will see "
 "that you've pledged. So just by pledging, you're encouraging your friends to "
