@@ -875,7 +875,7 @@ div.content {
                     0px 2px 5px rgba(0, 0, 0, 0.22);
     }
         #friends li figure{
-            width: 85px;
+            width: 50px;
             margin: 8px auto;
         }
         #friends li img{
@@ -894,6 +894,8 @@ div.content {
         padding: 0 10px;
         margin: 12px 0 4px;
         text-align: center;
+        max-height: 34px;
+        overflow: hidden;
     }
     #friends .status{
         font-size: 12px;
@@ -913,6 +915,18 @@ div.content {
             #friends .status.invited:before{
                 content: '\2713\A0';
             }
+        #friends .status.not-pledged{
+            color: #585858;
+        }
+            #friends .status.not-pledged:before{
+                content: '\D7\A0';
+            }
+        #friends .status.pledged{
+            color: #00931c;
+        }
+            #friends .status.pledged22:before{
+                content: '\2713\A0';
+            }
 
     #friends .action{
         margin: 12px 1px 1px;
@@ -923,7 +937,7 @@ div.content {
             font: bold 10px/1 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
             display: block;
             text-shadow: none;
-            padding: 7px 5px;
+            padding: 4px 5px 7px;
             text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
             -webkit-box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
             box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
@@ -933,13 +947,7 @@ div.content {
                 -webkit-box-shadow: inset 0px 1px 1px 1px rgba(0, 0, 0, 0.2);
                 box-shadow: inset 0px 1px 1px 1px rgba(0, 0, 0, 0.2);
             }
-            #friends .action .btn.btn-blue:before{
-                content: '\2713\A0\A0';
-            }
-            #friends .action .btn.btn-green{
-                padding-top: 4px;
-            }
-            #friends .action .btn.btn-green:before{
+            #friends .action .btn:before{
                 content: '\2709\A0';
                 font-size: 20px;
                 line-height: 10px;

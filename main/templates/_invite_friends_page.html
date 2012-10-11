@@ -12,16 +12,27 @@
 
                 {% if friend.invited %}
                     <div class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
+                    {% if friend.pledged %}
+                        <div class="invited pledged status">{% blocktrans %}pledged{% endblocktrans %}</div>
+                    {% else %}
+                        <div class="invited not-pledged status">{% blocktrans %}not pledged{% endblocktrans %}</div>
+                    {% endif %}
+                    
                 {% else %}
                     <div class="uninvited status">{% blocktrans %}not invited{% endblocktrans %}</div>
                     <div style="display: none" class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
+                    {% if friend.pledged %}
+                        <div style="display: none" class="invited pledged status">{% blocktrans %}pledged{% endblocktrans %}</div>
+                    {% else %}
+                        <div style="display: none" class="invited not-pledged status">{% blocktrans %}not pledged{% endblocktrans %}</div>
+                    {% endif %}
                 {% endif %}
 
                 <div class="action" data-friend-fbuid="{{ friend.fb_uid }}">
                     {% if friend.invited %}
                         <a href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% else %}
-                        <a href="javascript:void(0)" class="uninvited invite btn btn-green">{% blocktrans %}Send 1st Message{% endblocktrans %}</a>
+                        <a href="javascript:void(0)" class="uninvited invite btn btn-green">{% blocktrans %}Invite{% endblocktrans %}</a>
                         <a style="display: none" href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% endif %}
                 </div>

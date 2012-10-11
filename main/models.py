@@ -246,6 +246,10 @@ class Friendship(models.Model):
         return "https://graph.facebook.com/{0}/picture?type=large".format(
             self.fb_uid)
 
+    def picture_thumbnail_url(self):
+        return "https://graph.facebook.com/{0}/picture?type=square".format(
+            self.fb_uid)
+
 def _fill_in_display_ordering(sender, instance, **kwargs):
     instance.display_ordering = \
         (1 if instance.registered else 0) + \
