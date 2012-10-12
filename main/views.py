@@ -232,7 +232,9 @@ def _invite_friends_2_qs(user, section, start_index=0):
             Q(invited_with_batch=True) | Q(invited_individually=True))
     elif section == "not_invited":
         f_qs = f_qs.filter(
-            invited_with_batch=False, invited_individually=False)
+            invited_with_batch=False, 
+            invited_individually=False, 
+            date_pledged__isnull=True)
     elif section == "pledged":
         f_qs = f_qs.filter(date_pledged__isnull=False)
     elif section == "registered":
@@ -250,9 +252,12 @@ def invite_friends_2(request, section="not_invited"):
           "num_registered": f_mgr.filter(registered=True).count(),
           "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
           "num_invited": f_mgr.filter(
-            Q(invited_with_batch=True) | Q(invited_individually=True)).count(),
+                Q(invited_with_batch=True) | 
+                Q(invited_individually=True)).count(),
           "num_uninvited": f_mgr.filter(
-            Q(invited_with_batch=False) & Q(invited_individually=False)).count(),
+                invited_with_batch=False, 
+                invited_individually=False, 
+                date_pledged__isnull=True).count(),
           "num_friends": user.num_friends or 0 },
         context_instance=RequestContext(request))
 
