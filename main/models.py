@@ -67,6 +67,7 @@ class User(models.Model):
     wont_vote_reason = models.CharField(
         max_length=18, choices=WONT_VOTE_REASONS, blank=True, default="")
     date_pledged = models.DateTimeField(null=True)
+    date_voted = models.DateTimeField(null=True)
     date_invited_friends = models.DateTimeField(null=True)
     # number of invited friends who have pledged
     invited_pledge_count = models.IntegerField(default=0)
