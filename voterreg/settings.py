@@ -134,6 +134,8 @@ FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-dev:pled
 VOTIZEN_API_KEY = "" # secret
 USE_FAKE_VOTIZEN_API = False
 
+SESSION_COOKIE_HTTPONLY = False
+
 # change this whenever someone with sufficient permission
 # changes it in heroku/sendgrid.
 EMAIL_SENDER = "app7299205@heroku.com"

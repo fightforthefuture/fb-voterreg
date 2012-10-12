@@ -28,8 +28,8 @@ class FacebookMiddleware(object):
         return fb_user
 
     def _get_fb_user(self, request):
-        if request.GET.get("safari", False):
-            fb_user = { "method": "safari",
+        if request.GET.get("no_cookies", False):
+            fb_user = { "method": "no_cookies",
                         "uid": request.GET["fb_uid"],
                         "access_token": request.GET["access_token"] }
             return fb_user
@@ -38,34 +38,31 @@ class FacebookMiddleware(object):
             return fb_user
         return self._get_fb_user_canvas(request)
 
-    def _is_initial_safari_post(self, request):
-        if 'fb_user' not in request.session and \
-                'safari' not in request.POST and \
-                'safari' not in request.GET:
-            ua = request.META['HTTP_USER_AGENT']
-            if 'Safari' in ua and not 'Chrome' in ua:
-                return True
-        return False
+    def _is_initial_request(self, request):
+        return 'fb_user' not in request.session and \
+            'no_cookies' not in request.POST and \
+            'no_cookies' not in request.GET
 
     def process_request(self, request):
         fb_user = self._get_fb_user(request)
         request.facebook = fb_user
         if fb_user:
             user, created = User.objects.get_or_create(fb_uid=fb_user["uid"])
-            # Safari blocks third-party cookies by default.
-            if self._is_initial_safari_post(request):
+            # Some browsers block third-party cookies by default.
+            if self._is_initial_request(request):
+                request.session["fb_user"] = fb_user
+                request.session.modified = True
                 query_string = urllib.urlencode(
                     { 'fb_uid': fb_user['uid'],
                       'signed_request': request.POST['signed_request'],
                       'access_token': fb_user['access_token'],
-                      'safari': True })
+                      'no_cookies': True })
                 return render_to_response(
-                    'safari.html', 
+                    'cookies_test.html', 
                     { 'query_string': query_string }, 
                     RequestContext(request))
             request.session["fb_user"] = fb_user
             request.session.modified = True
-
         request.facebook = request.session.get("fb_user", None)
 
         return None

@@ -31,11 +31,11 @@ urlpatterns += patterns(
     url(r"^voterreg_invite$",
         TemplateView.as_view(template_name="voterreg_invite.html"),
         name="voterreg_invite"),
-    url(r"^safari$",
+    url(r"^cookies_test$",
         SafariView.as_view(),
-        name="safari"
+        name="cookies_test"
     ),
-    url(r"^safari2$",
-        TemplateView.as_view(template_name="safari2.html"),
-        name="safari2"),
+    url(r"^no_cookies$",
+        TemplateView.as_view(template_name="no_cookies.html"),
+        name="no_cookies"),
 )
