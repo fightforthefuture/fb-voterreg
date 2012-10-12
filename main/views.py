@@ -20,6 +20,7 @@ from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime, date
 from fb_utils import FacebookProfile
 from django.core.mail import EmailMultiAlternatives
+from models import BATCH_BARELY_LEGAL
 import logging
 
 
@@ -444,6 +445,27 @@ def register_widget(request):
         "register_widget.html",
         {"widget_qs": urllib.urlencode(widget_qs),
           "page": "register"},
+        context_instance=RequestContext(request))
+
+def mission(request, batch_type=BATCH_BARELY_LEGAL):
+    batch_type = int(batch_type)
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)
+    recs = f_qs.filter(invite_date__isnull=True)[:1]
+    uninvited_batch = None if len(recs) == 0 else recs[0]
+    recs = f_qs.filter(invite_date__isnull=False).order_by("-invite_date")[:1]
+    last_invited_batch = None if len(recs) == 0 else recs[0]
+    friends = user.friendship_set.filter(
+        batch_type=batch_type).order_by("fb_uid")[:12]
+    context = {
+        "batch_type": batch_type,
+        "missions": user.mission_set.all(),
+        "uninvited_batch": uninvited_batch,
+        "last_invited_batch": last_invited_batch,
+        "friends": friends }
+    return render_to_response(
+        "mission.html",
+        context,
         context_instance=RequestContext(request))
 
 def unsubscribe(request):
