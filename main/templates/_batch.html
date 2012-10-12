@@ -2,7 +2,7 @@
 
 <div class="box cf friend-box" data-batch-id="{{batch.id}}" data-batch-type="{{batch.type}}">
     <div class="friends">
-        {% for f in batch.friendships %}<img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}
+        {% for f in batch.friendships|slice:":32" %}<img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}
     </div>
     <div class="text">
 
