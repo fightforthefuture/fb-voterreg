@@ -132,7 +132,7 @@ def fetch_friends(fb_uid, access_token):
 
     user.friendshipbatch_set.all().update(completely_fetched=True)
 
-    _update_registered_status_of_all(user_id, friends)
+    _update_registered_status_of_all(user.id, friends)
 
 def update_friends_of(user_id, access_token):
     # modify any existing Friendship records that has this User on 
