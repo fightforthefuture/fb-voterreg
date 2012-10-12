@@ -4,7 +4,8 @@ def add_settings(request):
     return { "FACEBOOK_APP_ID": settings.FACEBOOK_APP_ID,
              "BASE_URL": settings.BASE_URL,
              "KM_CODE": settings.KM_CODE,
-             "FACEBOOK_CANVAS_PAGE": settings.FACEBOOK_CANVAS_PAGE }
+             "FACEBOOK_CANVAS_PAGE": settings.FACEBOOK_CANVAS_PAGE,
+             "DEBUG_APP_REQUESTS": settings.DEBUG_APP_REQUESTS }
 
 def add_fbuid(request):
     if hasattr(request, "facebook") and request.facebook is not None:

@@ -27,6 +27,7 @@ urlpatterns = patterns(
     url(r"^mission$", "mission", name="mission"),
     url(r"^mission/(?P<batch_type>\d+)", "mission", name="mission"),
     url(r"^mission_friends_page/(?P<batch_type>\d+)", "mission_friends_page", name="mission_friends_page"),
+    url(r"^mark_mission_batch_invited/(?P<batch_type>\d+)", "mark_mission_batch_invited", name="mark_mission_batch_invited"),
 )
 
 urlpatterns += patterns(

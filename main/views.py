@@ -12,7 +12,7 @@ from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
@@ -477,6 +477,27 @@ def mission_friends_page(request, batch_type):
     return render_to_response(
         "_invite_friends_page.html",
         { "friends": _mission_friends_qs(user, batch_type, start_index) },
+        context_instance=RequestContext(request))
+
+@csrf_exempt
+def mark_mission_batch_invited(request, batch_type):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    batch_type = int(batch_type)
+    batch_id = int(request.POST["batch_id"])
+    batch = FriendshipBatch.objects.get(id=batch_id)
+    if batch.user != user:
+        return HttpResponseNotAllowed("not allowed")
+    batch.invite_date = datetime.now()
+    batch.save()
+    batch.friendship_set.all().update(invited_with_batch=True)
+    batch.user.save_invited_friends()
+    recs = FriendshipBatch.objects.filter(
+        user=batch.user, type=batch_type, invite_date__isnull=True)
+    uninvited_batch = None if len(recs) == 0 else recs[0]
+    return render_to_response(
+        "_mission_uninvited_batch.html",
+        { "uninvited_batch": uninvited_batch,
+          "batch_type": batch_type },
         context_instance=RequestContext(request))
 
 def unsubscribe(request):
