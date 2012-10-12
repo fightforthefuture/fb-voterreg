@@ -21,7 +21,7 @@ WONT_VOTE_REASONS = (
 
 )
 
-BATCH_SIZE = 32
+BATCH_SIZE = 49
 
 BATCH_BARELY_LEGAL = 1
 BATCH_FAR_FROM_HOME = 2
@@ -254,6 +254,8 @@ def _fill_in_display_ordering(sender, instance, **kwargs):
     instance.display_ordering = \
         (1 if instance.registered else 0) + \
         (1 if instance.pledged else 0)
+
+def _assign_to_batch(sender, instance, **kwargs):
     if not instance.registered and not instance.batch:
         today = date.today()
         user = instance.user
@@ -288,6 +290,9 @@ def _update_batch(sender, instance, **kwargs):
 
 pre_save.connect(_fill_in_display_ordering, sender=Friendship, 
                  dispatch_uid="fill_in_display_ordering")
+
+pre_save.connect(_assign_to_batch, sender=Friendship, 
+                 dispatch_uid="assign_to_batch")
 
 post_save.connect(_update_batch, sender=Friendship,
                   dispatch_uid="update_batch")
