@@ -447,6 +447,10 @@ def register_widget(request):
           "page": "register"},
         context_instance=RequestContext(request))
 
+def _mission_friends_qs(user, batch_type, start_index=0):
+    return user.friendship_set.filter(
+        batch_type=batch_type).order_by("fb_uid")[start_index:(start_index + 12)]
+
 def mission(request, batch_type=BATCH_BARELY_LEGAL):
     batch_type = int(batch_type)
     user = User.objects.get(fb_uid=request.facebook["uid"])
@@ -455,17 +459,24 @@ def mission(request, batch_type=BATCH_BARELY_LEGAL):
     uninvited_batch = None if len(recs) == 0 else recs[0]
     recs = f_qs.filter(invite_date__isnull=False).order_by("-invite_date")[:1]
     last_invited_batch = None if len(recs) == 0 else recs[0]
-    friends = user.friendship_set.filter(
-        batch_type=batch_type).order_by("fb_uid")[:12]
     context = {
         "batch_type": batch_type,
         "missions": user.mission_set.all(),
         "uninvited_batch": uninvited_batch,
         "last_invited_batch": last_invited_batch,
-        "friends": friends }
+        "friends": _mission_friends_qs(user, batch_type) }
     return render_to_response(
         "mission.html",
         context,
+        context_instance=RequestContext(request))
+
+@csrf_exempt
+def mission_friends_page(request, batch_type):
+    start_index = int(request.POST.get("start", 0))
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    return render_to_response(
+        "_invite_friends_page.html",
+        { "friends": _mission_friends_qs(user, batch_type, start_index) },
         context_instance=RequestContext(request))
 
 def unsubscribe(request):

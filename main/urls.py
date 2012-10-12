@@ -24,8 +24,9 @@ urlpatterns = patterns(
     url(r"^invite_friends_2$", "invite_friends_2", name="invite_friends_2"),
     url(r"^invite_friends_2/(?P<section>\w+)$", "invite_friends_2", name="invite_friends_2"),
     url(r"^invite_friends_2_page/(?P<section>\w+)$", "invite_friends_2_page", name="invite_friends_2_page"),
-    url(r"^mission$", "mission"),
+    url(r"^mission$", "mission", name="mission"),
     url(r"^mission/(?P<batch_type>\d+)", "mission", name="mission"),
+    url(r"^mission_friends_page/(?P<batch_type>\d+)", "mission_friends_page", name="mission_friends_page"),
 )
 
 urlpatterns += patterns(

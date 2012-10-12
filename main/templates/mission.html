@@ -15,7 +15,7 @@
       <div id="next-to-invite">
         {% if uninvited_batch %}
           {% include "_mission_facegrid.html" with batch=uninvited_batch %}
-          <a href="javascript:void(0)">Invite them</a>
+          <a href="javascript:void(0)" data-id="{{uninvited_batch.id}}">Invite them</a>
         {% else %}
         <span>Looks like you've invited all your friends for Mission {{batch_type}}.</span>
         {% endif %}
@@ -30,16 +30,19 @@
     <div class="badges"></div>
   </div>
   <h3>INDIVIDUAL INVITES</h3>
-  {% include "_invite_friends_page.html" %}
-  <a href="javascript:void(0)" id="load_more_friends" class="load-more">Load More Friends</a>
+  <div id="friends">
+    {% include "_invite_friends_page.html" %}
+    <a href="javascript:void(0)" id="load_more_friends" class="load-more">Load More Friends</a>
+  </div>
 </div>
 {% endblock %}
 
 
 {% block scripts %}
-    <script>
-        var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
-        var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
-    </script>
-    <script src="{% static 'js/invite_friends_2.js' %}"></script>
+<script>
+  var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
+  var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
+  var LOAD_MORE_URL = "{% url 'main:mission_friends_page' batch_type %}";
+</script>
+<script src="{% static 'js/invite_friend_grid.js' %}"></script>
 {% endblock %}
