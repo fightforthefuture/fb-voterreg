@@ -172,12 +172,12 @@ class FriendshipBatch(models.Model):
             return u"{0}, {1}, and {2} others".format(
                 f[0].name, f[1].name, self.count - 2)
 
-
 class Friendship(models.Model):
     class Meta:
         unique_together = (("user", "fb_uid",),)
     user = models.ForeignKey(User)
     batch = models.ForeignKey(FriendshipBatch, null=True)
+    batch_type = models.IntegerField(choices=BATCH_TYPES, null=True)
     user_fb_uid = models.CharField(max_length=32, db_index=True)
     fb_uid = models.CharField(max_length=32, db_index=True)
     name = models.CharField(max_length=128)
@@ -276,17 +276,20 @@ def _assign_to_batch(sender, instance, **kwargs):
             type=batch_type,
             completely_fetched=False)
         instance.batch = batch
+        instance.batch_type = batch_type
 
 def _update_batch(sender, instance, **kwargs):
     if not instance.batch:
         return
     batch = instance.batch
-    batch.count = Friendship.objects.filter(batch=batch).count()
-    if batch.count >= BATCH_SIZE:
-        batch.completely_fetched = True
-        batch.regular_batch_no = FriendshipBatch.objects.filter(
-            user=batch.user, type=batch.type).count()
-    batch.save()
+    friendship_count = Friendship.objects.filter(batch=batch).count()
+    if batch.count != friendship_count:
+        batch.count = friendship_count
+        if batch.count >= BATCH_SIZE:
+            batch.completely_fetched = True
+            batch.regular_batch_no = FriendshipBatch.objects.filter(
+                user=batch.user, type=batch.type).count()
+        batch.save()
 
 pre_save.connect(_fill_in_display_ordering, sender=Friendship, 
                  dispatch_uid="fill_in_display_ordering")
