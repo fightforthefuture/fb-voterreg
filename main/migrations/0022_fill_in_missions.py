@@ -13,7 +13,7 @@ BATCH_TYPES = [1, 2, 3, 4]
 
 class Migration(DataMigration):
 
-    def _create_mission(user, batch_type):
+    def _create_mission(self, orm, user, batch_type):
         mission, created = orm.Mission.objects.get_or_create(
             user=user, type=batch_type)
         mission.count = \
@@ -26,10 +26,10 @@ class Migration(DataMigration):
     def forwards(self, orm):
         for user in orm.User.objects.all():
             for batch_type in BATCH_TYPES:
-                self._create_mission(user, batch_type)
+                self._create_mission(orm, user, batch_type)
     
     def backwards(self, orm):
-        orm.Mission.objects.delete()
+        orm.Mission.objects.all().delete()
     
     models = {
         'main.friendship': {
