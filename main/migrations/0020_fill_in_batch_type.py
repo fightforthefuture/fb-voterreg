@@ -8,8 +8,9 @@ class Migration(DataMigration):
     
     def forwards(self, orm):
         for f in orm.Friendship.objects.all():
-            f.batch_type = f.batch.type
-            f.save()
+            if f.batch:
+                f.batch_type = f.batch.type
+                f.save()
 
     def backwards(self, orm):
         pass
