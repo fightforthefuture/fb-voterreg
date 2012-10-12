@@ -108,6 +108,31 @@ class User(models.Model):
         return self.date_pledged is not None
 
     @property
+    def voted(self):
+        return self.date_voted is not None
+
+    def num_friends_invited(self):
+        """
+        Returns the number of friends the user has invited.
+        """
+        return self.friendship_set.filter(
+            models.Q(invited_with_batch=True) |
+            models.Q(invited_individually=True)
+        ).count()
+
+    def num_friends_pledged(self):
+        """
+        Returns the number of pledged friends the user has.
+        """
+        return self.friendship_set.filter(date_pledged__isnull=False).count()
+
+    def num_friends_voted(self):
+        """
+        Returns the number of voting friends the user has.
+        """
+        return self.friendship_set.filter(date_voted__isnull=False).count()
+
+    @property
     def invited_friends(self):
         return self.date_invited_friends is not None
 
@@ -199,6 +224,7 @@ class Friendship(models.Model):
     votizen_id = models.CharField(max_length=132, blank=True)
     registered = models.BooleanField(default=False)
     date_pledged = models.DateTimeField(null=True)
+    date_voted = models.DateTimeField(null=True)
     invited_with_batch = models.BooleanField(default=False)
     invited_individually = models.BooleanField(default=False)
     invited_pledge_count = models.IntegerField(default=0)
