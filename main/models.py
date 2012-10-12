@@ -118,6 +118,14 @@ class User(models.Model):
     def is_admirable(self):
         return self.registered or self.pledged or self.invited_friends
 
+class Mission(models.Model):
+    class Meta:
+        unique_together = (("user", "type",),)
+    user = models.ForeignKey(User)
+    type = models.IntegerField(choices=BATCH_TYPES)
+    count = models.IntegerField(default=0)
+    pledged_count = models.IntegerField(default=0)
+
 class FriendshipBatch(models.Model):
     user = models.ForeignKey(User)
     count = models.IntegerField(default=0)
@@ -291,6 +299,18 @@ def _update_batch(sender, instance, **kwargs):
                 user=batch.user, type=batch.type).count()
         batch.save()
 
+def _update_mission(sender, instance, **kwargs):
+    user = instance.user
+    batch_type = instance.batch_type
+    mission, created = Mission.objects.get_or_create(
+        user=user, type=batch_type)
+    mission.count = \
+        user.friendship_set.filter(batch_type=batch_type).count()
+    mission.pledged_count = \
+        user.friendship_set.filter(
+            batch_type=batch_type, date_pledged__isnull=False).count()
+    mission.save()
+
 pre_save.connect(_fill_in_display_ordering, sender=Friendship, 
                  dispatch_uid="fill_in_display_ordering")
 
@@ -299,3 +319,6 @@ pre_save.connect(_assign_to_batch, sender=Friendship,
 
 post_save.connect(_update_batch, sender=Friendship,
                   dispatch_uid="update_batch")
+
+post_save.connect(_update_mission, sender=Friendship,
+                  dispatch_uid="update_mission")
