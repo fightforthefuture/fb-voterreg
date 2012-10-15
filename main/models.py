@@ -81,7 +81,8 @@ class User(models.Model):
     unsubscribed = models.BooleanField(default=False)
     # User explicitly shared their pledge with friends
     explicit_share = models.BooleanField(default=False)
-
+    # User explicitly shared their vote with friends
+    explicit_share_vote = models.BooleanField(default=False)
 
     def update_friends_fetch(self):
         self.friends_fetch_last_activity = datetime.now()
