@@ -77,13 +77,8 @@ def _index_redirect(user, query_string=""):
         query_string = "?" + query_string
     if user.wont_vote:
         return redirect(reverse("main:invite_friends_2") + query_string)
-    elif user.registered:
-        if user.pledged:
-            return redirect(reverse("main:invite_friends_2") + query_string)
-        else:
-            return redirect(reverse("main:pledge") + query_string)
     else:
-        return redirect(reverse("main:register") + query_string)
+        return redirect(reverse("main:my_vote") + query_string)
 
 
 def _fetch_fb_friends(request):
@@ -143,11 +138,21 @@ def my_vote(request):
 
 def my_vote_register(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    return render_to_response("my_vote_register.html", {
+    context = {
+        "page": "register"
+    }
+    if user.location_city:
+        context["location"] = "{0}, {1}".format(
+            user.location_city, user.location_state)
+    if user.birthday:
+        context["birthday"] = user.birthday.strftime("%b %d, %Y")
+    return _friend_listing_page(
+        request, "my_vote_register.html", additional_context={
         'page': 'my_vote',
         'section': 'register',
         'user': user,
-    }, context_instance=RequestContext(request))
+        "name": user.name,
+    }, user=user)
 
 
 def my_vote_pledge(request):
@@ -258,37 +263,12 @@ def _friend_listing_page(request, template, additional_context={}, user=None):
 
 
 def register(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    context = {
-        "name": user.name,
-        "page": "register"
-    }
-    if user.location_city:
-        context["location"] = "{0}, {1}".format(
-            user.location_city, user.location_state)
-    if user.birthday:
-        context["birthday"] = user.birthday.strftime("%b %d, %Y")
-    return _friend_listing_page(
-        request, "register.html", additional_context=context, user=user)
+    return redirect('main:my_vote_register')
 
 
 def pledge(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    if request.GET.get("from_widget", False):
-        user.registered = True
-        user.used_registration_widget = True
-        user.save()
-        update_friends_of.delay(
-            user.id, request.facebook["access_token"])
-        messages.add_message(
-            request, messages.INFO,
+    return redirect('main:my_vote_pledge')
 
-            # Translators: message displayed to users in green bar when they register to vote
-            _("Thank you for registering to vote!")
-        )
-    return _friend_listing_page(
-        request, "pledge.html",
-        additional_context={"page": "pledge"})
 
 def _invite_friends_2_qs(user, section, start_index=0):
     f_qs = user.friendship_set.all()
@@ -404,6 +384,7 @@ def fetch_friends(request):
 def wont_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     user.wont_vote_reason = "rather_not_say"
+    user.registered = False
     user.save()
     messages.add_message(
         request, messages.INFO,
