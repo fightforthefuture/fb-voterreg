@@ -248,6 +248,7 @@ def invite_friends_2(request, section="not_invited"):
     return render_to_response(
         "invite_friends_2.html",
         { "friends": f_qs,
+          "page": 'friends',
           "section": section,
           "num_registered": f_mgr.filter(registered=True).count(),
           "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
@@ -271,11 +272,11 @@ def invite_friends_2_page(request, section):
         { "friends": f_qs },
         context_instance=RequestContext(request))
 
-def invite_friends(request):
+def missions(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_mgr = user.friendship_set
     context = {
-        "page": "friends",
+        "page": "missions",
         "num_registered": f_mgr.filter(registered=True).count(),
         "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
         "num_friends": user.num_friends or 0,
