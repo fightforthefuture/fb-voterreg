@@ -10,7 +10,11 @@
 
                 <h2>{{ friend.name }}</h2>
 
-                {% if friend.invited %}
+                {% if friend.voted %}
+
+                    <div class="invited pledged status">{% blocktrans %}voted{% endblocktrans %}</div>
+
+                {% elif friend.invited %}
                     <div class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
                     {% if friend.pledged %}
                         <div class="invited pledged status">{% blocktrans %}pledged{% endblocktrans %}</div>
