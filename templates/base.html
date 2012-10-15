@@ -90,8 +90,8 @@
       {% block nav %}
           <ul id="nav">
             <li><a href="{% url 'main:missions' %}" {% if page == "missions" %}class="selected"{% endif %}>MISSIONS</a></li>
-            <li><a href="{% url 'main:pledge' %}" {% if page == "pledge" %}class="selected"{% endif %}>PLEDGE TO VOTE</a></li>
-            <li><a href="{% url 'main:register_widget' %}" {% if page == "register" %}class="selected"{% endif %}>REGISTER</a></li>
+            <li><a href="{% url 'main:invite_friends' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
+            <li><a href="{% url 'main:my_vote' %}" {% if page == "my_vote" %}class="selected"{% endif %}>MY VOTE</a></li>
             <li><a href="{% url 'main:invite_friends_2' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
           </ul>
       {% endblock nav %}

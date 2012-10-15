@@ -115,6 +115,42 @@ def index(request):
         context_instance=RequestContext(request))
 
 
+def my_vote(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    if user.pledged:
+        return redirect('main:my_vote_vote')
+    elif user.registered:
+        return redirect('main:my_vote_pledge')
+    return redirect('main:my_vote_register')
+
+
+def my_vote_pledge(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    return render_to_response("my_vote_pledge.html", {
+        'page': 'my_vote',
+        'section': 'pledge',
+        'user': user,
+    }, context_instance=RequestContext(request))
+
+
+def my_vote_register(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    return render_to_response("my_vote_register.html", {
+        'page': 'my_vote',
+        'section': 'register',
+        'user': user,
+    }, context_instance=RequestContext(request))
+
+
+def my_vote_vote(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    return render_to_response("my_vote_pledge.html", {
+        'page': 'my_vote',
+        'section': 'vote',
+        'user': user,
+    }, context_instance=RequestContext(request))
+
+
 def fetch_me(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if not user.data_fetched:
