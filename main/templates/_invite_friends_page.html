@@ -53,6 +53,7 @@
             {% if section == "invited" %}You haven't invited any friends. Why don't you <a href="{% url 'main:invite_friends_2' 'not_invited' %}">invite some</a>?</p>{% endif %}
             {% if section == "pledged" %}None of your friends have pledged. <a href="{% url 'main:invite_friends_2' 'not_invited' %}">Invite some more friends</a> to see if they will.</p>{% endif %}
             {% if section == "registered" %}None of your friends are registered to vote. Do your civic duty and <a href="{% url 'main:invite_friends_2' 'not_invited' %}">make sure they're registered</a>!</p>{% endif %}
+            {% if section == "voted" %}None of your friends have told us that they're voting. Can you <a href="{% url 'main:invite_friends_2' 'not_invited' %}">make sure they do so</a>?</p>{% endif %}
         </p>
     </div>
 

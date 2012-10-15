@@ -319,6 +319,8 @@ def _invite_friends_2_qs(user, section, start_index=0):
         f_qs = f_qs.filter(date_pledged__isnull=False)
     elif section == "registered":
         f_qs = f_qs.filter(registered=True)
+    elif section == "voted":
+        f_qs = f_qs.filter(date_voted__isnull=False)
     return f_qs.order_by("fb_uid")[start_index:(start_index + 16)]
 
 def invite_friends_2(request, section="not_invited"):
@@ -339,7 +341,8 @@ def invite_friends_2(request, section="not_invited"):
                 invited_with_batch=False, 
                 invited_individually=False, 
                 date_pledged__isnull=True).count(),
-          "num_friends": user.num_friends or 0 },
+          "num_friends": user.num_friends or 0,
+          "num_voted": user.num_friends_voted() },
         context_instance=RequestContext(request))
 
 @csrf_exempt

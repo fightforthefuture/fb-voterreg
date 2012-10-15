@@ -26,6 +26,9 @@
         {% comment %}Translators: group of friends the have registered to vote{% endcomment %}
         <li{% if section == "registered" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'registered' %}">Registered <span class="count">({{ num_registered }})</span></a></li>
 
+        {% comment %}Translators: group of friends that have voted{% endcomment %}
+        <li{% if section == "voted" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'voted' %}">Voted <span class="count">({{ num_voted }})</span></a></li>
+
     </ul>
 
     <div class="main-content cf" id="friends">
