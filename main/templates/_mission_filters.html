@@ -1,0 +1,20 @@
+{% load url from future %}
+
+<ul class="filters">
+  {% for mission in missions %}
+  <li{% if batch_type == mission.batch_type %} class="selected"{% endif %}>
+    <a href="{% url 'main:mission' mission.type %}">
+      {% if mission.type == 1 %}
+      Young voters
+      {% elif mission.type == 2 %}
+      Far from home
+      {% elif mission.type == 3 %}
+      My City
+      {% elif mission.type == 4 %}
+      The Unregistered
+      {% endif %}
+      <span class="pledged_count">{{mission.pledged_count}}/{{mission.count}} Pledged</span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>

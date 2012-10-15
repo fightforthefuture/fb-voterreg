@@ -1,0 +1,1 @@
+{% for f in batch.friendships|slice:":32" %}<img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}

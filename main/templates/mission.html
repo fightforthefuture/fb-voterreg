@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}{% endblock css %}
+
+{% block content %}
+{% include "_mission_filters.html" %}  
+<div>
+  {% include "_mission_header.html" %}
+  <div>
+    <div class="mass-invites">
+      <div id="next-to-invite">
+        {% include "_mission_uninvited_batch.html" %}
+      </div>
+      <div id="last-invited">
+        <div class="faces">
+          {% if last_invited_batch %}
+          {% include "_mission_facegrid.html" with batch=last_invited_batch %}
+          {% endif %}
+        </div>
+        <a{% if not last_invited_batch %} style="display:none"{% endif %} href="javascript:void(0)">Invited</a>
+      </div>
+    </div>
+    <div class="badges"></div>
+  </div>
+  <h3>INDIVIDUAL INVITES</h3>
+  <div id="friends">
+    {% include "_invite_friends_page.html" %}
+    <a href="javascript:void(0)" id="load_more_friends" class="load-more">Load More Friends</a>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+  var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
+  var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
+  var LOAD_MORE_URL = "{% url 'main:mission_friends_page' batch_type %}";
+  var INVITE_MESSAGE = "The 2012 election is almost here -- are you going to vote?  This app gets you everything you need, and helps you recruit your friends."
+  var DEBUG_APP_REQUESTS = {% if DEBUG_APP_REQUESTS %}true{% else %}false{% endif %};
+  var MARK_MISSION_BATCH_INVITED = "{% url 'main:mark_mission_batch_invited' batch_type %}";
+</script>
+<script src="{% static 'js/invite_friend_grid.js' %}"></script>
+<script src="{% static 'js/mission.js' %}"></script>
+{% endblock %}

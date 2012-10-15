@@ -4,6 +4,7 @@ from os import environ
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+DEBUG_APP_REQUESTS = False
 
 PROJECT_ROOT = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
 def rel(*x):

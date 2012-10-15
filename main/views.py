@@ -12,7 +12,7 @@ from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotAllowed
 from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
@@ -20,6 +20,7 @@ from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime, date
 from fb_utils import FacebookProfile
 from django.core.mail import EmailMultiAlternatives
+from models import BATCH_BARELY_LEGAL
 import logging
 
 
@@ -445,6 +446,59 @@ def register_widget(request):
         "register_widget.html",
         {"widget_qs": urllib.urlencode(widget_qs),
           "page": "register"},
+        context_instance=RequestContext(request))
+
+def _mission_friends_qs(user, batch_type, start_index=0):
+    return user.friendship_set.filter(
+        batch_type=batch_type).order_by("fb_uid")[start_index:(start_index + 12)]
+
+def mission(request, batch_type=BATCH_BARELY_LEGAL):
+    batch_type = int(batch_type)
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)
+    recs = f_qs.filter(invite_date__isnull=True)[:1]
+    uninvited_batch = None if len(recs) == 0 else recs[0]
+    recs = f_qs.filter(invite_date__isnull=False).order_by("-invite_date")[:1]
+    last_invited_batch = None if len(recs) == 0 else recs[0]
+    context = {
+        "batch_type": batch_type,
+        "missions": user.mission_set.all(),
+        "uninvited_batch": uninvited_batch,
+        "last_invited_batch": last_invited_batch,
+        "friends": _mission_friends_qs(user, batch_type) }
+    return render_to_response(
+        "mission.html",
+        context,
+        context_instance=RequestContext(request))
+
+@csrf_exempt
+def mission_friends_page(request, batch_type):
+    start_index = int(request.POST.get("start", 0))
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    return render_to_response(
+        "_invite_friends_page.html",
+        { "friends": _mission_friends_qs(user, batch_type, start_index) },
+        context_instance=RequestContext(request))
+
+@csrf_exempt
+def mark_mission_batch_invited(request, batch_type):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    batch_type = int(batch_type)
+    batch_id = int(request.POST["batch_id"])
+    batch = FriendshipBatch.objects.get(id=batch_id)
+    if batch.user != user:
+        return HttpResponseNotAllowed("not allowed")
+    batch.invite_date = datetime.now()
+    batch.save()
+    batch.friendship_set.all().update(invited_with_batch=True)
+    batch.user.save_invited_friends()
+    recs = FriendshipBatch.objects.filter(
+        user=batch.user, type=batch_type, invite_date__isnull=True)
+    uninvited_batch = None if len(recs) == 0 else recs[0]
+    return render_to_response(
+        "_mission_uninvited_batch.html",
+        { "uninvited_batch": uninvited_batch,
+          "batch_type": batch_type },
         context_instance=RequestContext(request))
 
 def unsubscribe(request):
