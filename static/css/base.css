@@ -144,7 +144,6 @@ header .score{
             max-width: 100%;
         }
 
-<<<<<<< HEAD
     header .score a{
         text-decoration: none;
         color: #333;
@@ -152,9 +151,6 @@ header .score{
         header .score a:hover{
             text-decoration: underline;
         }
-
-=======
->>>>>>> 1fb4d4bccbc6eed002d168ea68949a9f6bd99588
     header .score ul,
     header .score li{
         list-style-type: none;
@@ -178,17 +174,11 @@ header .score{
             header .score li.false{
                 font-weight: bold;
                 padding-left: 25px;
-<<<<<<< HEAD
                 background: url(../img/header/x.png) no-repeat 0 5px;
             }
                 header .score li.false a{
                     color: #b1085e;
                 }
-=======
-                color: #b1085e;
-                background: url(../img/header/x.png) no-repeat 0 5px;
-            }
->>>>>>> 1fb4d4bccbc6eed002d168ea68949a9f6bd99588
 
             header .score li strong{
                 display: inline-block;
@@ -199,15 +189,10 @@ header .score{
             }
                 header .score li.voted strong{
                     font-weight: bold;
-<<<<<<< HEAD
                 }
                     header .score li.voted a strong{
                         color: #b1085e;
                     }
-=======
-                    color: #b1085e;
-                }
->>>>>>> 1fb4d4bccbc6eed002d168ea68949a9f6bd99588
 
     header .score .user{
         margin-right: 10px;
