@@ -76,10 +76,10 @@ def _index_redirect(user, query_string=""):
     if query_string:
         query_string = "?" + query_string
     if user.wont_vote:
-        return redirect(reverse("main:invite_friends") + query_string)
+        return redirect(reverse("main:invite_friends_2") + query_string)
     elif user.registered:
         if user.pledged:
-            return redirect(reverse("main:invite_friends") + query_string)
+            return redirect(reverse("main:invite_friends_2") + query_string)
         else:
             return redirect(reverse("main:pledge") + query_string)
     else:
@@ -312,14 +312,14 @@ def submit_pledge(request):
         # Translators: message displayed to users in green bar when they pledge to vote
         _("Thank you for pledging to vote!")
     )
-    return {"next": reverse("main:invite_friends")}
+    return {"next": reverse("main:invite_friends_2")}
 
 
 def pledge_explicit_share(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     import pdb
     pdb.set_trace()
-    return {"next": reverse("main:invite_friends")}
+    return {"next": reverse("main:invite_friends_2")}
 
 
 @render_json
@@ -347,7 +347,7 @@ def wont_vote(request):
         # Translators: message displayed to users in green bar when they say they are ineligible to vote
         _("Thank you! Even though you can't vote, you can still invite your friends.")
     )
-    return {"next": reverse("main:invite_friends")}
+    return {"next": reverse("main:invite_friends_2")}
 
 
 @render_json
