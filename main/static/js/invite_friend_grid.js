@@ -12,7 +12,7 @@ $(function() {
         var $prevUninv = $('#uninvited_friends').find('.num'),
             $prevInv = $('#invited_friends').find('.num');
         $prevUninv.text( parseInt($prevUninv.text(), 10) - 1);
-        $prevInv.text( parseInt($prevInv.text(), 10) + 1);
+        $prevInv.add('.score .invited .num').text( parseInt($prevInv.text(), 10) + 1);
     }
 
     function inviteFriend(fbuid, $link) {
