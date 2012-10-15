@@ -177,11 +177,46 @@ def my_vote_pledge(request):
 
 def my_vote_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    return render_to_response("my_vote_vote.html", {
-        'page': 'my_vote',
-        'section': 'vote',
-        'user': user,
-    }, context_instance=RequestContext(request))
+
+    if request.method == 'GET':
+        return render_to_response("my_vote_vote.html", {
+            'page': 'my_vote',
+            'section': 'vote',
+            'user': user,
+        }, context_instance=RequestContext(request))
+
+    elif request.method == 'POST':
+        explicit_share = request.POST.get('tell-friends', '') == 'on'
+        #if explicit_share:
+        #    requests.post(settings.FACEBOOK_OG_PLEDGE_URL, params={
+        #        'website': settings.BASE_URL + reverse('pledge_object'),
+        #        'access_token': request.facebook['access_token'],
+        #        'fb:explicitly_shared': 'true',
+        #    })
+        user.explicit_share_vote = explicit_share
+
+        if 'yes' in request.POST:
+            user.date_voted = datetime.now()
+            messages.add_message(
+                request, messages.INFO,
+                # Translators: message displayed to users in when they mark themselves as having voted.
+                _("Your voice was heard! Make sure your friends' voices are also heard:")
+            )
+            redirect_view = 'main:invite_friends_2'
+        else:
+            user.date_voted = None
+            messages.add_message(
+                request, messages.INFO,
+                # Translators: message displayed to users in when they mark themselves as not having voted.
+                _("Got it, you haven't voted yet. Don't forget!")
+            )
+            redirect_view = 'main:my_vote_vote'
+        user.save()
+
+        update_friends_of.delay(
+            user.id, request.facebook["access_token"])
+
+        return redirect(redirect_view)
 
 
 def fetch_me(request):

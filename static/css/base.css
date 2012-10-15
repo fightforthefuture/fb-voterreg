@@ -894,7 +894,7 @@ div.content {
 
 .filters{
     width: 712px;
-    margin: 20px auto 10px;
+    margin: -20px auto 20px;
     list-style: none inside none;
     text-align: center;
 }

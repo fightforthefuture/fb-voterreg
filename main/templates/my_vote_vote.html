@@ -8,6 +8,64 @@
 
     {% include "_my_vote_nav.html" %}
 
-    <p>My Vote Vote</p>
+    <div class="main-content cf">
+
+        <div class="main-content-message">
+
+            {% if user.voted %}
+
+                {% comment %}Translators: title of page where users are asked if they've voted, if they've already voted.{% endcomment %}
+                <h2>{% trans "Thanks for voting!" %}</h2>
+
+                {% comment %}Translators: tagline of page where users are asked if they've voted, if they've already voted.{% endcomment %}
+                <p>Participation is the cornerstone of democracy.</p>
+
+            {% else %}
+
+                {% comment %}Translators: title of page where users are asked if they've voted{% endcomment %}
+                <h2>{% trans "Have you voted in the 2012 election?" %}</h2>
+
+            {% endif %}
+        </div>
+
+        <form action="{% url 'main:my_vote_vote' %}" method="post">
+            {% csrf_token %}
+
+            <div class="main-content-buttons">
+
+                {% if user.voted %}
+
+                    {% comment %}Translators: text of the button a user presses to retract their status as having voted{% endcomment %}
+                    <button class="btn btn-large" type="submit" name="no"><i class="icon-cancel"></i> {% trans "I lied. I haven't voted yet." %}</button>
+
+                {% else %}
+
+                    {% comment %}Translators: text of the button a user presses to say they've voted{% endcomment %}
+                    <button class="btn btn-large btn-green" type="submit" name="yes"><i class="icon-ok"></i> {% trans "Yes, I've already voted" %}</button>
+
+                    {% comment %}Translators: text of the button a user presses to say they have note voted{% endcomment %}
+                    <button class="btn btn-large" type="submit" name="no"><i class="icon-cancel"></i> {% trans "No, not yet." %}</button>
+
+                {% endif %}
+
+            </div>
+
+            <div class="main-content-message">
+
+                {% if not user.voted %}
+                    
+                    {% comment %}Translators: consent to post voting action to timeline{% endcomment %}
+                    <p><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell my friends I'm voting{% endblocktrans %}</a></p>
+
+                {% endif %}
+
+                {% comment %}Translators: explanation of why it's important for users to vote{% endcomment %}
+                <p>{% blocktrans %}<strong>Why is it important to say so?</strong>  Because it encourages your friends to vote too, and tells your friends that they don't need to remind you.{% endblocktrans %}</p>
+
+        </div>
+
+        </form>
+
+    </div>
 
 {% endblock %}
