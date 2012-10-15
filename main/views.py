@@ -96,6 +96,22 @@ def _fetch_fb_friends(request):
         fetch_fb_friends.delay(fb_uid, access_token)
 
 
+def _unpledge(request):
+    if request.method == 'POST':
+        user = User.objects.get(fb_uid=request.facebook["uid"])
+        user.date_pledged = None
+        user.save()
+        update_friends_of.delay(
+            user.id, request.facebook["access_token"])
+        messages.add_message(
+            request, messages.INFO,
+            # Translators: message displayed to users when they unpledge
+            _("Sorry to hear that you're no longer pledging to vote.")
+        )
+        return redirect('main:my_vote')
+    return HttpResponseNotAllowed()
+
+
 @csrf_exempt
 def index(request):
     if request.method == "POST":
@@ -117,20 +133,12 @@ def index(request):
 
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    if user.pledged:
+    if user.pledged and user.registered:
         return redirect('main:my_vote_vote')
     elif user.registered:
         return redirect('main:my_vote_pledge')
-    return redirect('main:my_vote_register')
-
-
-def my_vote_pledge(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    return render_to_response("my_vote_pledge.html", {
-        'page': 'my_vote',
-        'section': 'pledge',
-        'user': user,
-    }, context_instance=RequestContext(request))
+    else:
+        return redirect('main:my_vote_register')
 
 
 def my_vote_register(request):
@@ -142,9 +150,29 @@ def my_vote_register(request):
     }, context_instance=RequestContext(request))
 
 
+def my_vote_pledge(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    if request.GET.get("from_widget", False):
+        user.registered = True
+        user.used_registration_widget = True
+        user.save()
+        update_friends_of.delay(
+            user.id, request.facebook["access_token"])
+        messages.add_message(
+            request, messages.INFO,
+            # Translators: message displayed to users in green bar when they register to vote
+            _("Thank you for registering to vote!")
+        )
+    return render_to_response("my_vote_pledge.html", {
+        'page': 'my_vote',
+        'section': 'pledge',
+        'user': user,
+    }, context_instance=RequestContext(request))
+
+
 def my_vote_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    return render_to_response("my_vote_pledge.html", {
+    return render_to_response("my_vote_vote.html", {
         'page': 'my_vote',
         'section': 'vote',
         'user': user,

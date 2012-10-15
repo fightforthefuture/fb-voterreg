@@ -14,6 +14,7 @@ urlpatterns = patterns(
     url(r"^my_vote/pledge$", "my_vote_pledge", name="my_vote_pledge"),
     url(r"^my_vote/vote$", "my_vote_vote", name="my_vote_vote"),
     url(r"^pledge$", "pledge", name="pledge"),
+    url(r"^unpledge$", "_unpledge", name="unpledge"),
     url(r"^submit_pledge$", "submit_pledge", name="submit_pledge"),
     url(r"^pledge_explicit_share$", "pledge_explicit_share", name="pledge_explicit_share"),
     url(r"^actually_registered$", "im_actually_registered", name="actually_registered"),
