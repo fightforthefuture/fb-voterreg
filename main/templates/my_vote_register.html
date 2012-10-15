@@ -1,0 +1,93 @@
+{% extends "_base_my_vote.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block content %}
+
+    {% include "_my_vote_nav.html" %}
+
+    <div class="main-content cf">
+
+        <div class="main-content-message">
+
+            {% if user.registered %}
+                
+                {% comment %}Translators: title of My Vote > Register when the user has already registered.{% endcomment %}
+                <h2>Thanks for being registered to vote!</h2>
+
+                {% comment %}Translators: tagline of My Vote > Register when the user has already registered.{% endcomment %}
+                <p>{% blocktrans %}Not actually registered? No problem! You can still register to vote. If you're unsure, It’s always best to re-register to update your address and info.{% endblocktrans %}</p>
+
+            {% else %}
+
+                {% if user.wont_vote_reason %}
+                    
+                    {% comment %}Translators: tagline of My Vote > Register if users have previously said they were not voting{% endcomment %}
+                    <h2>Change your mind? Want to register to vote?</h2>
+
+                {% else %}
+
+                    {% comment %}Translators: tagline of page where users are told we can't find a voter registration record for them{% endcomment %}
+                    <h2>Are you registered to vote?  We can't find a registration for you based on your Facebook info.</h2>
+
+                    {% comment %}Translators: description of the data we used to see if the user was registered to vote{% endcomment %}
+                    <p>({% trans "We searched for:" %} {{ name }}{% if location %} / {{location}}{% endif %}{% if birthday %} / {{birthday}}{% endif %})</p>
+
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+        <div class="main-content-buttons">
+
+            {% if not user.registered %}
+
+                {% comment %}Translators: text of button users click to confirm that they are registered to vote, despite our records saying otherwise{% endcomment %}
+                <a id="already-registered" href="javascript:void(0)" class="btn btn-large btn-blue">{% trans "I'm Registered" %}</a>
+
+            {% endif %}
+
+
+            {% comment %}Translators: text of button users click to visit internetvotes.org to register to vote{% endcomment %}
+            <a href="http://www.theinternetvotes.org" target="internetvotes" class="btn btn-large btn-green"><i class="icon-ok"></i> Register Now</a>
+
+            <br/>
+
+            {% comment %}Translators: explanation that a link opens in a new window{% endcomment %}
+            <span class="note">{% trans "(Opens in a new window)" %}</span>
+
+        </div>
+        <div class="main-content-message">
+
+            {% comment %}Translators: text of button users click to say they aren't eligible to vote{% endcomment %}
+            <a id="not-eligible" href="javascript:void(0)">I'm not eligible</a>
+
+        </div>
+
+        {% if not user.registered %}
+            <div class="main-content-extra">
+
+                {% comment %}Translators: explanation that it's okay if users re-register to vote if they are unsure{% endcomment %}
+                <span>{% blocktrans %}Not sure if you are registered? If you're unsure, It’s always best to re-register to update your address and info. Note: we match user information with voter records. This information may not be up-to-date, and we may not have enough data to make a match.{% endblocktrans %}</span>
+
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        var ACTUALLY_REGISTERED_URL = "{% url 'main:actually_registered' %}";
+        var WONT_VOTE_URL = "{% url 'main:wont_vote' %}";
+    </script>
+    <script type="text/javascript" src="{% static 'js/register.js' %}"></script>
+{% endblock %}

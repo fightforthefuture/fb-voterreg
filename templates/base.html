@@ -40,23 +40,66 @@
   </head>
   <body>
     <div id="fb-root"></div>
+
     <header>
-      <div class="logo" href="{% url 'main:index' %}">
-        <h1>Vote for the Internet</h1>
-        <p>
-            <strong>Get more of your friends to vote than you ever thought possible.</strong>
-            Track who is registered, see who has voted early, and see who actually votes on election day.
-        </p>
-      </div>
+        <div class="inner cf">
+
+            <div class="logo">
+                <h1>Vote for the Internet</h1>
+                <p>Get more of your friends to vote than you ever thought possible.</p>
+            </div>
+
+            <div class="score cf">
+                <h2>{{ fb_user.first_name }} {{ fb_user.last_name }}</h2>
+                <figure>
+                    <img src="{{ fb_user.pic }}" />
+                </figure>
+                <ul class="user">
+                    <li class="{{ vwf_user.registered|lower }}">
+                        <a href="{% url 'main:my_vote_register' %}">
+                            {% if vwf_user.registered %}Registered{% else %}Haven't Registered{% endif %}
+                        </a>
+                    </li>
+                    <li class="{{ vwf_user.pledged|lower }}">
+                        <a href="{% url 'main:my_vote_pledge' %}">
+                            {% if vwf_user.pledged %}Pledged{% else %}Haven't Pledged{% endif %}
+                        </a>
+                    </li>
+                    <li class="{{ vwf_user.voted|lower }}">
+                        <a href="{% url 'main:my_vote_vote' %}">
+                            {% if vwf_user.voted %}Voted{% else %}Haven't Voted{% endif %}
+                        </a>
+                    </li>
+                </ul>
+                <ul class="friends">
+                    <li class="invited">
+                        <a href="{% url 'main:invite_friends_2' 'invited' %}">
+                            <strong class="num">{{ vwf_user.num_friends_invited }}</strong>Friends Invited
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'main:invite_friends_2' 'pledged' %}">
+                            <strong class="num">{{ vwf_user.num_friends_pledged }}</strong>Friends Pledged
+                        </a>
+                    </li>
+                    <li class="voted">
+                        <a href="{% url 'main:invite_friends_2' 'voted' %}">
+                            <strong class="num">{{ vwf_user.num_friends_voted }}</strong>Friends Voted
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </header>
+
       {% block nav %}
-          <ul>
+          <ul id="nav">
             <li><a href="{% url 'main:missions' %}" {% if page == "missions" %}class="selected"{% endif %}>MISSIONS</a></li>
-            <li><a href="{% url 'main:pledge' %}" {% if page == "pledge" %}class="selected"{% endif %}>PLEDGE TO VOTE</a></li>
-            <li><a href="{% url 'main:register_widget' %}" {% if page == "register" %}class="selected"{% endif %}>REGISTER</a></li>
+            <li><a href="{% url 'main:my_vote' %}" {% if page == "my_vote" %}class="selected"{% endif %}>MY VOTE</a></li>
             <li><a href="{% url 'main:invite_friends_2' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
           </ul>
       {% endblock nav %}
-    </header>
     {% if messages %}
     <div class="notification">
         {% for message in messages %}

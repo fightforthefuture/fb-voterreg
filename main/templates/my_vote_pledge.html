@@ -1,0 +1,79 @@
+{% extends "_base_my_vote.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block content %}
+
+    {% include "_my_vote_nav.html" %}
+
+    <div class="main-content cf">
+
+        <div class="main-content-message">
+
+            {% if user.pledged %}
+
+                {% comment %}Translators: title of page where users are asked to pledge to vote, if they've already pledged.{% endcomment %}
+                <h2>{% trans "Thanks for pledging to vote!" %}</h2>
+                <p>Have you changed your mind?</p>
+
+            {% else %}
+
+                {% comment %}Translators: title of page where users are asked to pledge to vote{% endcomment %}
+                <h2>{% trans "Will you pledge to vote in this election?" %}</h2>
+
+            {% endif %}
+        </div>
+
+        <div class="main-content-buttons">
+
+            {% if user.pledged %}
+
+                <form action="{% url 'main:unpledge' %}" method="post">
+                    {% csrf_token %}
+                    {% comment %}Translators: text of the button a user presses to unpledge{% endcomment %}
+                    <button class="btn btn-large" type="submit"><i class="icon-cancel"></i> {% trans "I'm not ready to pledge yet" %}</button>
+                </form>
+                
+            {% else %}
+
+                {% comment %}Translators: text of the button a user presses to pledge to vote{% endcomment %}
+                <a id="pledge" href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> {% trans "Yes, I pledge to vote" %}</a>
+
+                {% comment %}Translators: text of the button a user presses declining to pledge to vote{% endcomment %}
+                <a href="{% url 'main:invite_friends_2' %}" class="btn btn-large"><i class="icon-cancel"></i> {% trans "No, not ready to pledge yet" %}</a>
+
+            {% endif %}
+
+        </div>
+
+        <div class="main-content-message">
+
+            {% if not user.pledged %}
+                
+                {% comment %}Translators: consent to post action to timeline{% endcomment %}
+                <p><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell my friends I'm voting{% endblocktrans %}</a></p>
+
+            {% endif %}
+
+            {% comment %}Translators: tagline of page where users are asked to pledge to vote{% endcomment %}
+            <p>{% blocktrans %}<strong>Why does pledging matter?</strong> Because your friends will see that you've pledged. So just by pledging, you're encouraging your friends to vote.{% endblocktrans %}</p>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block modals %}
+    {% include "_pledge_modal.html" with modal_id="pledge-modal" %}
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        var SUBMIT_PLEDGE_URL = "{% url 'main:submit_pledge' %}";
+    </script>
+    <script type="text/javascript" src="{% static 'js/pledge.js' %}"></script>
+{% endblock %}

@@ -33,7 +33,6 @@ class OGObjectView(TemplateView):
     The view used to serve the OpenGraph objects published whenever a user
     pledges to vote.
     """
-    template_name = 'pledge/index.html'
 
     def get_context_data(self, **kwargs):
         context = super(OGObjectView, self).get_context_data(**kwargs)
@@ -77,13 +76,8 @@ def _index_redirect(user, query_string=""):
         query_string = "?" + query_string
     if user.wont_vote:
         return redirect(reverse("main:invite_friends_2") + query_string)
-    elif user.registered:
-        if user.pledged:
-            return redirect(reverse("main:invite_friends_2") + query_string)
-        else:
-            return redirect(reverse("main:pledge") + query_string)
     else:
-        return redirect(reverse("main:register") + query_string)
+        return redirect(reverse("main:my_vote") + query_string)
 
 
 def _fetch_fb_friends(request):
@@ -94,6 +88,22 @@ def _fetch_fb_friends(request):
         user.update_friends_fetch()
         user.save()
         fetch_fb_friends.delay(fb_uid, access_token)
+
+
+def _unpledge(request):
+    if request.method == 'POST':
+        user = User.objects.get(fb_uid=request.facebook["uid"])
+        user.date_pledged = None
+        user.save()
+        update_friends_of.delay(
+            user.id, request.facebook["access_token"])
+        messages.add_message(
+            request, messages.INFO,
+            # Translators: message displayed to users when they unpledge
+            _("Sorry to hear that you're no longer pledging to vote.")
+        )
+        return redirect('main:my_vote')
+    return HttpResponseNotAllowed()
 
 
 @csrf_exempt
@@ -113,6 +123,99 @@ def index(request):
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
+
+
+def my_vote(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    if user.pledged and user.registered:
+        return redirect('main:my_vote_vote')
+    elif user.registered:
+        return redirect('main:my_vote_pledge')
+    else:
+        return redirect('main:my_vote_register')
+
+
+def my_vote_register(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    context = {
+        "page": "register"
+    }
+    if user.location_city:
+        context["location"] = "{0}, {1}".format(
+            user.location_city, user.location_state)
+    if user.birthday:
+        context["birthday"] = user.birthday.strftime("%b %d, %Y")
+    return _friend_listing_page(
+        request, "my_vote_register.html", additional_context={
+        'page': 'my_vote',
+        'section': 'register',
+        'user': user,
+        "name": user.name,
+    }, user=user)
+
+
+def my_vote_pledge(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    if request.GET.get("from_widget", False):
+        user.registered = True
+        user.used_registration_widget = True
+        user.save()
+        update_friends_of.delay(
+            user.id, request.facebook["access_token"])
+        messages.add_message(
+            request, messages.INFO,
+            # Translators: message displayed to users in green bar when they register to vote
+            _("Thank you for registering to vote!")
+        )
+    return render_to_response("my_vote_pledge.html", {
+        'page': 'my_vote',
+        'section': 'pledge',
+        'user': user,
+    }, context_instance=RequestContext(request))
+
+
+def my_vote_vote(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+
+    if request.method == 'GET':
+        return render_to_response("my_vote_vote.html", {
+            'page': 'my_vote',
+            'section': 'vote',
+            'user': user,
+        }, context_instance=RequestContext(request))
+
+    elif request.method == 'POST':
+        explicit_share = request.POST.get('tell-friends', '') == 'on'
+        if explicit_share:
+            requests.post(settings.FACEBOOK_OG_VOTE_URL, params={
+                'website': settings.BASE_URL + reverse('vote_object'),
+                'access_token': request.facebook['access_token'],
+                'fb:explicitly_shared': 'true',
+            })
+        user.explicit_share_vote = explicit_share
+
+        if 'yes' in request.POST:
+            user.date_voted = datetime.now()
+            messages.add_message(
+                request, messages.INFO,
+                # Translators: message displayed to users in when they mark themselves as having voted.
+                _("Your voice was heard! Make sure your friends' voices are also heard:")
+            )
+            redirect_view = 'main:invite_friends_2'
+        else:
+            user.date_voted = None
+            messages.add_message(
+                request, messages.INFO,
+                # Translators: message displayed to users in when they mark themselves as not having voted.
+                _("Got it, you haven't voted yet. Don't forget!")
+            )
+            redirect_view = 'main:my_vote_vote'
+        user.save()
+
+        update_friends_of.delay(
+            user.id, request.facebook["access_token"])
+
+        return redirect(redirect_view)
 
 
 def fetch_me(request):
@@ -194,37 +297,12 @@ def _friend_listing_page(request, template, additional_context={}, user=None):
 
 
 def register(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    context = {
-        "name": user.name,
-        "page": "register"
-    }
-    if user.location_city:
-        context["location"] = "{0}, {1}".format(
-            user.location_city, user.location_state)
-    if user.birthday:
-        context["birthday"] = user.birthday.strftime("%b %d, %Y")
-    return _friend_listing_page(
-        request, "register.html", additional_context=context, user=user)
+    return redirect('main:my_vote_register')
 
 
 def pledge(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    if request.GET.get("from_widget", False):
-        user.registered = True
-        user.used_registration_widget = True
-        user.save()
-        update_friends_of.delay(
-            user.id, request.facebook["access_token"])
-        messages.add_message(
-            request, messages.INFO,
+    return redirect('main:my_vote_pledge')
 
-            # Translators: message displayed to users in green bar when they register to vote
-            _("Thank you for registering to vote!")
-        )
-    return _friend_listing_page(
-        request, "pledge.html",
-        additional_context={"page": "pledge"})
 
 def _invite_friends_2_qs(user, section, start_index=0):
     f_qs = user.friendship_set.all()
@@ -240,6 +318,8 @@ def _invite_friends_2_qs(user, section, start_index=0):
         f_qs = f_qs.filter(date_pledged__isnull=False)
     elif section == "registered":
         f_qs = f_qs.filter(registered=True)
+    elif section == "voted":
+        f_qs = f_qs.filter(date_voted__isnull=False)
     return f_qs.order_by("fb_uid")[start_index:(start_index + 16)]
 
 def invite_friends_2(request, section="not_invited"):
@@ -260,7 +340,8 @@ def invite_friends_2(request, section="not_invited"):
                 invited_with_batch=False, 
                 invited_individually=False, 
                 date_pledged__isnull=True).count(),
-          "num_friends": user.num_friends or 0 },
+          "num_friends": user.num_friends or 0,
+          "num_voted": user.num_friends_voted() },
         context_instance=RequestContext(request))
 
 @csrf_exempt
@@ -315,13 +396,6 @@ def submit_pledge(request):
     return {"next": reverse("main:invite_friends_2")}
 
 
-def pledge_explicit_share(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    import pdb
-    pdb.set_trace()
-    return {"next": reverse("main:invite_friends_2")}
-
-
 @render_json
 def fetch_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
@@ -340,6 +414,7 @@ def fetch_friends(request):
 def wont_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     user.wont_vote_reason = "rather_not_say"
+    user.registered = False
     user.save()
     messages.add_message(
         request, messages.INFO,

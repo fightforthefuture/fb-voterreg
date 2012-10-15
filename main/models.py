@@ -81,7 +81,8 @@ class User(models.Model):
     unsubscribed = models.BooleanField(default=False)
     # User explicitly shared their pledge with friends
     explicit_share = models.BooleanField(default=False)
-
+    # User explicitly shared their vote with friends
+    explicit_share_vote = models.BooleanField(default=False)
 
     def update_friends_fetch(self):
         self.friends_fetch_last_activity = datetime.now()
@@ -106,6 +107,31 @@ class User(models.Model):
     @property
     def pledged(self):
         return self.date_pledged is not None
+
+    @property
+    def voted(self):
+        return self.date_voted is not None
+
+    def num_friends_invited(self):
+        """
+        Returns the number of friends the user has invited.
+        """
+        return self.friendship_set.filter(
+            models.Q(invited_with_batch=True) |
+            models.Q(invited_individually=True)
+        ).count()
+
+    def num_friends_pledged(self):
+        """
+        Returns the number of pledged friends the user has.
+        """
+        return self.friendship_set.filter(date_pledged__isnull=False).count()
+
+    def num_friends_voted(self):
+        """
+        Returns the number of voting friends the user has.
+        """
+        return self.friendship_set.filter(date_voted__isnull=False).count()
 
     @property
     def invited_friends(self):
@@ -199,6 +225,7 @@ class Friendship(models.Model):
     votizen_id = models.CharField(max_length=132, blank=True)
     registered = models.BooleanField(default=False)
     date_pledged = models.DateTimeField(null=True)
+    date_voted = models.DateTimeField(null=True)
     invited_with_batch = models.BooleanField(default=False)
     invited_individually = models.BooleanField(default=False)
     invited_pledge_count = models.IntegerField(default=0)

@@ -1,0 +1,23 @@
+{% load url from future %}
+
+<ul class="filters">
+
+    {% comment %}Translators: group of friends the user hasn't yet invited to the app{% endcomment %}
+    <li class="
+        {% if section == "register" %}selected {% endif %}
+        {% if user.registered %}checked {% endif %}
+    "><a href="{% url 'main:my_vote_register' %}">Register</span></a></li>
+
+    {% comment %}Translators: group of friends the user has invited to the app{% endcomment %}
+    <li class="
+        {% if section == "pledge" %}selected {% endif %}
+        {% if user.pledged %}checked {% endif %}
+    "><a href="{% url 'main:my_vote_pledge' %}">Pledge</span></a></li>
+
+    {% comment %}Translators: group of friends who have pledged to vote{% endcomment %}
+    <li class="
+        {% if section == "vote" %}selected {% endif %}
+        {% if user.voted %}checked {% endif %}
+    "><a href="{% url 'main:my_vote_vote' %}">Vote</span></a></li>
+
+</ul>
