@@ -56,31 +56,37 @@
                 </figure>
                 <ul class="user">
                     <li class="{{ vwf_user.registered|lower }}">
-                        {% if vwf_user.registered %}
-                            Registered
-                        {% else %}
-                            Haven't Registered
-                        {% endif %}
+                        <a href="{% url 'main:my_vote_register' %}">
+                            {% if vwf_user.registered %}Registered{% else %}Haven't Registered{% endif %}
+                        </a>
                     </li>
                     <li class="{{ vwf_user.pledged|lower }}">
-                        {% if vwf_user.pledged %}
-                            Pledged
-                        {% else %}
-                            Haven't Pledged
-                        {% endif %}
+                        <a href="{% url 'main:my_vote_pledge' %}">
+                            {% if vwf_user.pledged %}Pledged{% else %}Haven't Pledged{% endif %}
+                        </a>
                     </li>
                     <li class="{{ vwf_user.voted|lower }}">
-                        {% if vwf_user.voted %}
-                            Voted
-                        {% else %}
-                            Haven't Voted
-                        {% endif %}
+                        <a href="{% url 'main:my_vote_vote' %}">
+                            {% if vwf_user.voted %}Voted{% else %}Haven't Voted{% endif %}
+                        </a>
                     </li>
                 </ul>
                 <ul class="friends">
-                    <li><strong class="num">{{ vwf_user.num_friends_invited }}</strong> Friends Invited</li>
-                    <li><strong class="num">{{ vwf_user.num_friends_pledged }}</strong> Friends Pledged</li>
-                    <li class="voted"><strong class="num">{{ vwf_user.num_friends_voted }}</strong> Friends Voted</li>
+                    <li>
+                        <a href="{% url 'main:invite_friends_2' 'invited' %}">
+                            <strong class="num">{{ vwf_user.num_friends_invited }}</strong>Friends Invited
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'main:invite_friends_2' 'pledged' %}">
+                            <strong class="num">{{ vwf_user.num_friends_pledged }}</strong>Friends Pledged
+                        </a>
+                    </li>
+                    <li class="voted">
+                        <a href="{% url 'main:invite_friends_2' 'registered' %}">
+                            <strong class="num">{{ vwf_user.num_friends_voted }}</strong>Friends Voted
+                        </a>
+                    </li>
                 </ul>
             </div>
 
