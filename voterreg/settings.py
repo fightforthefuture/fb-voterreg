@@ -192,6 +192,7 @@ if environment == 'staging':
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-stag/"
     USE_FAKE_VOTIZEN_API = True
     FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-stag:pledge'
+    FACEBOOK_OG_VOTE_URL = 'https://graph.facebook.com/me/votewithfriends-stag:vote'
 
 if environment == 'production':
     FACEBOOK_APP_ID = "220561354738022"
@@ -200,6 +201,7 @@ if environment == 'production':
     AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
     FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends:pledge'
+    FACEBOOK_OG_VOTE_URL = 'https://graph.facebook.com/me/votewithfriends:vote'
 
 
 if environment == 'dev':
