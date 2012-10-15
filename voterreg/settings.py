@@ -133,6 +133,7 @@ FACEBOOK_APP_ID = "258722907563918"
 FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
 FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-dev/"
 FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-dev:pledge'
+FACEBOOK_OG_VOTE_URL = 'https://graph.facebook.com/me/votewithfriends-dev:vote'
 
 VOTIZEN_API_KEY = "" # secret
 USE_FAKE_VOTIZEN_API = False

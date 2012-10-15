@@ -1,0 +1,18 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+        <title>Redirecting</title>
+        <meta property="fb:app_id" content="{{ facebook_app_id }}" />
+        <meta property="og:title" content="I voted!" />
+        <meta property="og:description" content="Vote With Friends is a new strategy to bring all our friends to the polls. I just voted, and you should too!" />
+        <meta property="og:image" content="{% static 'img/share-voted.png' %}" />
+        <meta property="og:url" content="{{ base_url }}{% url vote_object %}" />
+        <meta property="og:type" content="website" />
+    </head>
+    <body>
+        <script type="text/javascript">
+            window.location.assign('{{ canvas_url }}');
+        </script>
+    </body>
+</html>

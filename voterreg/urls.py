@@ -13,5 +13,6 @@ urlpatterns = patterns('',
     url(r'staticpages/(?P<page_name>.*)', "staticpages.views.index", name="staticpages"),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^rosetta/', include('rosetta.urls')),
-    url(r'^pledge/', OGObjectView.as_view(), name="pledge_object"),
+    url(r'^share_pledge', OGObjectView.as_view(template_name='pledge/index.html'), name="pledge_object"),
+    url(r'^share_vote', OGObjectView.as_view(template_name='vote/index.html'), name="vote_object"),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

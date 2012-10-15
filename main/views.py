@@ -33,7 +33,6 @@ class OGObjectView(TemplateView):
     The view used to serve the OpenGraph objects published whenever a user
     pledges to vote.
     """
-    template_name = 'pledge/index.html'
 
     def get_context_data(self, **kwargs):
         context = super(OGObjectView, self).get_context_data(**kwargs)
@@ -187,12 +186,12 @@ def my_vote_vote(request):
 
     elif request.method == 'POST':
         explicit_share = request.POST.get('tell-friends', '') == 'on'
-        #if explicit_share:
-        #    requests.post(settings.FACEBOOK_OG_PLEDGE_URL, params={
-        #        'website': settings.BASE_URL + reverse('pledge_object'),
-        #        'access_token': request.facebook['access_token'],
-        #        'fb:explicitly_shared': 'true',
-        #    })
+        if explicit_share:
+            requests.post(settings.FACEBOOK_OG_VOTE_URL, params={
+                'website': settings.BASE_URL + reverse('vote_object'),
+                'access_token': request.facebook['access_token'],
+                'fb:explicitly_shared': 'true',
+            })
         user.explicit_share_vote = explicit_share
 
         if 'yes' in request.POST:
@@ -394,13 +393,6 @@ def submit_pledge(request):
         # Translators: message displayed to users in green bar when they pledge to vote
         _("Thank you for pledging to vote!")
     )
-    return {"next": reverse("main:invite_friends_2")}
-
-
-def pledge_explicit_share(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    import pdb
-    pdb.set_trace()
     return {"next": reverse("main:invite_friends_2")}
 
 

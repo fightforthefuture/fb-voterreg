@@ -33,22 +33,28 @@ def fb_user(request):
 
     https://developers.facebook.com/docs/reference/fql/user/
     """
-    api = facebook.GraphAPI(request.facebook['access_token'])
-    fields = [
-        'pic',
-        'first_name',
-        'last_name',
-    ]
-    data = api.fql('SELECT %s FROM user WHERE uid=me()' % ', '.join(fields))
-    return {
-        'fb_user': data[0]
-    }
+    try:
+        api = facebook.GraphAPI(request.facebook['access_token'])
+        fields = [
+            'pic',
+            'first_name',
+            'last_name',
+        ]
+        data = api.fql('SELECT %s FROM user WHERE uid=me()' % ', '.join(fields))
+        return {
+            'fb_user': data[0]
+        }
+    except TypeError:
+        return {}
 
 
 def vwf_user(request):
     """
     User
     """
-    return {
-        'vwf_user': User.objects.get(fb_uid=request.facebook['uid'])
-    }
+    try:
+        return {
+            'vwf_user': User.objects.get(fb_uid=request.facebook['uid'])
+        }
+    except TypeError:
+        return {}
