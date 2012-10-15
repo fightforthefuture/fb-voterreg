@@ -393,7 +393,7 @@ def submit_pledge(request):
         # Translators: message displayed to users in green bar when they pledge to vote
         _("Thank you for pledging to vote!")
     )
-    return {"next": reverse("main:invite_friends_2")}
+    return {"next": reverse("main:my_vote")}
 
 
 @render_json
