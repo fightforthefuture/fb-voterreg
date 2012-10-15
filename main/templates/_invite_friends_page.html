@@ -12,17 +12,22 @@
 
                 {% if friend.voted %}
 
+                    {% comment %}Translators: friend status in friend list if the friend has already voted{% endcomment %}
                     <div class="invited pledged status">{% blocktrans %}voted{% endblocktrans %}</div>
 
                 {% elif friend.invited %}
+                    {% comment %}Translators: friend status in friend list if the friend has been invited{% endcomment %}
                     <div class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
                     {% if friend.pledged %}
+                        {% comment %}Translators: friend status in friend list if user has pledged{% endcomment %}
                         <div class="invited pledged status">{% blocktrans %}pledged{% endblocktrans %}</div>
                     {% else %}
+                        {% comment %}Translators: friend status in friend list if user has not pledged{% endcomment %}
                         <div class="invited not-pledged status">{% blocktrans %}not pledged{% endblocktrans %}</div>
                     {% endif %}
                     
                 {% else %}
+                    {% comment %}Translators: friend status in friend list if the friend has not been invited{% endcomment %}
                     <div class="uninvited status">{% blocktrans %}not invited{% endblocktrans %}</div>
                     <div style="display: none" class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
                     {% if friend.pledged %}
@@ -34,8 +39,10 @@
 
                 <div class="action" data-friend-fbuid="{{ friend.fb_uid }}">
                     {% if friend.invited %}
+                        {% comment %}Translators: button text in friend list if user has already been invited{% endcomment %}
                         <a href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% else %}
+                        {% comment %}Translators: button text in friend list if user has not beeen invited{% endcomment %}
                         <a href="javascript:void(0)" class="uninvited invite btn btn-green">{% blocktrans %}Invite{% endblocktrans %}</a>
                         <a style="display: none" href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% endif %}
@@ -49,11 +56,16 @@
         
     <div class="empty">
         <p>
-            {% if section == "not_invited" %}You've invited all your friends. Thanks for inviting so many people!</p>{% endif %}
-            {% if section == "invited" %}You haven't invited any friends. Why don't you <a href="{% url 'main:invite_friends_2' 'not_invited' %}">invite some</a>?</p>{% endif %}
-            {% if section == "pledged" %}None of your friends have pledged. <a href="{% url 'main:invite_friends_2' 'not_invited' %}">Invite some more friends</a> to see if they will.</p>{% endif %}
-            {% if section == "registered" %}None of your friends are registered to vote. Do your civic duty and <a href="{% url 'main:invite_friends_2' 'not_invited' %}">make sure they're registered</a>!</p>{% endif %}
-            {% if section == "voted" %}None of your friends have told us that they're voting. Can you <a href="{% url 'main:invite_friends_2' 'not_invited' %}">make sure they do so</a>?</p>{% endif %}
+            {% comment %}Translators: message displayed on Invite Friends page when the user has no uninvited friends{% endcomment %}
+            {% if section == "not_invited" %}{% blocktrans %}You've invited all your friends. Thanks for inviting so many people!{% endblocktrans %}{% endif %}
+            {% comment %}Translators: message displayed on Invite Friends page when the user has invited friends{% endcomment %}
+            {% if section == "invited" %}{% blocktrans %}You haven't invited any friends. Why don't you <a href="{% url 'main:invite_friends_2' 'not_invited' %}">invite some</a>?{% endblocktrans %}{% endif %}
+            {% comment %}Translators: message displayed on Invite Friends page when the user has no pledged friends{% endcomment %}
+            {% if section == "pledged" %}{% blocktrans %}None of your friends have pledged. <a href="{% url 'main:invite_friends_2' 'not_invited' %}">Invite some more friends</a> to see if they will.{% endblocktrans %}{% endif %}
+            {% comment %}Translators: message displayed on Invite Friends page when the user has no registered friends{% endcomment %}
+            {% if section == "registered" %}{% blocktrans %}None of your friends are registered to vote. Do your civic duty and <a href="{% url 'main:invite_friends_2' 'not_invited' %}">make sure they're registered</a>!{% endblocktrans %}{% endif %}
+            {% comment %}Translators: message displayed on Invite Friends page when the user has no friends who have voted{% endcomment %}
+            {% if section == "voted" %}{% blocktrans %}None of your friends have told us that they're voting. Can you <a href="{% url 'main:invite_friends_2' 'not_invited' %}">make sure they do so</a>?{% endblocktrans %}{% endif %}
         </p>
     </div>
 
