@@ -1,0 +1,4 @@
+{% for cutoff in badge_cutoffs %}
+<span data-cutoff="{{cutoff}}" class="badge{% if cutoff <= num %} badge-accomplished{% endif %}">{{ cutoff }}</span>
+{% endfor %}
+<span data-cutoff="-1" class="badge badge-all{% if num >= num_friends %} badge-accomplished{% endif %}">ALL</span>

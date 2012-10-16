@@ -1,21 +1,37 @@
 $(function() {
-    function batchInvited(batchID) {
+    function batchInvited(batchID, uninvitedNo) {
         // TODO: show loading animation
-        var facesHTML = $("#next-to-invite .faces").html();
-        $("#next-to-invite").load(
-            MARK_MISSION_BATCH_INVITED,
-            { "batch_id": batchID },
-            function(response, status) {
-                if (status != "error") {
-                    $("#last-invited .faces").html(facesHTML);
-                    $("#last-invited a").show();
-                }
-            });
+	var $justInvited = $("#uninvited-" + uninvitedNo);
+	var $next = $("#uninvited-" + ((uninvitedNo + 1) % 2));
+	$justInvited.find(".invite").hide();
+	$justInvited.find(".invited").show();
+	$.getJSON(MARK_MISSION_BATCH_INVITED,
+	      { "batch_id": batchID },
+	      function(result) {
+		  // TODO: hide loading animation
+		  if ($next.find(".invited:visible").length > 0) {
+		      $next.html(result["html"]);
+		  }
+		  fillInInvitedBadges(result["num_invited"], result["num_friends"]);
+	      });
     }
 
-    function showFriendRequestDialog(fbuids, batchID) {
+    function fillInInvitedBadges(numInvited, numFriends) {
+	$("#num-invited").text(numInvited + "");
+	$(".invited-badges .badge").each(function() {
+	    var cutoff = $(this).data("cutoff");
+	    if (cutoff != -1 && cutoff < numInvited) {
+		$(this).addClass("badge-accomplished");
+	    }
+	    else if (cutoff == -1 && numInvited >= numFriends) {
+		$(this).addClass("badge-accomplished");
+	    }
+	});
+    }
+
+    function showFriendRequestDialog(fbuids, batchID, uninvitedNo) {
         if (DEBUG_APP_REQUESTS) {
-            batchInvited(batchID);
+            batchInvited(batchID, uninvitedNo);
             return;
         }
         FB.ui(
@@ -27,20 +43,22 @@ $(function() {
             function(response) {
                 if (response) {
                     if (response["to"] && response["to"].length > 0) {
-                        batchInvited(batchID);
+                        batchInvited(batchID, uninvitedNo);
                     }
                 }
             });
     }
 
-    $(document).on("click", "#next-to-invite a", function(e) {
+    $(document).on("click", ".mass-invites a.invite", function(e) {
         var fbuids = [];
-        $("#next-to-invite img").each(function() {
+	var $uninvited = $(this).parents(".uninvited");
+	$uninvited.find("img").each(function() {
             fbuids.push($(this).data("uid"));
-        });
+	});
         showFriendRequestDialog(
             fbuids.join(","),
-            parseInt($(this).data("id")));
+            parseInt($(this).data("id")),
+	    parseInt($uninvited.data("id")));
         return;
     });
 });
