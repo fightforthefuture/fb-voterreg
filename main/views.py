@@ -308,7 +308,7 @@ def pledge(request):
     return redirect('main:my_vote_pledge')
 
 
-def _invite_friends_2_qs(user, section, start_index=0):
+def _invite_friends_2_qs(user, section, start_index=0, sort_order='name'):
     f_qs = user.friendship_set.all()
     if section == "invited":
         f_qs = f_qs.filter(
@@ -318,13 +318,14 @@ def _invite_friends_2_qs(user, section, start_index=0):
             invited_with_batch=False, 
             invited_individually=False, 
             date_pledged__isnull=True)
+        sort_order = '?'
     elif section == "pledged":
         f_qs = f_qs.filter(date_pledged__isnull=False)
     elif section == "registered":
         f_qs = f_qs.filter(registered=True)
     elif section == "voted":
         f_qs = f_qs.filter(date_voted__isnull=False)
-    return f_qs.order_by("name")[start_index:(start_index + 16)]
+    return f_qs.order_by(sort_order)[start_index:(start_index + 16)]
 
 def invite_friends_2(request, section="not_invited"):
     user = User.objects.get(fb_uid=request.facebook["uid"])
