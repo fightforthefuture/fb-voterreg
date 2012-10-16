@@ -57,17 +57,17 @@
                 <ul class="user">
                     <li class="{{ vwf_user.registered|lower }}">
                         <a href="{% url 'main:my_vote_register' %}">
-                            {% if vwf_user.registered %}Registered{% else %}Haven't Registered{% endif %}
+                            {% if vwf_user.registered %}Registered{% else %}Hasn't Registered{% endif %}
                         </a>
                     </li>
                     <li class="{{ vwf_user.pledged|lower }}">
                         <a href="{% url 'main:my_vote_pledge' %}">
-                            {% if vwf_user.pledged %}Pledged{% else %}Haven't Pledged{% endif %}
+                            {% if vwf_user.pledged %}Pledged{% else %}Hasn't Pledged{% endif %}
                         </a>
                     </li>
                     <li class="{{ vwf_user.voted|lower }}">
                         <a href="{% url 'main:my_vote_vote' %}">
-                            {% if vwf_user.voted %}Voted{% else %}Haven't Voted{% endif %}
+                            {% if vwf_user.voted %}Voted{% else %}Hasn't Voted{% endif %}
                         </a>
                     </li>
                 </ul>

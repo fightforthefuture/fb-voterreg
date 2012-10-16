@@ -208,7 +208,7 @@ def my_vote_vote(request):
                 # Translators: message displayed to users in when they mark themselves as not having voted.
                 _("Got it, you haven't voted yet. Don't forget!")
             )
-            redirect_view = 'main:my_vote_vote'
+            redirect_view = 'main:invite_friends_2'
         user.save()
 
         update_friends_of.delay(
