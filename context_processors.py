@@ -1,7 +1,7 @@
 import facebook
 from django.conf import settings
 from main.models import User
-
+from datetime import date
 
 def add_settings(request):
     return { "FACEBOOK_APP_ID": settings.FACEBOOK_APP_ID,
@@ -9,6 +9,9 @@ def add_settings(request):
              "KM_CODE": settings.KM_CODE,
              "FACEBOOK_CANVAS_PAGE": settings.FACEBOOK_CANVAS_PAGE,
              "DEBUG_APP_REQUESTS": settings.DEBUG_APP_REQUESTS }
+
+def add_days_left(request):
+    return { "num_days_left": (date(2012, 11, 6) - date.today()).days }
 
 def add_fbuid(request):
     if hasattr(request, "facebook") and request.facebook is not None:

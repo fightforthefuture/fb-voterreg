@@ -1,4 +1,9 @@
 $(function() {
+    function loadMoreButtonTop() {
+        return $("#load_more_friends").offset().top - 
+            $(document).scrollTop();
+    }
+
     function inviteFriendSucceeded(fbuid, $link) {
         // TODO: show loading animation in button
         $.getJSON(
@@ -35,18 +40,40 @@ $(function() {
             return false;
         });
 
-    $("#load_more_friends").click(function(e) {
-        // TODO: show loading animation in button
-        var $newDiv = $("<div/>").insertBefore(this);
+    function loadMoreFriends() {
+        if ($("#loading_label").is(":visible")) {
+            return
+        }
+        $("#load_more_label").hide();
+        $("#loading_label").show();
+        var $newDiv = $("<div/>").insertBefore($("#load_more_friends"));
         $newDiv.load(
             LOAD_MORE_URL,
             { "start": $("#friends li").length },
             function(){
-                if(!$newDiv.text().replace(/\s+/gi, '').length){
+                $("#load_more_label").show();
+                $("#loading_label").hide();
+                if (!$newDiv.text().replace(/\s+/gi, '').length) {
                     $newDiv.remove();
                     $("#load_more_friends").remove();
                 }
             });
         return false;
+    }
+
+    $("#load_more_friends").click(function(e) {
+        loadMoreFriends();
     });
+
+    function checkScroll() {
+        FB.Canvas.getPageInfo(
+            function(info) {
+                var scrollTop = info.clientHeight + info.offsetTop + info.scrollTop;
+                if (scrollTop > loadMoreButtonTop() + 100) {
+                    loadMoreFriends();
+                }
+            });
+    }
+
+    setInterval(checkScroll, 1000);
 });

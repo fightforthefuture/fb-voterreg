@@ -38,7 +38,6 @@ $(function() {
         FB.ui(
             {
                 "method": "apprequests",
-                "message": INVITE_MESSAGE,
                 "to": fbuids
             },
             function(response) {

@@ -1,5 +1,6 @@
 <!doctype html>
 
+{% load i18n %}
 {% load static from staticfiles %}
 {% load url from future %}
 
@@ -109,6 +110,16 @@
     {% endif %}
     <div class="content cf">
         {% block content %}{% endblock %}
+    </div>
+    <div class="days-left">
+      
+      <span class="regular large">{{num_days_left}}</span> 
+      {% comment %}Translators: this is the word 'days' as used in 'x days to the election'. Use singular (we add s automatically){% endcomment %}
+      <span class="cursive">{% blocktrans %}day{% endblocktrans%}{{ num_days_left|pluralize }}</span><br>
+      {% comment %}Translators: this are the words "TIL THE" in "28 days till the election"{% endcomment %}
+      <span class="regular">TIL THE</span><br>
+      {% comment %}Translators: this is the word "election" in "28 days till the election"{% endcomment %}
+      <span class="regular">ELECTION</span>
     </div>
     <a class="invite-friends" href="javascript:void(0)">
       <i class="icon-invite"></i>

@@ -85,7 +85,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "context_processors.fb_user",
     "context_processors.add_settings",
     "context_processors.add_fbuid",
-    "context_processors.add_source" )
+    "context_processors.add_source",
+    "context_processors.add_days_left" )
 
 INSTALLED_APPS = (
     'django.contrib.auth',

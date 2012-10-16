@@ -1,29 +1,12 @@
 $(function() {
     var UPDATE_INTERVAL = 5000;
 
-    var InviteMessages = {
-        1: "I'm sending this to all my friends who were too young to vote in '08, but are old enough now.  Click here to register and pledge to vote!",
-        2: "I'm sending this to all my friends who moved out of state.  Use this to make sure you're registered and pledged to vote this year!",
-        4: "The 2012 election is almost here -- join my voting network to see which of our friends are registered to vote!",
-        5: "The 2012 election is almost here -- join my voting network to see which of our friends are registered to vote!"
-    };
-
     function showFriendRequestDialog(friendList, batchID, batchType) {
         _gaq.push(["_trackPageview", "/show_batch_invite"]);
         _kmq.push(["record", "Opened batch invite dialog"]);
-        var message = null;
-        if (batchType == 3) {
-            message = "I'm sending this to all my friends in " + MY_CITY + 
-                " who aren't registered to vote yet. It's really " +
-                "important that you guys register and promise to vote.";
-        }
-        else {
-            message = InviteMessages[batchType];
-        }
         FB.ui(
             {
                 "method": "apprequests",
-                "message": message,
                 "to": friendList
             },
             function(response) {
