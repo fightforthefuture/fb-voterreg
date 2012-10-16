@@ -21,7 +21,16 @@
 	{% endif %}
       </div>
     </div>
-    <div class="badges"></div>
+    <div class="badges">
+      <h3><span id="num-invited">{{ num_invited }}</span> Friend{{ num_invited|pluralize }} Invited</h3>
+      <div class="invited-badges">
+	{% include "_mission_badge_list.html" with num=num_invited %}
+      </div>
+      <h3>{{ num_pledged }} Friend{{ num_pledged|pluralize }} Pledged to Vote</h3>
+      <div class="uninvited-badges">
+	{% include "_mission_badge_list.html" with num=num_pledged %}
+      </div>
+    </div>
   </div>
   <h3>INDIVIDUAL INVITES</h3>
   <div id="friends">

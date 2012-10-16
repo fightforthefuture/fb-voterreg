@@ -5,14 +5,28 @@ $(function() {
 	var $next = $("#uninvited-" + ((uninvitedNo + 1) % 2));
 	$justInvited.find(".invite").hide();
 	$justInvited.find(".invited").show();
-	$.get(MARK_MISSION_BATCH_INVITED,
+	$.getJSON(MARK_MISSION_BATCH_INVITED,
 	      { "batch_id": batchID },
 	      function(result) {
 		  // TODO: hide loading animation
 		  if ($next.find(".invited:visible").length > 0) {
-		      $next.html(result);
+		      $next.html(result["html"]);
 		  }
+		  fillInInvitedBadges(result["num_invited"], result["num_friends"]);
 	      });
+    }
+
+    function fillInInvitedBadges(numInvited, numFriends) {
+	$("#num-invited").text(numInvited + "");
+	$(".invited-badges .badge").each(function() {
+	    var cutoff = $(this).data("cutoff");
+	    if (cutoff != -1 && cutoff < numInvited) {
+		$(this).addClass("badge-accomplished");
+	    }
+	    else if (cutoff == -1 && numInvited >= numFriends) {
+		$(this).addClass("badge-accomplished");
+	    }
+	});
     }
 
     function showFriendRequestDialog(fbuids, batchID, uninvitedNo) {

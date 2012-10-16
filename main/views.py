@@ -23,6 +23,7 @@ from django.core.mail import EmailMultiAlternatives
 from models import BATCH_BARELY_LEGAL
 import logging
 
+BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
 
 class OGObjectView(TemplateView):
     """
@@ -249,7 +250,7 @@ def fetch_me(request):
 def _send_join_email(user, request):
     today = date.today()
     num_days = (date(2012, 11, 6) - today).days
-    invite_friends_url = reverse('main:invite_friends')
+    invite_friends_url = reverse('main:invite_friends_2')
     unsubscribe_url = reverse('main:unsubscribe')
     html_body = render_to_string(
         "join_email.html",
@@ -530,12 +531,21 @@ def mission(request, batch_type=BATCH_BARELY_LEGAL):
     recs = f_qs.filter(invite_date__isnull=True)[:2]
     uninvited_batch_1 = None if len(recs) < 1 else recs[0]
     uninvited_batch_2 = None if len(recs) < 2 else recs[1]
+    num_invited = user.friendship_set.filter(
+        batch_type=batch_type).filter(
+        Q(invited_with_batch=True) | Q(invited_individually=True)).count()
+    num_pledged = user.friendship_set.filter(
+        batch_type=batch_type).filter(date_pledged__isnull=False).count()
     context = {
         "batch_type": batch_type,
         "missions": user.mission_set.all(),
         "uninvited_batch_1": uninvited_batch_1,
         "uninvited_batch_2": uninvited_batch_2,
-        "friends": _mission_friends_qs(user, batch_type) }
+        "friends": _mission_friends_qs(user, batch_type), 
+        "num_invited": num_invited,
+        "num_pledged": num_pledged,
+        "num_friends": user.friendship_set.filter(batch_type=batch_type).count(),
+        "badge_cutoffs": BADGE_CUTOFFS }
     return render_to_response(
         "mission.html",
         context,
@@ -565,11 +575,18 @@ def mark_mission_batch_invited(request, batch_type):
     recs = FriendshipBatch.objects.filter(
         user=batch.user, type=batch_type, invite_date__isnull=True)
     uninvited_batch = None if len(recs) == 0 else recs[0]
-    return render_to_response(
+    html = render_to_string(
         "_mission_uninvited_batch.html",
         { "uninvited_batch": uninvited_batch,
           "batch_type": batch_type },
         context_instance=RequestContext(request))
+    num_invited = user.friendship_set.filter(
+        batch_type=batch_type).filter(
+        Q(invited_with_batch=True) | Q(invited_individually=True)).count()
+    return { "html": html, 
+             "num_invited": num_invited,
+             "num_friends": user.friendship_set.filter(batch_type=batch_type).count() }
+
 
 def unsubscribe(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
