@@ -12,16 +12,13 @@
   {% include "_mission_header.html" %}
   <div>
     <div class="mass-invites">
-      <div id="next-to-invite">
-        {% include "_mission_uninvited_batch.html" %}
+      <div data-id="0" id="uninvited-0" class="uninvited">
+        {% include "_mission_uninvited_batch.html" with uninvited_batch=uninvited_batch_1 %}
       </div>
-      <div id="last-invited">
-        <div class="faces">
-          {% if last_invited_batch %}
-          {% include "_mission_facegrid.html" with batch=last_invited_batch %}
-          {% endif %}
-        </div>
-        <a{% if not last_invited_batch %} style="display:none"{% endif %} href="javascript:void(0)">Invited</a>
+      <div data-id="1" id="uninvited-1" class="uninvited">
+	{% if uninvited_batch_2 %}
+	{% include "_mission_uninvited_batch.html" with uninvited_batch=uninvited_batch_2 %}
+	{% endif %}
       </div>
     </div>
     <div class="badges"></div>

@@ -24,10 +24,6 @@ from models import BATCH_BARELY_LEGAL
 import logging
 
 
-class SafariView(TemplateView):
-    template_name = 'safari.html'
-
-
 class OGObjectView(TemplateView):
     """
     The view used to serve the OpenGraph objects published whenever a user
@@ -531,15 +527,14 @@ def mission(request, batch_type=BATCH_BARELY_LEGAL):
     batch_type = int(batch_type)
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)
-    recs = f_qs.filter(invite_date__isnull=True)[:1]
-    uninvited_batch = None if len(recs) == 0 else recs[0]
-    recs = f_qs.filter(invite_date__isnull=False).order_by("-invite_date")[:1]
-    last_invited_batch = None if len(recs) == 0 else recs[0]
+    recs = f_qs.filter(invite_date__isnull=True)[:2]
+    uninvited_batch_1 = None if len(recs) < 1 else recs[0]
+    uninvited_batch_2 = None if len(recs) < 2 else recs[1]
     context = {
         "batch_type": batch_type,
         "missions": user.mission_set.all(),
-        "uninvited_batch": uninvited_batch,
-        "last_invited_batch": last_invited_batch,
+        "uninvited_batch_1": uninvited_batch_1,
+        "uninvited_batch_2": uninvited_batch_2,
         "friends": _mission_friends_qs(user, batch_type) }
     return render_to_response(
         "mission.html",
@@ -555,11 +550,11 @@ def mission_friends_page(request, batch_type):
         { "friends": _mission_friends_qs(user, batch_type, start_index) },
         context_instance=RequestContext(request))
 
-@csrf_exempt
+@render_json
 def mark_mission_batch_invited(request, batch_type):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     batch_type = int(batch_type)
-    batch_id = int(request.POST["batch_id"])
+    batch_id = int(request.GET["batch_id"])
     batch = FriendshipBatch.objects.get(id=batch_id)
     if batch.user != user:
         return HttpResponseNotAllowed("not allowed")
