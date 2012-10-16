@@ -44,7 +44,7 @@ body {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 15px;
     background: transparent url(../img/body-back.png) 0 116px no-repeat;
-    min-height: 900px;
+    min-height: 1200px;
    padding-bottom: 300px;
 }
 
@@ -1079,9 +1079,9 @@ a.load-more{
     text-decoration: none;
     padding: 10px;
 }
-    a.load-more:hover{
-        background: #c2c8d6;
-    }
+a.load-more:hover{
+    background: #c2c8d6;
+}
 
 .empty{
     text-align: center;
