@@ -42,7 +42,7 @@
                         {% comment %}Translators: button text in friend list if user has already been invited{% endcomment %}
                         <a href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% elif friend.pledged %}
-                        <a href="javascript:void(0)" class="btn btn-blue">Pledged</a>
+                        <a href="javascript:void(0)" class="btn btn-blue">{% blocktrans %}Pledged{% endblocktrans %}</a>
                     {% else %}
                         {% comment %}Translators: button text in friend list if user has not beeen invited{% endcomment %}
                         <a href="javascript:void(0)" class="uninvited invite btn btn-green">{% blocktrans %}Invite{% endblocktrans %}</a>
