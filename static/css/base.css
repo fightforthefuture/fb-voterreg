@@ -10,6 +10,18 @@
 }
 
 @font-face {
+    font-family: 'WisdomScript';
+    src: url('../font/wisdom_script-webfont.eot');
+    src: url('../font/wisdom_script-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../font/wisdom_script-webfont.woff') format('woff'),
+         url('../font/wisdom_script-webfont.ttf') format('truetype'),
+         url('../font/wisdom_script-webfont.svg#wisdom_script_airegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
@@ -873,6 +885,33 @@ div.content {
     text-indent: -999em;
     overflow: hidden;
     background: url(../img/feedback.png);
+}
+
+.days-left {
+    position: fixed;
+    color: white;
+    left: 0;
+    top: 240px;
+    padding: 8px;
+    background: url(../img/sprite.png);
+    background-position: -19px 127px;
+    -webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.55);
+    -moz-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.55);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.55);
+}
+
+.days-left .regular {
+    font-family: 'BebasNeueRegular', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.days-left .large {
+    font-size: 28px;
+}
+
+.days-left .cursive {
+    font-family: 'WisdomScript', sans-serif;
 }
 
 .invite-friends {
