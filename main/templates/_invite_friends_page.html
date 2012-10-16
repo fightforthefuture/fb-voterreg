@@ -27,12 +27,12 @@
                     {% endif %}
                     
                 {% else %}
-                    {% comment %}Translators: friend status in friend list if the friend has not been invited{% endcomment %}
-                    <div class="uninvited status">{% blocktrans %}not invited{% endblocktrans %}</div>
-                    <div style="display: none" class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
                     {% if friend.pledged %}
-                        <div style="display: none" class="invited pledged status">{% blocktrans %}pledged{% endblocktrans %}</div>
+                        <div class="invited pledged status">{% blocktrans %}pledged{% endblocktrans %}</div>
                     {% else %}
+                        {% comment %}Translators: friend status in friend list if the friend has not been invited{% endcomment %}
+                        <div class="uninvited status">{% blocktrans %}not invited{% endblocktrans %}</div>
+                        <div style="display: none" class="invited status">{% blocktrans %}invited{% endblocktrans %}</div>
                         <div style="display: none" class="invited not-pledged status">{% blocktrans %}not pledged{% endblocktrans %}</div>
                     {% endif %}
                 {% endif %}
@@ -41,6 +41,8 @@
                     {% if friend.invited %}
                         {% comment %}Translators: button text in friend list if user has already been invited{% endcomment %}
                         <a href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
+                    {% elif friend.pledged %}
+                        <a href="javascript:void(0)" class="btn btn-blue">{% blocktrans %}Pledged{% endblocktrans %}</a>
                     {% else %}
                         {% comment %}Translators: button text in friend list if user has not beeen invited{% endcomment %}
                         <a href="javascript:void(0)" class="uninvited invite btn btn-green">{% blocktrans %}Invite{% endblocktrans %}</a>

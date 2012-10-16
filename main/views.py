@@ -280,13 +280,18 @@ def _send_join_email(user, request):
         msg.attach_alternative(html_body, "text/html")
         msg.send(fail_silently=False)
 
+def _friend_list(user):
+    friends = list(user.friendship_set.order_by("-display_ordering")[:4])
+    return sorted(friends, key=lambda f: f.name)
+    
+
 def _friend_listing_page(request, template, additional_context={}, user=None):
     if not user:
         user = User.objects.get(fb_uid=request.facebook["uid"])
     context = {"user": user}
     context.update(additional_context)
     if user.friendship_set.filter(registered=True).count() >= 4:
-        context["friends"] = user.friendship_set.order_by("-display_ordering")[:4]
+        context["friends"] = _friend_list(user)
     else:
         _fetch_fb_friends(request)
     return render_to_response(
@@ -401,10 +406,9 @@ def fetch_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if user.friendship_set.filter(registered=True).count() < 4:
         return {"fetched": False}
-    friends = user.friendship_set.order_by("-display_ordering")[:4]
     html = render_to_string(
         "_friends.html",
-        {"friends": friends},
+        {"friends": _friend_list(user) },
         context_instance=RequestContext(request))
     return {"fetched": True,
              "html": html}
