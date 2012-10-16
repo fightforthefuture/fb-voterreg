@@ -125,3 +125,10 @@ class FacebookProfile(object):
         return self.location_state is not None and \
             self.hometown_state is not None and \
             self.location_state != self.hometown_state
+
+
+def opengraph_url(request, action):
+    return 'https://graph.facebook.com/%s/%s' % (
+        request.facebook["uid"],
+        action,
+    )

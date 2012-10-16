@@ -132,8 +132,8 @@ BROKER_BACKEND = "django"
 FACEBOOK_APP_ID = "258722907563918"
 FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
 FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-dev/"
-FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-dev:pledge'
-FACEBOOK_OG_VOTE_URL = 'https://graph.facebook.com/me/votewithfriends-dev:vote'
+FACEBOOK_OG_PLEDGE_ACTION = 'votewithfriends-dev:pledge'
+FACEBOOK_OG_VOTE_ACTION = 'https://graph.facebook.com/me/votewithfriends-dev:vote'
 
 VOTIZEN_API_KEY = "" # secret
 USE_FAKE_VOTIZEN_API = False
@@ -191,8 +191,8 @@ if environment == 'staging':
     BASE_URL = "https://voterreg-facebook-staging.herokuapp.com"
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-stag/"
     USE_FAKE_VOTIZEN_API = True
-    FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends-stag:pledge'
-    FACEBOOK_OG_VOTE_URL = 'https://graph.facebook.com/me/votewithfriends-stag:vote'
+    FACEBOOK_OG_PLEDGE_ACTION = 'https://graph.facebook.com/me/votewithfriends-stag:pledge'
+    FACEBOOK_OG_VOTE_ACTION = 'https://graph.facebook.com/me/votewithfriends-stag:vote'
 
 if environment == 'production':
     FACEBOOK_APP_ID = "220561354738022"
@@ -200,8 +200,8 @@ if environment == 'production':
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends/"
     AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
-    FACEBOOK_OG_PLEDGE_URL = 'https://graph.facebook.com/me/votewithfriends:pledge'
-    FACEBOOK_OG_VOTE_URL = 'https://graph.facebook.com/me/votewithfriends:vote'
+    FACEBOOK_OG_PLEDGE_ACTION = 'https://graph.facebook.com/me/votewithfriends:pledge'
+    FACEBOOK_OG_VOTE_ACTION = 'https://graph.facebook.com/me/votewithfriends:vote'
 
 
 if environment == 'dev':

@@ -18,12 +18,13 @@ from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime, date
-from fb_utils import FacebookProfile
+from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
 from models import BATCH_BARELY_LEGAL
 import logging
 
 BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
+
 
 class OGObjectView(TemplateView):
     """
@@ -184,7 +185,8 @@ def my_vote_vote(request):
     elif request.method == 'POST':
         explicit_share = request.POST.get('tell-friends', '') == 'on'
         if explicit_share:
-            requests.post(settings.FACEBOOK_OG_VOTE_URL, params={
+            og_url = opengraph_url(request, settings.FACEBOOK_OG_VOTE_ACTION)
+            requests.post(og_url, params={
                 'website': settings.BASE_URL + reverse('vote_object'),
                 'access_token': request.facebook['access_token'],
                 'fb:explicitly_shared': 'true',
@@ -374,7 +376,8 @@ def submit_pledge(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     explicit_share = request.GET.get('explicit_share', None) == 'true'
     if explicit_share:
-        share = requests.post(settings.FACEBOOK_OG_PLEDGE_URL, params={
+        og_url = opengraph_url(request, settings.FACEBOOK_OG_PLEDGE_ACTION)
+        share = requests.post(og_url, params={
             'website': settings.BASE_URL + reverse('pledge_object'),
             'access_token': request.facebook['access_token'],
             'fb:explicitly_shared': 'true',
