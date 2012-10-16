@@ -29,7 +29,7 @@ $(function() {
     }
 
     $(document).on(
-        "click", "#friends li .btn",
+        "click", "#friends li .invite",
         function(e) {
             inviteFriend($(this).parent().data("friend-fbuid"), $(this));
             return false;

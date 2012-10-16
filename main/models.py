@@ -328,6 +328,8 @@ def _update_batch(sender, instance, **kwargs):
         batch.save()
 
 def _update_mission(sender, instance, **kwargs):
+    if not instance.batch:
+        return
     user = instance.user
     batch_type = instance.batch_type
     mission, created = Mission.objects.get_or_create(
