@@ -1091,5 +1091,8 @@ a.load-more{
     .empty > :first-child{
         margin-top: 0;
     }
-
+    .empty p{
+        margin: 0 100px;
+        line-height: 1.5;
+    }
 
