@@ -463,6 +463,7 @@ div.content {
     border-radius: 5px;
     -webkit-box-shadow:  5px 5px 18px 0px #999999;
     box-shadow:  5px 5px 18px 0px #999999;
+    overflow: hidden;
 }
 
 .main-content-message {
@@ -928,22 +929,6 @@ div.content {
         color: #111;
         text-decoration: none;
     }
-    .filters li.checked a{
-        padding-left: 22px;
-        position: relative;
-    }
-        .filters li.checked a:before{
-            content: url(../img/check.png);
-            position: absolute;
-            top: 12px;
-            left: 0;
-        }
-    .filters li.checked.selected a{
-        padding-left: 32px;
-    }
-        .filters li.checked.selected a:before{
-            left: 10px;
-        }
     .filters li.selected a{
         background: #EEE;
         background: -moz-linear-gradient(top, rgba(255,255,255,1) 40%, rgba(204,204,204,1) 100%);
@@ -962,6 +947,93 @@ div.content {
     .filters .count{
         color: #b1085e;
     }
+
+
+.steps{
+    background: #EEE;
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 40%, rgba(204,204,204,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(40%,rgba(255,255,255,1)), color-stop(100%,rgba(204,204,204,1)));
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 40%,rgba(204,204,204,1) 100%);
+    background: -o-linear-gradient(top, rgba(255,255,255,1) 40%,rgba(204,204,204,1) 100%);
+    background: -ms-linear-gradient(top, rgba(255,255,255,1) 40%,rgba(204,204,204,1) 100%);
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 40%,rgba(204,204,204,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cccccc',GradientType=0 );
+    -webkit-box-shadow: inset 0px -1px 1px 0px rgba(255, 255, 255, 0.4),
+                        0px 1px 2px 0px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0px -1px 1px 0px rgba(255, 255, 255, 0.4),
+                0px 1px 2px 0px rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    width: auto;
+    padding: 0;
+    text-align: left;
+    margin-top: -30px;
+    margin-bottom: 35px;
+    overflow: hidden;
+}  
+    .steps li{
+        padding: 0;
+        margin: 0;
+        border: 0;
+        position: relative;
+        float: left;
+    }
+        .steps li:after{
+            content: url(../img/divide.png);
+            position: absolute;
+            top: 0;
+            right: -12px;
+            z-index: 1;
+        }
+    .steps a{
+        padding: 19px 18px 17px 47px !important;
+        z-index: 2;
+    }
+        .steps a:before{
+            left: 23px !important;
+        }
+    .steps li:first-child a{
+        padding-left: 42px !important;
+    }
+        .steps li:first-child a:before{
+            left: 20px !important;
+        }
+    .steps li.selected{
+        padding: 0;
+        margin: 0;
+        border: 0;
+    }
+    .steps li.selected a{
+        background: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border-radius: 0;
+        border: 0;
+        color: #417e1a;
+        font-weight: bold;
+    }
+    .steps li a{
+        padding-left: 22px;
+        position: relative;
+    }
+        .steps li a:before{
+            content: url(../img/check.png);
+            position: absolute;
+            top: 16px;
+            left: 0;
+        }
+    .steps li.selected a{
+        padding-left: 32px;
+    }
+        .steps li.selected a:before{
+            left: 10px;
+        }
+    .steps li.unchecked.selected a{
+        color: #b1085e;
+    }
+        .steps li.unchecked a:before{
+            content: url(../img/unchecked.png);
+            top: 18px;
+        } 
 
 
 #friends{
