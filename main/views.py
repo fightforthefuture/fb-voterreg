@@ -324,7 +324,7 @@ def _invite_friends_2_qs(user, section, start_index=0):
         f_qs = f_qs.filter(registered=True)
     elif section == "voted":
         f_qs = f_qs.filter(date_voted__isnull=False)
-    return f_qs.order_by("fb_uid")[start_index:(start_index + 16)]
+    return f_qs.order_by("name")[start_index:(start_index + 16)]
 
 def invite_friends_2(request, section="not_invited"):
     user = User.objects.get(fb_uid=request.facebook["uid"])
