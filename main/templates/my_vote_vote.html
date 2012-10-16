@@ -36,7 +36,7 @@
                 {% if user.voted %}
 
                     {% comment %}Translators: text of the button a user presses to retract their status as having voted{% endcomment %}
-                    <button class="btn btn-large" type="submit" name="no"><i class="icon-cancel"></i> {% trans "I lied. I haven't voted yet." %}</button>
+                    <button class="btn btn-large" type="submit" name="no"><i class="icon-cancel"></i> {% trans "Oops. I actually haven't voted yet." %}</button>
 
                 {% else %}
 
@@ -55,7 +55,7 @@
                 {% if not user.voted %}
                     
                     {% comment %}Translators: consent to post voting action to timeline{% endcomment %}
-                    <p><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell my friends I'm voting{% endblocktrans %}</a></p>
+                    <p><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell My Friends I Voted{% endblocktrans %}</a></p>
 
                 {% endif %}
 
