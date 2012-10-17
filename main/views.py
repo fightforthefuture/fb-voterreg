@@ -1,10 +1,12 @@
 import facebook
 import requests
 import urllib
+from urlparse import urlparse
 import sys
 from django.db.models import Q
 from django.contrib import messages
 from django.conf import settings
+from django.core.urlresolvers import resolve
 from django.shortcuts import render_to_response, redirect
 from django.template.loader import render_to_string
 from django.template.context import RequestContext
@@ -126,7 +128,18 @@ def index(request):
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if user.pledged and user.registered:
-        return redirect('main:my_vote_vote')
+
+        # If the user just completed the form in the my_vote_pledge view, then
+        # send them to the 'Have you voted?' form. If not, send them to the
+        # invite friends page.
+        referer = request.META.get('HTTP_REFERER', None)
+        if referer:
+            referer_path = urlparse(referer)[2]
+            view_name = resolve(referer_path).view_name
+            if view_name == 'main:my_vote_pledge':
+                return redirect('main:my_vote_vote')
+        return redirect('main:invite_friends_2')
+
     elif user.registered:
         return redirect('main:my_vote_pledge')
     else:
