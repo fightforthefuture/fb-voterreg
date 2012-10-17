@@ -276,7 +276,9 @@ def _send_join_email(user, request):
             _("Re: Vote with Friends"),
             text_body,
             settings.EMAIL_SENDER,
-            [user.email])
+            [user.email],
+            headers={ 'Reply-To': 'info@votewithfriends.net',
+                      "From": "Vote with Friends <{0}>".format(settings.EMAIL_SENDER)})
         msg.attach_alternative(html_body, "text/html")
         msg.send(fail_silently=False)
 
