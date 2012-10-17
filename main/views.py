@@ -481,16 +481,16 @@ def single_user_invited(request):
     user.save_invited_friends()
     return { "response": "ok" }
 
-def unregistered_friends_list(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    batches = user.friendshipbatch_set.filter(
-        completely_fetched=True, type=BATCH_REGULAR)
-    friendships = []
-    for batch in batches:
-        friendships.extend(list(batch.friendship_set.all()))
+def friends_list(request):
+    graph = facebook.GraphAPI(request.facebook["access_token"])
+    q = ("SELECT uid, name, first_name, last_name, "
+         "birthday_date, hometown_location, current_location "
+         "FROM user "
+         "WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = me())")
+    results = graph.fql(q)
     return render_to_response(
-        "unregistered_friends_list.html",
-        {"friendships": friendships},
+        "friends_list.html",
+        { "friendships": results },
         context_instance=RequestContext(request))
 
 def register_widget(request):
