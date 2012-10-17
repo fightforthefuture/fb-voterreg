@@ -326,6 +326,9 @@ def invite_friends_2(request, section="not_invited"):
           "num_invited": f_mgr.filter(
                 Q(invited_with_batch=True) | 
                 Q(invited_individually=True)).count(),
+          "num_individually_invited": f_mgr.filter(
+                invited_individually=True
+          ).count(),
           "num_uninvited": f_mgr.filter(
                 invited_with_batch=False, 
                 invited_individually=False, 
