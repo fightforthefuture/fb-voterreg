@@ -143,14 +143,15 @@ def my_vote_register(request):
             user.location_city, user.location_state)
     if user.birthday:
         context["birthday"] = user.birthday.strftime("%b %d, %Y")
-    return _friend_listing_page(
-        request, "my_vote_register.html", additional_context={
-        'page': 'my_vote',
-        'section': 'register',
-        'user': user,
-        "name": user.name,
-    }, user=user)
-
+    return render_to_response(
+        "my_vote_register.html", 
+        {
+            'page': 'my_vote',
+            'section': 'register',
+            'user': user,
+            "name": user.name,
+        },
+        context_instance=RequestContext(request))
 
 def my_vote_pledge(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
@@ -245,6 +246,7 @@ def fetch_me(request):
         if user.registered:
             update_friends_of.delay(
                 user.id, request.facebook["access_token"])
+        _fetch_fb_friends(request)
     redirect_url = reverse("main:pledge") if user.registered \
         else reverse("main:register")
     return HttpResponse(redirect_url, content_type="text/plain")
@@ -282,22 +284,6 @@ def _send_join_email(user, request):
 def _friend_list(user):
     friends = list(user.friendship_set.order_by("-display_ordering")[:4])
     return sorted(friends, key=lambda f: f.name)
-    
-
-def _friend_listing_page(request, template, additional_context={}, user=None):
-    if not user:
-        user = User.objects.get(fb_uid=request.facebook["uid"])
-    context = {"user": user}
-    context.update(additional_context)
-    if user.friendship_set.filter(registered=True).count() >= 4:
-        context["friends"] = _friend_list(user)
-    else:
-        _fetch_fb_friends(request)
-    return render_to_response(
-        template,
-        context,
-        context_instance=RequestContext(request))
-
 
 def register(request):
     return redirect('main:my_vote_register')
