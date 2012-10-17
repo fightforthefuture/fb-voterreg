@@ -2,12 +2,11 @@
 
 {% comment %}Translators: HTML version of the email sent after the user joins the app{% endcomment %}
 {% blocktrans %}
-<p>Thanks for trying out Vote with Friends!  Before you do anything else, invite your closest friends to pledge to vote!</p>
-<p>There's only {{num_days}} days until election day!</p>
+<p>{{first_name}}, will your friends vote in this election?  Ask them to pledge now -</p>
 <p>{{ FACEBOOK_CANVAS_PAGE }}?target={{ invite_friends_url }}</p>
-<p>Thanks for being a part of this!</p>
+<p>There's only {{num_days}} days until the election. If you care about what happens, you need to start mobilizing!</p>
+<p>See your current friend mobilization stats here: {{ FACEBOOK_CANVAS_PAGE }}</p>
 <p>Sincerely,<br/>Center for Rights & Vote with Friends</p>
 <p>--<br/><br/></p>
 <p><a href="{{ FACEBOOK_CANVAS_PAGE }}?target={{ unsubscribe_url }}">No emails please</a></p>
 {% endblocktrans %}
-

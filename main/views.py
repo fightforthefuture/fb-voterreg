@@ -254,26 +254,23 @@ def _send_join_email(user, request):
     num_days = (date(2012, 11, 6) - today).days
     invite_friends_url = reverse('main:invite_friends_2')
     unsubscribe_url = reverse('main:unsubscribe')
+    context = {
+        "first_name": user.first_name,
+        "num_days": num_days,
+        "invite_friends_url": invite_friends_url,
+        "unsubscribe_url": unsubscribe_url }
     html_body = render_to_string(
         "join_email.html",
-        {
-            "num_days": num_days,
-            "invite_friends_url": invite_friends_url,
-            "unsubscribe_url": unsubscribe_url,
-        },
+        context,
         context_instance=RequestContext(request))
     text_body = render_to_string(
         "join_email.txt",
-        {
-            "num_days": num_days,
-            "invite_friends_url": invite_friends_url,
-            "unsubscribe_url": unsubscribe_url,
-        },
+        context,
         context_instance=RequestContext(request))
     if user.email:
         msg = EmailMultiAlternatives(
             # Translators: subject of email sent to users when they join the app
-            _("Re: Vote with Friends"),
+            _("Get your friends to pledge."),
             text_body,
             settings.EMAIL_SENDER,
             [user.email],
