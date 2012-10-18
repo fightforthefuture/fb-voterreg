@@ -130,13 +130,14 @@ def my_vote(request):
     if user.pledged and user.registered:
 
         # If the user just completed the form in the my_vote_pledge view, then
-        # send them to the 'Have you voted?' form. If not, send them to the
+        # send them to the 'Have you voted?' form. Also do so if they
+        # explicitly navigated there via 'My Vote'. If not, send them to the
         # invite friends page.
         referer = request.META.get('HTTP_REFERER', None)
         if referer:
             referer_path = urlparse(referer)[2]
             view_name = resolve(referer_path).view_name
-            if view_name == 'main:my_vote_pledge':
+            if view_name == 'main:my_vote_pledge' or 'nav' in request.GET:
                 return redirect('main:my_vote_vote')
         return redirect('main:invite_friends_2')
 
