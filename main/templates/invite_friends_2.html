@@ -18,7 +18,7 @@
         <li{% if section == "not_invited" %} class="selected"{% endif %} id="uninvited_friends"><a href="{% url 'main:invite_friends_2' 'not_invited' %}">Not Invited <span class="count">(<span class="num">{{ num_uninvited }}</span>)</span></a></li>
 
         {% comment %}Translators: group of friends the user has invited to the app{% endcomment %}
-        <li{% if section == "invited" %} class="selected"{% endif %} id="invited_friends"><a href="{% url 'main:invite_friends_2' 'invited' %}">Invited <span class="count">(<span class="num">{{ num_invited }}</span>)</span></a></li>
+        <li{% if section == "invited" %} class="selected"{% endif %} id="invited_friends"><a href="{% url 'main:invite_friends_2' 'invited' %}">Personally Invited <span class="count">(<span class="num">{{ num_individually_invited }}</span>)</span></a></li>
 
         {% comment %}Translators: group of friends who have pledged to vote{% endcomment %}
         <li{% if section == "pledged" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'pledged' %}">Pledged <span class="count">({{ num_pledged }})</span></a></li>

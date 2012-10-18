@@ -97,7 +97,7 @@
       {% block nav %}
           <ul id="nav">
             <li><a href="{% url 'main:missions' %}" {% if page == "missions" %}class="selected"{% endif %}>MISSIONS</a></li>
-            <li><a href="{% url 'main:my_vote' %}" {% if page == "my_vote" %}class="selected"{% endif %}>MY VOTE</a></li>
+            <li><a href="{% url 'main:my_vote' %}?nav" {% if page == "my_vote" %}class="selected"{% endif %}>MY VOTE</a></li>
             <li><a href="{% url 'main:invite_friends_2' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
           </ul>
       {% endblock nav %}

@@ -3,13 +3,13 @@
 
 {% comment %}Translators: text version of the email sent after the user joins the app{% endcomment %}
 {% blocktrans %}
-Thanks for trying out Vote with Friends!  Before you do anything else, invite your closest friends to pledge to vote!
-
-There's only {{num_days}} days until election day!
+{{first_name}}, will your friends vote in this election?  Ask them to pledge now -
 
 {{ FACEBOOK_CANVAS_PAGE }}?target={{ invite_friends_url }}
 
-Thanks for being a part of this!
+There's only {{num_days}} days until the election. If you care about what happens, you need to start mobilizing!
+
+See your current friend mobilization stats here: {{ FACEBOOK_CANVAS_PAGE }}
 
 Sincerely,
 Center for Rights & Vote with Friends
