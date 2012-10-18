@@ -1103,14 +1103,13 @@ div.content {
         } 
 
 
-#friends{
-    padding: 28px;
-    width: 656px;
-    list-style: none inside none;
-}
+    #friends{
+        padding: 0;
+        list-style: none inside none;
+    }
     #friends ul{
         list-style: none;
-        padding: 0;
+        padding: 0 26px;
         margin: 0;
     }
     #friends li {
@@ -1236,6 +1235,7 @@ a.load-more{
     background: #d6dae4;
     text-decoration: none;
     padding: 10px;
+    margin: 10px 0 0 0;
 }
 a.load-more:hover{
     background: #c2c8d6;
