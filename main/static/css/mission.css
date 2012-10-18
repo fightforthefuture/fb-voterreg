@@ -1,0 +1,272 @@
+.choose-mission {
+    width: 686px;
+    margin: 0 auto;
+}
+
+.choose-mission-title {
+    font-family: WisdomScript;
+    text-align: center;
+    font-size: 26px;
+    color: #000000;
+
+}
+
+.choose-mission-body {
+    display: table;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.choose-mission-body li {
+    display: table-cell;
+    padding: 0 0 3px 0; /* for box <a> shadow */
+}
+
+.choose-mission-body li a {
+    display: block;
+    padding: 12px 0 10px 0;
+    width: 134px;
+    text-decoration: none;
+    color: #000;
+    text-align: center;
+    font-size: 14px;
+    border-bottom: 1px solid transparent;
+}
+
+.choose-mission-body li.active a,
+.choose-mission-body li a:hover,
+.choose-mission-body li a:focus {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border-bottom: 1px solid #f1f1f1;
+    -webkit-box-shadow:  0px 2px 1px 0px rgba(0, 0, 0, 0.4);
+    box-shadow:  0px 2px 1px 0px rgba(0, 0, 0, 0.4);
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #cbcbcb 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cbcbcb)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#cbcbcb 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#cbcbcb 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#cbcbcb 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ffffff 0%,#cbcbcb 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cbcbcb',GradientType=0 ); /* IE6-9 */
+}
+
+.choose-mission-body li {
+    padding: 0 6px;
+    border-right: 1px solid #808080;
+}
+
+.choose-mission-body li:first-child {
+    padding-left: 0;
+}
+
+.choose-mission-body li:last-child {
+    padding-right: 0;
+    border-right: none;
+}
+
+.choose-mission-body li a span {
+    display: block;
+}
+
+.choose-mission-body li a span:first-child {
+    font-family: Montserrat;
+    font-weight: normal;
+}
+
+.choose-mission-body li a span:last-child {
+    margin-top: 4px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.choose-mission-body li a span:last-child strong {
+    color: #b1085e;
+}
+
+.choose-mission-body li a span:last-child em {
+    font-weight: normal;
+    font-style: normal;
+    font-family: WisdomScript;
+    font-size: 14px;
+}
+
+.mission-box-wrapper {
+    background: transparent url(../img/friends-back.png) 50% 0 no-repeat;
+    margin: 18px 0 0 0;
+    padding: 18px 0 0 0;
+}
+
+.mission-box {
+    width: 686px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid #91959f;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+    *zoom: 1;
+}
+
+.mission-box:before, .mission-box:after {
+    content: " ";
+    display: table;
+}
+
+.mission-box:after {
+    clear: both;
+}
+
+.mission-box h1 {
+    text-align: left;
+    font-size: 19px;
+    margin: 0;
+    font-family: Montserrat;
+    font-weight: normal;
+}
+
+.mission-box p {
+    text-align: left;
+    font-size: 13px;
+    margin: 3px 0 30px 0;
+    padding:  0 0 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.mission-box-mass h2 {
+    font-family: BebasNeueRegular;
+    color: #848484;
+    font-weight: normal;
+    margin: 0 0 12px 0;
+}
+
+.mission-box-mass {
+    float: left;
+    width: 263px;
+}
+
+.mission-box-mass ul {
+    width: 263px;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 6px 0;
+    *zoom: 1;
+}
+
+.mission-box-mass ul li {
+    list-style: none;
+    float: left;
+    height: 32px;
+    width: 32px;
+    margin: 0 1px 1px 0;
+    padding: 0;
+}
+
+.mission-box-mass ul li img {
+    display: block;
+    height: 32px;
+    width: 32px;
+}
+
+.mission-box-mass .btn {
+    width: 140px;
+}
+
+.mission-box-mass ul:after, mission-box-mass:before {
+    content: " ";
+    display: table;
+}
+
+.mission-box-mass ul:after {
+    clear: both;
+}
+
+.mission-box-badges {
+    float: left;
+    margin-left: 20px;
+    width: 402px;
+}
+
+.mission-box-badges h2 {
+    font-family: Montserrat;
+    font-weight: normal;
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #292929;
+}
+
+.mission-box-badges h2 strong {
+    font-weight: normal;
+    color: #b1085e;
+}
+
+.mission-box-badges div {
+    margin: 0 0 10px 0;
+}
+
+.mission-box-badges *[class^=badge] {
+    background: transparent url(../img/sprite.png) -140px -30px no-repeat;
+    width: 54px;
+    height: 60px;
+    display: inline-block;
+    text-align: center;
+    font-family: BebasNeueRegular;
+    font-size: 18px;
+    color: #fff;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.75);
+    filter: dropshadow(color=rgba(0, 0, 0, 0.75), offx=0, offy=1);
+}
+
+.mission-box-badges .badge-accomplished {
+    opacity: 0.5;
+}
+
+.mission-box-badges .badge-orange {
+    line-height: 60px;
+    background-position: -140px -30px;
+}
+
+.mission-box-badges .badge-orange.badge-all {
+    background-position: -140px -150px;
+}
+
+.mission-box-badges .badge-green {
+    line-height: 60px;
+    background-position: -194px -30px;
+}
+
+.mission-box-badges .badge-green.badge-all {
+    background-position: -194px -150px;
+}
+
+.mission-box-badges .badge-blue {
+    line-height: 56px;
+    background-position: -248px -30px
+}
+
+.mission-box-badges .badge-blue.badge-all {
+    background-position: -248px -150px;
+}
+
+.mission-box-individual {
+    margin: 14px 0 0 0;
+    *zoom: 1;
+}
+
+.mission-box-individual:before,
+.mission-box-individual:after {
+    content: " ";
+    display: table;
+}
+
+.mission-box-individual:after {
+    clear: both;
+}
+
+.mission-box-individual h2 {
+    font-family: BebasNeueRegular;
+    color: #848484;
+    font-weight: normal;
+    margin: 0 0 12px 0;
+}
