@@ -71,11 +71,13 @@ def _main_content_context(user):
     }
 
 
-def _index_redirect(request, user):
+def _index_redirect(user, query_string=""):
+    if query_string:
+        query_string = "?" + query_string
     if user.wont_vote:
-        return invite_friends_2(request)
+        return redirect(reverse("main:invite_friends_2") + query_string)
     else:
-        return my_vote(request)
+        return redirect(reverse("main:my_vote") + query_string)
 
 
 def _fetch_fb_friends(request):
@@ -111,12 +113,13 @@ def index(request):
         if response:
             return response
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    query_string = request.META["QUERY_STRING"]
     if user.data_fetched:
         target_url = request.GET.get("target", None)
         if target_url:
             return redirect(target_url)
         else:
-            return _index_redirect(request, user)
+            return _index_redirect(user, query_string)
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
@@ -125,20 +128,15 @@ def index(request):
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
 
-    print 'starting'
-
     if user.pledged and user.registered and user.voted and not 'nav' in request.GET:
-        print 'branch 1'
-        return invite_friends_2(request)
+        return redirect('main:invite_friends_2')
 
     if user.pledged and user.registered:
 
-        print 'branch 2'
         # The user has explicitly navigated here from the navigation, so don't
         # try to guess what they wanted.
         if 'nav' in request.GET:
-            print 'branch 2a'
-            return my_vote_vote(request)
+            return redirect('main:my_vote_vote')
 
         # If the user just completed the form in the my_vote_pledge view, then
         # send them to the 'Have you voted?' form. If not, send them to the
@@ -148,20 +146,14 @@ def my_vote(request):
             referer_path = urlparse(referer)[2]
             view_name = resolve(referer_path).view_name
             if view_name and view_name == 'main:my_vote_pledge':
-                print 'branch 2b'
-                return my_vote_vote(request)
+                return redirect('main:my_vote_vote')
 
-        print 'branch 2c'
-
-        return invite_friends_2(request)
+        return redirect('main:invite_friends_2')
 
     elif user.registered:
-        print 'branch 3'
-        return my_vote_pledge(request)
-
-    'branch 0'
-
-    return my_vote_register(request)
+        return redirect('main:my_vote_pledge')
+    else:
+        return redirect('main:my_vote_register')
 
 
 def my_vote_register(request):
@@ -625,4 +617,4 @@ def unsubscribe(request):
         # Translators: message displayed to users in green bar when they unsubscribe from emails
         _("Email notifications are turned off")
     )
-    return _index_redirect(request, user)
+    return _index_redirect(user)
