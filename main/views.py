@@ -109,14 +109,19 @@ def index(request):
     if request.method == "POST":
         response = _post_index(request)
         if response:
+            print 'R: ' + response
             return response
+    print 'POST not returned'
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if user.data_fetched:
         target_url = request.GET.get("target", None)
         if target_url:
+            print 'Redirecting to target'
             return redirect(target_url)
         else:
+            print 'Returning _index_redirect'
             return _index_redirect(request, user)
+    print 'Returning loading page'
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
