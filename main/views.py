@@ -109,19 +109,14 @@ def index(request):
     if request.method == "POST":
         response = _post_index(request)
         if response:
-            print 'R: ' + response
             return response
-    print 'POST not returned'
     user = User.objects.get(fb_uid=request.facebook["uid"])
     if user.data_fetched:
         target_url = request.GET.get("target", None)
         if target_url:
-            print 'Redirecting to target'
             return redirect(target_url)
         else:
-            print 'Returning _index_redirect'
             return _index_redirect(request, user)
-    print 'Returning loading page'
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
@@ -130,14 +125,19 @@ def index(request):
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
 
+    print 'starting'
+
     if user.pledged and user.registered and user.voted and not 'nav' in request.GET:
+        print 'branch 1'
         return invite_friends_2(request)
 
     if user.pledged and user.registered:
 
+        print 'branch 2'
         # The user has explicitly navigated here from the navigation, so don't
         # try to guess what they wanted.
         if 'nav' in request.GET:
+            print 'branch 2a'
             return my_vote_vote(request)
 
         # If the user just completed the form in the my_vote_pledge view, then
@@ -148,14 +148,20 @@ def my_vote(request):
             referer_path = urlparse(referer)[2]
             view_name = resolve(referer_path).view_name
             if view_name and view_name == 'main:my_vote_pledge':
+                print 'branch 2b'
                 return my_vote_vote(request)
+
+        print 'branch 2c'
 
         return invite_friends_2(request)
 
     elif user.registered:
+        print 'branch 3'
         return my_vote_pledge(request)
 
-    return my_vote(register(request))
+    'branch 0'
+
+    return my_vote_register(request)
 
 
 def my_vote_register(request):
