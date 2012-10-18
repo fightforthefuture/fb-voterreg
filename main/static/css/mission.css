@@ -171,6 +171,7 @@
 
 .mission-box-mass .btn {
     width: 140px;
+    margin: 0 0 6px 0;
 }
 
 .mission-box-mass ul:after, mission-box-mass:before {
@@ -270,3 +271,4 @@
     font-weight: normal;
     margin: 0 0 12px 0;
 }
+
