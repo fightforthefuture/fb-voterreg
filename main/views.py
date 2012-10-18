@@ -126,14 +126,14 @@ def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
 
     if user.pledged and user.registered and user.voted and not 'nav' in request.GET:
-        return redirect('main:invite_friends_2')
+        return invite_friends_2(request)
 
     if user.pledged and user.registered:
 
         # The user has explicitly navigated here from the navigation, so don't
         # try to guess what they wanted.
         if 'nav' in request.GET:
-            return redirect('main:my_vote_vote')
+            return my_vote_vote(request)
 
         # If the user just completed the form in the my_vote_pledge view, then
         # send them to the 'Have you voted?' form. If not, send them to the
@@ -143,14 +143,14 @@ def my_vote(request):
             referer_path = urlparse(referer)[2]
             view_name = resolve(referer_path).view_name
             if view_name and view_name == 'main:my_vote_pledge':
-                return redirect('main:my_vote_vote')
+                return my_vote_vote(request)
 
-        return redirect('main:invite_friends_2')
+        return invite_friends_2(request)
 
     elif user.registered:
-        return redirect('main:my_vote_pledge')
+        return my_vote_pledge(request)
 
-    return redirect('main:my_vote_register')
+    return my_vote(register(request))
 
 
 def my_vote_register(request):
