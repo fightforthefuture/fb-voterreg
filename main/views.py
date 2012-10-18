@@ -127,6 +127,10 @@ def index(request):
 
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+
+    if user.pledged and user.registered and user.voted and not 'nav' in request.GET:
+        return redirect('main:invite_friends_2')
+
     if user.pledged and user.registered:
 
         # The user has explicitly navigated here from the navigation, so don't
@@ -141,7 +145,9 @@ def my_vote(request):
         if referer:
             referer_path = urlparse(referer)[2]
             view_name = resolve(referer_path).view_name
-            if view_name == 'main:my_vote_pledge':
+            import pdb
+            pdb.set_trace()
+            if view_name and view_name == 'main:my_vote_pledge':
                 return redirect('main:my_vote_vote')
 
         return redirect('main:invite_friends_2')
