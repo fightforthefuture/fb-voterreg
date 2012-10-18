@@ -4,9 +4,11 @@
         {% for friend in friends %}
             <li>
 
-                <img src="{{friend.picture_thumbnail_url}}" alt="{{friend.name}}" />
+                <figure>
+                    <img src="{{friend.picture_thumbnail_url}}" alt="{{friend.name}}" />
+                </figure>
 
-                <div class="name">{{ friend.name }}</div>
+                <h2>{{ friend.name }}</h2>
 
                 {% if friend.voted %}
 
@@ -38,13 +40,13 @@
                 <div class="action" data-friend-fbuid="{{ friend.fb_uid }}">
                     {% if friend.invited %}
                         {% comment %}Translators: button text in friend list if user has already been invited{% endcomment %}
-                        <a href="javascript:void(0)" class="invited invite">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
+                        <a href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% elif friend.pledged %}
-                        <a href="javascript:void(0)" class="pledged">{% blocktrans %}Pledged{% endblocktrans %}</a>
+                        <a href="javascript:void(0)" class="btn btn-blue">{% blocktrans %}Pledged{% endblocktrans %}</a>
                     {% else %}
                         {% comment %}Translators: button text in friend list if user has not beeen invited{% endcomment %}
-                        <a href="javascript:void(0)" class="uninvited invite">{% blocktrans %}Invite{% endblocktrans %}</a>
-                        <a style="display: none" href="javascript:void(0)" class="invited invite">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
+                        <a href="javascript:void(0)" class="uninvited invite btn btn-green">{% blocktrans %}Invite{% endblocktrans %}</a>
+                        <a style="display: none" href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% endif %}
                 </div>
 
