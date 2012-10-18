@@ -152,8 +152,8 @@ def my_vote(request):
 
     elif user.registered:
         return redirect('main:my_vote_pledge')
-    else:
-        return redirect('main:my_vote_register')
+
+    return redirect('main:my_vote_register')
 
 
 def my_vote_register(request):
