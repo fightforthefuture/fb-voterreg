@@ -459,6 +459,34 @@ div.content {
     background-position: 0 -92px;
 }
 
+.icon-mini-ok2 {
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+    background-position: -180px 0;
+}
+
+.icon-mini-invited {
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+    background-position: -160px 0;
+}
+
+.icon-mini-notinvited {
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+    background-position: -200px 0;
+}
+
+.icon-mini-message {
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+    background-position: -140px 0;
+}
+
 .main-content {
     width: 660px;
     margin: 0 auto;
@@ -1081,51 +1109,42 @@ div.content {
     list-style: none inside none;
 }
     #friends ul{
-        margin: 0;
+        list-style: none;
         padding: 0;
+        margin: 0;
     }
-    #friends li{
-        width: 138px;
-        background: #e8eaf0;
+    #friends li {
         float: left;
-        list-style-type: none;
-        margin: 0 12px 24px;
-        -webkit-border-radius: 5px;
-        border-radius: 5px;
+        display: block;
+        width: 140px;
+        margin: 8px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
         border: 1px solid #c0c3ca;
-        -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.75),
-                            0px 2px 5px rgba(0, 0, 0, 0.22);
-        box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.75),
-                    0px 2px 5px rgba(0, 0, 0, 0.22);
+        background-color: #e8eaf0;
+        -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.27);
+        box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.27);
     }
-        #friends li figure{
-            width: 50px;
-            margin: 8px auto;
-        }
-        #friends li img{
-            max-width: 100%;
-            border: 3px solid #FFF;
-            -webkit-box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.22);
-            box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.22);
-        }
-        #friends li:nth-child(4n+1){
-            clear: left;
-        }
-    #friends h2{
-        font-size: 13px;
-        font-weight: bold;
-        color: #2e4685;
-        padding: 0 10px;
-        margin: 12px 0 4px;
+    #friends li img{
+        display: block;
+        margin: 14px auto;
+        border: 2px solid #fff;
+        -webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.27);
+        box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.27);
+    }
+    #friends li .name {
         text-align: center;
+        padding: 4px;
+        color: #2e4685;
+        font-size: 16px;
         max-height: 34px;
         overflow: hidden;
     }
     #friends .status{
+        text-align: center;
+        padding: 2px 4px 8px 4px;
         font-size: 12px;
         font-weight: bold;
-        padding: 0 10px;
-        text-align: center;
     }
         #friends .status.uninvited{
             color: #585858;
@@ -1153,31 +1172,59 @@ div.content {
             }
 
     #friends .action{
-        margin: 12px 1px 1px;
-        padding: 9px 6px 10px;
+        padding: 8px;
         border-top: 1px dashed #babbc0;
     }
-        #friends .action .btn{
+        #friends .action a {
             font: bold 10px/1 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
             display: block;
-            text-shadow: none;
-            padding: 4px 5px 7px;
-            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-            -webkit-box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            -webkit-border-radius: 3px;
+            border-radius: 3px;
+            color: #fff;
+            margin: 0;
+            text-decoration: none;
+            padding: 4px;
+            -webkit-box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.27);
+            box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.27);
+            font-weight: bold;
+            text-align: center;
         }
-            #friends .action .btn:active,
-            #friends .action .btn:focus{
+            #friends .action a:active,
+            #friends .action a:focus{
                 -webkit-box-shadow: inset 0px 1px 1px 1px rgba(0, 0, 0, 0.2);
                 box-shadow: inset 0px 1px 1px 1px rgba(0, 0, 0, 0.2);
             }
-            #friends .action .btn:before{
+            #friends .action a:before{
                 content: '\2709\A0';
                 font-size: 20px;
                 line-height: 10px;
                 position: relative;
                 top: 3px;
                 font-weight: normal;
+            }
+            #friends .action a.invited,
+            #friends .action a.pledged {
+                border: 1px solid #000000;
+                background: #4261ab; /* Old browsers */
+                background: -moz-linear-gradient(top,  #4261ab 0%, #36508e 100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4261ab), color-stop(100%,#36508e)); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top,  #4261ab 0%,#36508e 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top,  #4261ab 0%,#36508e 100%); /* Opera 11.10+ */
+                background: -ms-linear-gradient(top,  #4261ab 0%,#36508e 100%); /* IE10+ */
+                background: linear-gradient(to bottom,  #4261ab 0%,#36508e 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4261ab', endColorstr='#36508e',GradientType=0 ); /* IE6-9 */
+            }
+
+            #friends .action a.uninvited {
+                border: 1px solid #185b00;
+                background: #00961d; /* Old browsers */
+                background: -moz-linear-gradient(top,  #00961d 0%, #007815 100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00961d), color-stop(100%,#007815)); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top,  #00961d 0%,#007815 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top,  #00961d 0%,#007815 100%); /* Opera 11.10+ */
+                background: -ms-linear-gradient(top,  #00961d 0%,#007815 100%); /* IE10+ */
+                background: linear-gradient(to bottom,  #00961d 0%,#007815 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00961d', endColorstr='#007815',GradientType=0 ); /* IE6-9 */
             }
 
 a.load-more{

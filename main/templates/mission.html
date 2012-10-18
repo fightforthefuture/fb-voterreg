@@ -4,39 +4,45 @@
 {% load static from staticfiles %}
 {% load url from future %}
 
-{% block css %}{% endblock css %}
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/mission.css' %}">
+{% endblock css %}
 
 {% block content %}
-{% include "_mission_filters.html" %}  
-<div>
-  {% include "_mission_header.html" %}
-  <div>
-    <div class="mass-invites">
-      <div data-id="0" id="uninvited-0" class="uninvited">
-        {% include "_mission_uninvited_batch.html" with uninvited_batch=uninvited_batch_1 %}
-      </div>
-      <div data-id="1" id="uninvited-1" class="uninvited">
-	{% if uninvited_batch_2 %}
-	{% include "_mission_uninvited_batch.html" with uninvited_batch=uninvited_batch_2 %}
-	{% endif %}
-      </div>
+{% include "_mission_filters.html" %}
+<div class="mission-box-wrapper">
+    <div class="mission-box">
+        {% include "_mission_header.html" %}
+        <div class="mission-box-mass">
+            <h2>Mass Invites</h2>
+            <div data-id="0" id="uninvited-0" class="uninvited">
+                {% include "_mission_uninvited_batch.html" with uninvited_batch=uninvited_batch_1 %}
+            </div>
+            <div data-id="1" id="uninvited-1" class="uninvited">
+                {% if uninvited_batch_2 %}
+                {% include "_mission_uninvited_batch.html" with uninvited_batch=uninvited_batch_2 %}
+                {% endif %}
+            </div>
+        </div>
+        <div class="mission-box-badges">
+            <h2><strong id="num-invited">{{ num_invited }}</strong> Friend{{ num_invited|pluralize }} Invited</h2>
+            <div class="invited-badges">
+                {% include "_mission_badge_list.html" with num=num_invited type="orange" %}
+            </div>
+            <h2><strong>{{ num_pledged }}</strong> Friend{{ num_pledged|pluralize }} Pledged to Vote</h2>
+            <div class="uninvited-badges">
+                {% include "_mission_badge_list.html" with num=num_pledged type="green" %}
+            </div>
+        </div>
+        <div class="mission-box-individual">
+            <h2>Individual Invites</h2>
+            <div id="friends">
+                {% include "_invite_friends_page.html" %}
+                <a href="javascript:void(0)" id="load_more_friends" class="load-more">Load More Friends</a>
+            </div>
+        </div>
     </div>
-    <div class="badges">
-      <h3><span id="num-invited">{{ num_invited }}</span> Friend{{ num_invited|pluralize }} Invited</h3>
-      <div class="invited-badges">
-	{% include "_mission_badge_list.html" with num=num_invited %}
-      </div>
-      <h3>{{ num_pledged }} Friend{{ num_pledged|pluralize }} Pledged to Vote</h3>
-      <div class="uninvited-badges">
-	{% include "_mission_badge_list.html" with num=num_pledged %}
-      </div>
-    </div>
-  </div>
-  <h3>INDIVIDUAL INVITES</h3>
-  <div id="friends">
-    {% include "_invite_friends_page.html" %}
-    <a href="javascript:void(0)" id="load_more_friends" class="load-more">Load More Friends</a>
-  </div>
 </div>
 {% endblock %}
 

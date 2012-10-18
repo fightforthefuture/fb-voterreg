@@ -1,9 +1,9 @@
 {% if uninvited_batch %}
-<div class="faces">
-  {% for f in uninvited_batch.friendships|slice:":32" %}<img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture">{% endfor %}
-</div>
-<a href="javascript:void(0)" class="invite" data-id="{{uninvited_batch.id}}">Invite them</a>
-<a href="#" style="display: none" class="invited">Invited</a>
+<ul>
+  {% for f in uninvited_batch.friendships|slice:":32" %}<li><img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture"></li>{% endfor %}
+</ul>
+<a href="javascript:void(0)" class="invite btn btn-green" data-id="{{uninvited_batch.id}}">Invite them</a>
+<a href="#" style="display: none;" class="invited btn">Invited</a>
 {% else %}
 <span>Looks like you've invited all your friends for Mission {{batch_type}}. Congratulations!</span>
 {% endif %}

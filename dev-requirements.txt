@@ -1,5 +1,5 @@
 Django==1.4
-South==0.7.
+South==0.7.5
 facebook-sdk==0.3.2
 django-celery==3.0.10
 gunicorn==0.14.3
