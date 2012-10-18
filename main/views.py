@@ -71,13 +71,11 @@ def _main_content_context(user):
     }
 
 
-def _index_redirect(user, query_string=""):
-    if query_string:
-        query_string = "?" + query_string
+def _index_redirect(request, user):
     if user.wont_vote:
-        return redirect(reverse("main:invite_friends_2") + query_string)
+        return invite_friends_2(request)
     else:
-        return redirect(reverse("main:my_vote") + query_string)
+        return my_vote(request)
 
 
 def _fetch_fb_friends(request):
@@ -113,13 +111,12 @@ def index(request):
         if response:
             return response
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    query_string = request.META["QUERY_STRING"]
     if user.data_fetched:
         target_url = request.GET.get("target", None)
         if target_url:
             return redirect(target_url)
         else:
-            return _index_redirect(user, query_string)
+            return _index_redirect(request, user)
     return render_to_response(
         "loading.html",
         context_instance=RequestContext(request))
@@ -617,4 +614,4 @@ def unsubscribe(request):
         # Translators: message displayed to users in green bar when they unsubscribe from emails
         _("Email notifications are turned off")
     )
-    return _index_redirect(user)
+    return _index_redirect(request, user)
