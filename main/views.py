@@ -145,8 +145,6 @@ def my_vote(request):
         if referer:
             referer_path = urlparse(referer)[2]
             view_name = resolve(referer_path).view_name
-            import pdb
-            pdb.set_trace()
             if view_name and view_name == 'main:my_vote_pledge':
                 return redirect('main:my_vote_vote')
 
