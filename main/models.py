@@ -124,22 +124,19 @@ class User(models.Model):
         """
         Returns the number of friends the user has invited.
         """
-        return self.friendship_set.filter(
-            models.Q(invited_with_batch=True) |
-            models.Q(invited_individually=True)
-        ).count()
+        return self.friends.invited.count()
 
     def num_friends_pledged(self):
         """
         Returns the number of pledged friends the user has.
         """
-        return self.friendship_set.filter(date_pledged__isnull=False).count()
+        return self.friends.pledged().count()
 
     def num_friends_voted(self):
         """
         Returns the number of voting friends the user has.
         """
-        return self.friendship_set.filter(date_voted__isnull=False).count()
+        return self.friends.voted().count()
 
     @property
     def invited_friends(self):
