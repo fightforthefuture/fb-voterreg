@@ -1,9 +1,13 @@
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from datetime import date, datetime
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
+from main.managers import FriendStatusManager
+
 
 WONT_VOTE_REASONS = (
 
@@ -83,6 +87,10 @@ class User(models.Model):
     explicit_share = models.BooleanField(default=False)
     # User explicitly shared their vote with friends
     explicit_share_vote = models.BooleanField(default=False)
+
+    @property
+    def friends(self):
+        return self.friendship_set.all()
 
     def update_friends_fetch(self):
         self.friends_fetch_last_activity = datetime.now()
@@ -231,6 +239,8 @@ class Friendship(models.Model):
     invited_pledge_count = models.IntegerField(default=0)
     wont_vote_reason = models.CharField(
         max_length=18, choices=WONT_VOTE_REASONS, blank=True)
+
+    objects = FriendStatusManager()
 
     @property
     def invited(self):

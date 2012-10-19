@@ -308,49 +308,35 @@ def pledge(request):
     return redirect('main:my_vote_pledge')
 
 
-def _invite_friends_2_qs(user, section, start_index=0, sort_order='name'):
-    f_qs = user.friendship_set.all()
-    if section == "invited":
-        f_qs = f_qs.filter(
-            Q(invited_with_batch=True) | Q(invited_individually=True))
-    elif section == "not_invited":
-        f_qs = f_qs.filter(
-            invited_individually=True, 
-            date_pledged__isnull=True)
-        sort_order = '?'
-    elif section == "pledged":
-        f_qs = f_qs.filter(date_pledged__isnull=False)
+def _invite_friends_2_qs(user, section, start_index=0):
+    if section == "not_invited":
+        f_qs = user.friends.personally_invited(status=False).order_by('?')
+    elif section == "invited":
+        f_qs = user.friends.invited()
     elif section == "registered":
-        f_qs = f_qs.filter(registered=True)
+        f_qs = user.friends.registered()
+    elif section == "pledged":
+        f_qs = user.friends.pledged()
     elif section == "voted":
-        f_qs = f_qs.filter(date_voted__isnull=False)
-    return f_qs.order_by(sort_order)[start_index:(start_index + 16)]
+        f_qs = user.friends.voted()
+    return f_qs[start_index:(start_index + 16)]
 
 
 def invite_friends_2(request, section="not_invited"):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_qs = _invite_friends_2_qs(user, section)
-    f_mgr = user.friendship_set    
-    return render_to_response(
-        "invite_friends_2.html",
-        { "friends": f_qs,
-          "page": 'friends',
-          "section": section,
-          "num_registered": f_mgr.filter(registered=True).count(),
-          "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
-          "num_invited": f_mgr.filter(
-                Q(invited_with_batch=True) | 
-                Q(invited_individually=True)).count(),
-          "num_individually_invited": f_mgr.filter(
-                invited_individually=True
-          ).count(),
-          "num_uninvited": f_mgr.filter(
-                invited_with_batch=False, 
-                invited_individually=False, 
-                date_pledged__isnull=True).count(),
-          "num_friends": user.num_friends or 0,
-          "num_voted": user.num_friends_voted() },
-        context_instance=RequestContext(request))
+    return render_to_response("invite_friends_2.html", {
+        "friends": f_qs,
+        "page": 'friends',
+        "section": section,
+        "num_registered": user.friends.registered().count(),
+        "num_pledged": user.friends.pledged().count(),
+        "num_invited": user.friends.invited().count(),
+        "num_individually_invited": user.friends.personally_invited().count(),
+        "num_uninvited": user.friends.personally_invited(status=False).count(),
+        "num_friends": user.num_friends or 0,
+        "num_voted": user.friends.voted().count()
+    }, context_instance=RequestContext(request))
 
 @csrf_exempt
 def invite_friends_2_page(request, section):
@@ -364,11 +350,10 @@ def invite_friends_2_page(request, section):
 
 def missions(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    f_mgr = user.friendship_set
     context = {
         "page": "missions",
-        "num_registered": f_mgr.filter(registered=True).count(),
-        "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
+        "num_registered": user.friends.registered().count(),
+        "num_pledged": user.friends.pledged().count(),
         "num_friends": user.num_friends or 0,
         "uninvited_batches": user.friendshipbatch_set.filter(
             completely_fetched=True, invite_date__isnull=True),
@@ -408,7 +393,7 @@ def submit_pledge(request):
 @render_json
 def fetch_friends(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    if user.friendship_set.filter(registered=True).count() < 4:
+    if user.friends().registered().count() < 4:
         return {"fetched": False}
     html = render_to_string(
         "_friends.html",
@@ -457,7 +442,6 @@ def fetch_updated_batches(request):
     else:
         batch_ids = set([int(b) for b in batch_ids.split(",")])
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    f_mgr = user.friendship_set
     batches = user.friendshipbatch_set.filter(
         completely_fetched=True, invite_date__isnull=True)
     htmls = []
@@ -468,10 +452,10 @@ def fetch_updated_batches(request):
                     "_batch.html", {"batch": batch},
                     context_instance=RequestContext(request)))
     return {
-        "num_registered": f_mgr.filter(registered=True).count(),
-        "num_pledged": f_mgr.filter(date_pledged__isnull=False).count(),
+        "num_registered": user.friends.registered().count(),
+        "num_pledged": user.friends.pledged().count(),
         "num_friends": user.num_friends or 0,
-        "num_processed": f_mgr.all().count(),
+        "num_processed": user.friends.all().count(),
         "boxes": htmls,
         "finished": user.friends_fetched}
 
@@ -542,11 +526,8 @@ def mission(request, batch_type=BATCH_BARELY_LEGAL):
     recs = f_qs.filter(invite_date__isnull=True)[:2]
     uninvited_batch_1 = None if len(recs) < 1 else recs[0]
     uninvited_batch_2 = None if len(recs) < 2 else recs[1]
-    num_invited = user.friendship_set.filter(
-        batch_type=batch_type).filter(
-        Q(invited_with_batch=True) | Q(invited_individually=True)).count()
-    num_pledged = user.friendship_set.filter(
-        batch_type=batch_type).filter(date_pledged__isnull=False).count()
+    num_invited = user.friends.filter(batch_type=batch_type).invited().count()
+    num_pledged = user.friends.filter(batch_type=batch_type).pledged().count()
     context = {
         "batch_type": batch_type,
         "missions": user.mission_set.all(),
@@ -555,7 +536,7 @@ def mission(request, batch_type=BATCH_BARELY_LEGAL):
         "friends": _mission_friends_qs(user, batch_type), 
         "num_invited": num_invited,
         "num_pledged": num_pledged,
-        "num_friends": user.friendship_set.filter(batch_type=batch_type).count(),
+        "num_friends": user.friends.filter(batch_type=batch_type).count(),
         "badge_cutoffs": BADGE_CUTOFFS }
     return render_to_response(
         "mission.html",
@@ -591,9 +572,7 @@ def mark_mission_batch_invited(request, batch_type):
         { "uninvited_batch": uninvited_batch,
           "batch_type": batch_type },
         context_instance=RequestContext(request))
-    num_invited = user.friendship_set.filter(
-        batch_type=batch_type).filter(
-        Q(invited_with_batch=True) | Q(invited_individually=True)).count()
+    num_invited = user.friends.filter(batch_type=batch_type).invited().count()
     return { "html": html, 
              "num_invited": num_invited,
              "num_friends": user.friendship_set.filter(batch_type=batch_type).count() }
