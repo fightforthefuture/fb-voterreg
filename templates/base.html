@@ -75,17 +75,17 @@
                 <ul class="friends">
                     <li class="invited">
                         <a href="{% url 'main:invite_friends_2' 'invited' %}">
-                            <strong class="num">{{ vwf_user.num_friends_invited }}</strong>Friends Invited
+                            <strong class="num">{{ vwf_user.friends.invited.count }}</strong>Friends Invited
                         </a>
                     </li>
                     <li>
                         <a href="{% url 'main:invite_friends_2' 'pledged' %}">
-                            <strong class="num">{{ vwf_user.num_friends_pledged }}</strong>Friends Pledged
+                            <strong class="num">{{ vwf_user.friends.pledged.count }}</strong>Friends Pledged
                         </a>
                     </li>
                     <li class="voted">
                         <a href="{% url 'main:invite_friends_2' 'voted' %}">
-                            <strong class="num">{{ vwf_user.num_friends_voted }}</strong>Friends Voted
+                            <strong class="num">{{ vwf_user.friends.voted.count }}</strong>Friends Voted
                         </a>
                     </li>
                 </ul>
