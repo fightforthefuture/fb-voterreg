@@ -14,7 +14,7 @@
 .voting-blocks-create .sample {
     float: left;
     margin: 0 0 0 28px;
-    width: 340px;
+    width: 406px;
 }
 
 .voting-blocks-create .sample .info {
@@ -90,10 +90,11 @@
     box-sizing: border-box;
     -webkit-box-sizing:border-box;
     -moz-box-sizing: border-box;
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 .voting-blocks-create .data input[type=text] + input[type=text] {
-    margin: 8px 0 0 0;
+    margin: 14px 0 0 0;
 }
 
 .voting-blocks-create .data label {
@@ -122,19 +123,39 @@
 .voting-blocks-create h2 {
     color: #292929;
     font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: normal;
+    margin: 20px 0 14px 0;
 }
 
 .voting-blocks-create h2 em {
     color: #484848;
     font-family: TeXGyrePagellaItalic, Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-style: normal;
 }
 
 .voting-blocks-create .sample .organization {
     color: #484848;
-    padding: 6px;
+    font-size: 13px;
+    padding: 12px 12px 16px 12px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+    -webkit-box-shadow:  0px 1px 5px 0px rgba(0, 0, 0, 0.36);
+    box-shadow:  0px 1px 5px 0px rgba(0, 0, 0, 0.36);
+    background: #fafafa; /* Old browsers */
+    background: -moz-linear-gradient(top,  #fafafa 0%, #e7e7e7 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#e7e7e7)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #fafafa 0%,#e7e7e7 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #fafafa 0%,#e7e7e7 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #fafafa 0%,#e7e7e7 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #fafafa 0%,#e7e7e7 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#e7e7e7',GradientType=0 ); /* IE6-9 */
+}
 
+.voting-blocks-create .actions {
+    margin: 38px 0 0 0;
+}
+
+.voting-blocks-create .actions a {
+    width: 192px;
 }
