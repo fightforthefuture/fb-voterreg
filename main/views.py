@@ -319,7 +319,7 @@ def _invite_friends_2_qs(user, section, start_index=0):
     if section == "not_invited":
         f_qs = user.friends.personally_invited(status=False).order_by('?')
     elif section == "invited":
-        f_qs = user.friends.invited()
+        f_qs = user.friends.personally_invited()
     elif section == "registered":
         f_qs = user.friends.registered()
     elif section == "pledged":
