@@ -20,11 +20,11 @@
         {% comment %}Translators: group of friends the user has invited to the app{% endcomment %}
         <li{% if section == "invited" %} class="selected"{% endif %} id="invited_friends"><a href="{% url 'main:invite_friends_2' 'invited' %}">Personally Invited <span class="count">(<span class="num">{{ num_individually_invited }}</span>)</span></a></li>
 
-        {% comment %}Translators: group of friends who have pledged to vote{% endcomment %}
-        <li{% if section == "pledged" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'pledged' %}">Pledged <span class="count">({{ num_pledged }})</span></a></li>
-
         {% comment %}Translators: group of friends the have registered to vote{% endcomment %}
         <li{% if section == "registered" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'registered' %}">Registered <span class="count">({{ num_registered }})</span></a></li>
+
+        {% comment %}Translators: group of friends who have pledged to vote{% endcomment %}
+        <li{% if section == "pledged" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'pledged' %}">Pledged <span class="count">({{ num_pledged }})</span></a></li>
 
         {% comment %}Translators: group of friends that have voted{% endcomment %}
         <li{% if section == "voted" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'voted' %}">Voted <span class="count">({{ num_voted }})</span></a></li>
@@ -32,16 +32,9 @@
     </ul>
 
     <div class="main-content cf" id="friends">
-
         {% include "_invite_friends_page.html" %}
-
         {% if friends %}
-            <a href="javascript:void(0)" id="load_more_friends" class="load-more">
-              {% comment %}Translators: text of button that allows user to load more friends{% endcomment %}
-              <span id="load_more_label">Load More Friends</span>
-              {% comment %}Translators: text of button that indicates more friends are loading{% endcomment %}
-              <span id="loading_label" style="display: none">Friends Loading...</span>
-            </a>
+        {% include "_invite_friends_buttons.html" %}
         {% endif %}
     </div>
 

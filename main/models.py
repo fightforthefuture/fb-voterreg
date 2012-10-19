@@ -1,9 +1,13 @@
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from datetime import date, datetime
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
+from main.managers import FriendStatusManager
+
 
 WONT_VOTE_REASONS = (
 
@@ -84,6 +88,10 @@ class User(models.Model):
     # User explicitly shared their vote with friends
     explicit_share_vote = models.BooleanField(default=False)
 
+    @property
+    def friends(self):
+        return self.friendship_set.all()
+
     def update_friends_fetch(self):
         self.friends_fetch_last_activity = datetime.now()
 
@@ -116,22 +124,19 @@ class User(models.Model):
         """
         Returns the number of friends the user has invited.
         """
-        return self.friendship_set.filter(
-            models.Q(invited_with_batch=True) |
-            models.Q(invited_individually=True)
-        ).count()
+        return self.friends.invited.count()
 
     def num_friends_pledged(self):
         """
         Returns the number of pledged friends the user has.
         """
-        return self.friendship_set.filter(date_pledged__isnull=False).count()
+        return self.friends.pledged().count()
 
     def num_friends_voted(self):
         """
         Returns the number of voting friends the user has.
         """
-        return self.friendship_set.filter(date_voted__isnull=False).count()
+        return self.friends.voted().count()
 
     @property
     def invited_friends(self):
@@ -231,6 +236,8 @@ class Friendship(models.Model):
     invited_pledge_count = models.IntegerField(default=0)
     wont_vote_reason = models.CharField(
         max_length=18, choices=WONT_VOTE_REASONS, blank=True)
+
+    objects = FriendStatusManager()
 
     @property
     def invited(self):
