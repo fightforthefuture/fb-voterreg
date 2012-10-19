@@ -5,7 +5,7 @@
     </div>
     <ul class="choose-mission-body">
         {% for mission in missions %}
-        <li{% if batch_type == mission.batch_type %} class="active"{% endif %}>
+        <li{% if batch_type == mission.type %} class="active"{% endif %}>
         <a href="{% url 'main:mission' mission.type %}">
             <span>
             {% if mission.type == 1 %}
