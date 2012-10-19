@@ -8,3 +8,5 @@ requests==0.14.0
 newrelic==1.5.0.103
 django-rosetta==0.6.8
 django-heroku-memcacheify==0.3
+PIL==1.1.7
+easy-thumbnails==1.1

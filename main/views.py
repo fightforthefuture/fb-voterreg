@@ -618,3 +618,40 @@ def unsubscribe(request):
         _("Email notifications are turned off")
     )
     return _index_redirect(user)
+
+
+def voting_blocks(request):
+    context = {
+        "page": "voting_blocks",
+    }
+    return render_to_response(
+        "voting_blocks.html",
+        context,
+        context_instance=RequestContext(request))
+
+def voting_blocks_create(request):
+    context = {
+        "page": "voting_blocks",
+    }
+    return render_to_response(
+        "voting_blocks_create.html",
+        context,
+        context_instance=RequestContext(request))
+
+def voting_blocks_item(request):
+    context = {
+        "page": "voting_blocks",
+        }
+    return render_to_response(
+        "voting_blocks_item.html",
+        context,
+        context_instance=RequestContext(request))
+
+def voting_blocks_join(request):
+    context = {
+        "page": "voting_blocks",
+        }
+    return render_to_response(
+        "voting_blocks_join.html",
+        context,
+        context_instance=RequestContext(request))

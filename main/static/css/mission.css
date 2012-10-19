@@ -4,7 +4,7 @@
 }
 
 .choose-mission-title {
-    font-family: WisdomScript;
+    font-family: WisdomScript, Helvetica, Arial, "Lucida Grande", sans-serif;;
     text-align: center;
     font-size: 26px;
     color: #000000;
@@ -70,7 +70,7 @@
 }
 
 .choose-mission-body li a span:first-child {
-    font-family: Montserrat;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: normal;
 }
 
@@ -87,7 +87,7 @@
 .choose-mission-body li a span:last-child em {
     font-weight: normal;
     font-style: normal;
-    font-family: WisdomScript;
+    font-family: WisdomScript, Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 14px;
 }
 
@@ -96,43 +96,6 @@
     margin: 18px 0 0 0;
     padding: 18px 0 0 0;
 }
-
-.mission-box {
-    width: 686px;
-    margin: 0 auto;
-    padding: 30px;
-    border: 1px solid #91959f;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background-color: #fff;
-    *zoom: 1;
-}
-
-.mission-box:before, .mission-box:after {
-    content: " ";
-    display: table;
-}
-
-.mission-box:after {
-    clear: both;
-}
-
-.mission-box h1 {
-    text-align: left;
-    font-size: 19px;
-    margin: 0;
-    font-family: Montserrat;
-    font-weight: normal;
-}
-
-.mission-box p {
-    text-align: left;
-    font-size: 13px;
-    margin: 3px 0 30px 0;
-    padding:  0 0 12px;
-    border-bottom: 1px solid #ddd;
-}
-
 
 .mission-box-mass h2 {
     font-family: BebasNeueRegular;
@@ -190,7 +153,7 @@
 }
 
 .mission-box-badges h2 {
-    font-family: Montserrat;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: normal;
     margin: 0 0 8px 0;
     font-size: 14px;

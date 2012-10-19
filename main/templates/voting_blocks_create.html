@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+
+{% block css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/voting_blocks.css' %}">
+{% endblock css %}
+
+{% block content %}
+<div class="voting-blocks-create white-box">
+    <h1>Creating a voting block</h1>
+    <div class="block cf">
+        <div class="data">
+            <input type="text" />
+            <p class="help">80 chars</p>
+            <input type="text" />
+            <p class="help">80 chars</p>
+            <label>Add Image:</label> <input type="file" />
+        </div>
+        <div class="sample">
+            <p class="info">Here is how it will look:</p>
+            <ul>
+                <li>
+                    <p class="title">Very long name</p>
+                    <p class="members">(1234 members)</p>
+                    <img src="http://placehold.it/80x68" />
+                    <p class="description">adaas sdsas adhaskjdhaskd hakdh akdhas kdh</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="note">
+        <strong>Note</strong>: Before making a new block, search <a href="#">here</a> to be sure someone else hasn't already set one up.
+        If you create a voting block for a specific location, include the location the title
+        (like this: Girl Scout parents of Westchester MA").
+    </div>
+    <h2>Collect contact information? <em>(Optional and for qualifying organizations only. Learn more)</em></h2>
+    <div class="block cf">
+        <div class="data">
+            <input type="text" />
+            <input type="text" />
+            <input type="text" />
+        </div>
+        <div class="sample">
+            <p class="info">Here is how it will look:</p>
+            <p class="organization"></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+{% endblock %}

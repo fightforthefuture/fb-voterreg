@@ -286,6 +286,26 @@ class Friendship(models.Model):
         return "https://graph.facebook.com/{0}/picture?type=square".format(
             self.fb_uid)
 
+class VotingBlock(models.Model):
+
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=90)
+    icon = models.ImageField(upload_to='voting_blocks')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User)
+
+    organization_name = models.CharField(max_length=40, null=True, blank=True)
+    organization_website = models.URLField(null=True, blank=True)
+    organization_privace_policy = models.URLField(null=True, blank=True)
+
+class VotingBlockMember(models.Model):
+
+    voting_block = models.ForeignKey(VotingBlock)
+    member = models.ForeignKey(User)
+
+    joined = models.DateTimeField(auto_now_add=True)
+
 def _fill_in_display_ordering(sender, instance, **kwargs):
     instance.display_ordering = \
         (1 if instance.registered else 0) + \

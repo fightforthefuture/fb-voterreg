@@ -22,6 +22,17 @@
 }
 
 @font-face {
+    font-family: 'TeXGyrePagellaItalic';
+    src: url('./font/texgyrepagella-italic-webfont.eot');
+    src: url('./font/texgyrepagella-italic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('./font/texgyrepagella-italic-webfont.woff') format('woff'),
+    url('./font/texgyrepagella-italic-webfont.ttf') format('truetype'),
+    url('./font/texgyrepagella-italic-webfont.svg#TeXGyrePagellaItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 400;
@@ -1207,3 +1218,43 @@ a.load-more:hover{
         line-height: 1.5;
     }
 
+
+
+.white-box {
+    width: 686px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid #91959f;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+    *zoom: 1;
+    -webkit-box-shadow:  0px 5px 10px 0px rgba(0, 0, 0, 0.36);
+    box-shadow:  0px 5px 10px 0px rgba(0, 0, 0, 0.36);
+}
+
+.white-box:before,
+.white-box:after {
+    content: " ";
+    display: table;
+}
+
+.white-box:after {
+    clear: both;
+}
+
+.white-box h1 {
+    text-align: left;
+    font-size: 19px;
+    margin: 0;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: normal;
+}
+
+.white-box h1 + p {
+    text-align: left;
+    font-size: 13px;
+    margin: 3px 0 30px 0;
+    padding:  0 0 12px;
+    border-bottom: 1px solid #ddd;
+}
