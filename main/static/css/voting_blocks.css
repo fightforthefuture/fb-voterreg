@@ -92,6 +92,10 @@
     -moz-box-sizing: border-box;
 }
 
+.voting-blocks-create .data input[type=text] + input[type=text] {
+    margin: 8px 0 0 0;
+}
+
 .voting-blocks-create .data label {
     display: inline;
 }
@@ -125,5 +129,12 @@
 .voting-blocks-create h2 em {
     color: #484848;
     font-family: TeXGyrePagellaItalic, Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-style: italic;
+}
+
+.voting-blocks-create .sample .organization {
+    color: #484848;
+    padding: 6px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
 }

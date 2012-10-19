@@ -97,7 +97,7 @@
     padding: 18px 0 0 0;
 }
 
-.mission-box-mass h2 {
+.mission-box-mass > h2 {
     font-family: BebasNeueRegular;
     color: #848484;
     font-weight: normal;
@@ -229,7 +229,7 @@
     clear: both;
 }
 
-.mission-box-individual h2 {
+.mission-box-individual > h2 {
     font-family: BebasNeueRegular;
     color: #848484;
     font-weight: normal;
