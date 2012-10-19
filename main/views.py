@@ -315,8 +315,7 @@ def _invite_friends_2_qs(user, section, start_index=0, sort_order='name'):
             Q(invited_with_batch=True) | Q(invited_individually=True))
     elif section == "not_invited":
         f_qs = f_qs.filter(
-            invited_with_batch=False, 
-            invited_individually=False, 
+            invited_individually=True, 
             date_pledged__isnull=True)
         sort_order = '?'
     elif section == "pledged":
@@ -326,6 +325,7 @@ def _invite_friends_2_qs(user, section, start_index=0, sort_order='name'):
     elif section == "voted":
         f_qs = f_qs.filter(date_voted__isnull=False)
     return f_qs.order_by(sort_order)[start_index:(start_index + 16)]
+
 
 def invite_friends_2(request, section="not_invited"):
     user = User.objects.get(fb_uid=request.facebook["uid"])
