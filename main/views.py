@@ -22,7 +22,7 @@ from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime, date
 from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
-from models import BATCH_BARELY_LEGAL
+from models import BATCH_BARELY_LEGAL, Friendship
 import logging
 
 BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
@@ -211,6 +211,13 @@ def my_vote_vote(request):
 
         if 'yes' in request.POST:
             user.date_voted = datetime.now()
+            try:
+                friendships = Friendship.objects.filter(fb_uid=user.fb_uid)
+                for friendship in friendships:
+                    friendship.date_voted = datetime.now()
+                    friendship.save()
+            except Friendship.DoesNotExist:
+                pass
             messages.add_message(
                 request, messages.INFO,
                 # Translators: message displayed to users in when they mark themselves as having voted.
