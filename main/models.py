@@ -166,6 +166,7 @@ class User(models.Model):
         if not self.date_invited_friends:
             self.date_invited_friends = datetime.now()
             self.save()
+        WonBadge.award_badge(self, BADGE_INVITED)
 
     def is_admirable(self):
         return self.registered or self.pledged or \

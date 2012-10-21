@@ -25,7 +25,6 @@ def add_source(request):
     else:
         return {}
 
-
 def fb_user(request):
     """
     Makes FQL query to add data from the authenticated user's row in the user

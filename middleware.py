@@ -2,7 +2,8 @@ import facebook
 from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from main.models import User
+from django.contrib import messages
+from main.models import User, BADGE_INVITED, BADGE_PLEDGED
 import urllib
 
 class FacebookMiddleware(object):
@@ -66,3 +67,21 @@ class FacebookMiddleware(object):
         request.facebook = request.session.get("fb_user", None)
 
         return None
+
+class BadgeMiddleware(object):
+    def process_request(self, request):
+        user = User.objects.get(fb_uid=request.facebook['uid'])
+        won_badges = user.wonbadge_set.filter(num__gt=0, message_shown=False)
+        if len(won_badges) > 0:
+            won_badge = won_badges[0]
+            if won_badge.badge_type == BADGE_INVITED:
+                verb = "invited"
+            elif won_badge.badge_type == BADGE_PLEDGED:
+                verb = "pledged"
+            else:
+                verb = "voted"
+            messages.add_message(
+                request, messages.INFO,
+                "{0} friends {1}! You just earned a badge.".format(
+                    won_badge.num, verb))
+            user.wonbadge_set.all().update(message_shown=True)

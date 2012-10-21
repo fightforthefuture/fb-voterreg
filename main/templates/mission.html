@@ -54,7 +54,6 @@
   var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
   var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
   var LOAD_MORE_URL = "{% url 'main:mission_friends_page' batch_type %}";
-  var DEBUG_APP_REQUESTS = {% if DEBUG_APP_REQUESTS %}true{% else %}false{% endif %};
   var MARK_MISSION_BATCH_INVITED = "{% url 'main:mark_mission_batch_invited' batch_type %}";
 </script>
 <script src="{% static 'js/invite_friend_grid.js' %}"></script>
