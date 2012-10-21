@@ -5,9 +5,14 @@ from django.dispatch import receiver
 from datetime import date, datetime
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from facebook import GraphAPI
+from django.conf import settings
 
 from main.managers import FriendStatusManager
 
+APP_NOTIFICATION_THRESHOLD = 6 * 60 * 60 # in seconds
+
+BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
 
 WONT_VOTE_REASONS = (
 
@@ -26,6 +31,16 @@ WONT_VOTE_REASONS = (
 )
 
 BATCH_SIZE = 49
+
+BADGE_INVITED = 1
+BADGE_PLEDGED = 2
+BADGE_VOTED = 3
+
+BADGE_TYPES = (
+    (BADGE_INVITED, "friends invited"),
+    (BADGE_PLEDGED, "friends pledged"),
+    (BADGE_VOTED, "friends voted")
+)
 
 BATCH_BARELY_LEGAL = 1
 BATCH_FAR_FROM_HOME = 2
@@ -52,6 +67,11 @@ BATCH_TYPES = (
 
 BATCH_MAP = dict(BATCH_TYPES)
 
+def _badge_count(count):
+    for cutoff in reversed(BADGE_CUTOFFS):
+        if count > cutoff:
+            return cutoff
+    return 0
 
 class User(models.Model):
     fb_uid = models.CharField(max_length=32, unique=True)
@@ -148,7 +168,8 @@ class User(models.Model):
             self.save()
 
     def is_admirable(self):
-        return self.registered or self.pledged or self.invited_friends
+        return self.registered or self.pledged or \
+            self.invited_friends or self.voted
 
 class Mission(models.Model):
     class Meta:
@@ -284,6 +305,7 @@ class Friendship(models.Model):
         self.date_pledged = user.date_pledged
         self.invited_pledge_count = user.invited_pledge_count
         self.wont_vote_reason = user.wont_vote_reason
+        self.date_voted = user.date_voted
 
     def picture_url(self):
         return "https://graph.facebook.com/{0}/picture?type=large".format(
@@ -294,24 +316,123 @@ class Friendship(models.Model):
             self.fb_uid)
 
 class VotingBlock(models.Model):
-
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=90)
     icon = models.ImageField(upload_to='voting_blocks')
-
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User)
-
     organization_name = models.CharField(max_length=40, null=True, blank=True)
     organization_website = models.URLField(null=True, blank=True)
     organization_privace_policy = models.URLField(null=True, blank=True)
 
 class VotingBlockMember(models.Model):
-
     voting_block = models.ForeignKey(VotingBlock)
     member = models.ForeignKey(User)
-
     joined = models.DateTimeField(auto_now_add=True)
+
+class WonBadge(models.Model):
+    class Meta:
+        unique_together = (("user", "badge_type",),)
+    user = models.ForeignKey(User)
+    badge_type = models.IntegerField(choices=BADGE_TYPES)
+    num = models.IntegerField(default=0)
+    message_shown = models.BooleanField(default=False)
+
+    @classmethod
+    def award_badge(cls, user, badge_type):
+        """ Returns True iff badge actually ends up getting awarded """
+        if badge_type == BADGE_INVITED:
+            actual_count = user.friends.invited().count()
+        elif badge_type == BADGE_PLEDGED:
+            actual_count = user.friends.pledged().count()
+        elif badge_type == BADGE_VOTED:
+            actual_count = user.friends.voted().count()
+        new_badge_count = _badge_count(actual_count)
+        won_badge, created = WonBadge.objects.get_or_create(
+            user=user,
+            badge_type=badge_type,
+            defaults={ "num": 0 })
+        if new_badge_count > won_badge.num:
+            won_badge.num = new_badge_count
+            won_badge.message_shown = False
+            won_badge.save()
+            return True
+        else:
+            return False
+
+class LastAppNotification(models.Model):
+    user = models.ForeignKey(User, unique=True)
+    pledged_count = models.IntegerField(default=0)
+    voted_count = models.IntegerField(default=0)
+    notification_date = models.DateTimeField(null=True)
+
+    def _user_needs_notification(self):
+        return self.user.friends.pledged().count() > self.pledged_count or \
+            self.user.friends.voted().count() > self.voted_count
+
+    def _is_before_threshold(self):
+        if not self.notification_date:
+            return True
+        now = datetime.now()
+        return (now - self.notification_date).total_seconds() > \
+            APP_NOTIFICATION_THRESHOLD
+
+    def _seconds_to_schedule(self):
+        return 60 + APP_NOTIFICATION_THRESHOLD - \
+            (datetime.now() - self.notification_date)
+
+    def _mark_as_notified(self):
+        self.pledged_count = self.user.friends.pledged().count()
+        self.voted_count = self.user.friends.voted().count()
+        self.notification_date = datetime.now()
+        self.save()
+
+    def _make_template(self):
+        pledged_count = self.user.friends.pledged().count()
+        voted_count = self.user.friends.voted().count()
+        if voted_count - self.voted_count > 0:
+            count = voted_count
+            qs = self.user.friends.voted().order_by("-date_voted")
+            template_suffix = " voted"
+        else:
+            count = pledged_count
+            qs = self.user.friends.pledged().order_by("-date_pledged")
+            template_suffix = " pledged to vote using Vote with Friends"
+        friends = list(qs[:2])
+        if count > 2:
+            template = "{{{0}}}, {{{1}}} and {{{2}}} other friend{3} {4}".format(
+                friends[0].fb_uid, friends[1].fb_uid,
+                count - 2, 
+                "s" if count > 3 else "",
+                "have" if count > 3 else "has")
+        elif count == 2:
+            template = "{{{0}}} and {{{1}}} have".format(
+                friends[0].fb_uid, friends[1].fb_uid)
+        else:
+            template = "{{{0}}} has".format(friends[0].fb_uid)
+        return template + template_suffix
+
+    def _send(self):
+        graph = GraphAPI(access_token=settings.FACEBOOK_APP_ACCESS_TOKEN)
+        graph.put_object(
+            self.user.fb_uid, "notifications", 
+            href="", template=self._make_template())
+        self._mark_as_notified()
+
+    @classmethod
+    def notify_user(cls, user):
+        notification, created = cls.objects.get_or_create(user=user)
+        notification.send()
+
+    def send(self):
+        if self._user_needs_notification():
+            if self._is_before_threshold():
+                self._send()
+            else:
+                from tasks import send_notification
+                send_notification.apply_async(
+                    args=[self.id],
+                    countdown=self._seconds_to_schedule())
 
 def _fill_in_display_ordering(sender, instance, **kwargs):
     instance.display_ordering = \
