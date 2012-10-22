@@ -331,6 +331,9 @@ class VotingBlockMember(models.Model):
     member = models.ForeignKey(User)
     joined = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = (('voting_block', 'member',),)
+
 class WonBadge(models.Model):
     class Meta:
         unique_together = (("user", "badge_type",),)

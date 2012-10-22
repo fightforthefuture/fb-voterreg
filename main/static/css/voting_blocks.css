@@ -148,7 +148,7 @@
 
 
 .voting-blocks-create .data .field + .field {
-    margin: 14px 0 0 0;
+    margin: 10px 0 0 0;
 }
 
 .voting-blocks-create .data label {
@@ -229,4 +229,308 @@
 .voting-blocks-create .actions a,
 .voting-blocks-create .actions input {
     width: 192px;
+}
+
+
+/* item */
+.voting-blocks-item {
+    width: 720px;
+    margin: 0 auto;
+}
+
+
+.voting-blocks-item h1 {
+    font-size: 53px;
+    font-family: BebasNeueRegular, Helvetica, Arial;
+    text-transform: uppercase;
+    color: #3e4b63;
+    margin: 0 auto;
+    font-weight: normal;
+    text-align: center;
+}
+
+.voting-blocks-item h2 {
+    color: #3b579a;
+    text-align: center;
+    font-size: 16px;
+    margin: 0 auto 0;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: normal;
+}
+
+.voting-blocks-item .info {
+    background: transparent url(../img/friends-back.png) 50% 0 no-repeat;
+    margin: 20px 0 0 0;
+    padding: 26px 0 0 0;
+}
+
+.voting-blocks-item .info img {
+    float: left;
+    height: 280px;
+    width: 436px;
+    border: 3px solid white;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+}
+
+.voting-blocks-item .info .data {
+    float: left;
+    width: 246px;
+    margin: 0 0 0 32px;
+}
+
+.voting-blocks-item .info .data p.count {
+    font-size: 12px;
+    color: #3e4b63;
+    margin: 0;
+    padding: 0;
+    line-height: 32px;
+}
+
+.voting-blocks-item .info .data p.count strong {
+    font-size: 44px;
+}
+
+.voting-blocks-item .info .data .join {
+    display: block;
+    margin: 10px 0 0 0;
+    font-size: 16px;
+    padding: 10px 12px
+}
+
+.voting-blocks-item .info .data .leave {
+    color: #3f3f3f;
+    text-decoration: underline;
+    font-weight: bold;
+    margin: 10px 0 0 0;
+    font-size: 12px;
+}
+
+.voting-blocks-item .info .data .organization {
+    color: #151515;
+    margin: 10px 0 0 0;
+    font-size: 11px;
+}
+
+.voting-blocks-item .info .data .organization a {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #151515;
+}
+
+.voting-blocks-item .filter {
+    display: table;
+    margin: 22px auto 12px;
+    padding: 0;
+}
+
+.voting-blocks-item .filter li {
+    display: table-cell;
+    padding: 0 0 3px 0; /* for box <a> shadow */
+}
+
+.voting-blocks-item .filter li a {
+    display: block;
+    padding: 12px 18px 10px;
+    text-decoration: none;
+    color: #000;
+    text-align: center;
+    font-size: 12px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    border-bottom: 1px solid transparent;
+}
+
+.voting-blocks-item .filter li.active a,
+.voting-blocks-item .filter li a:hover,
+.voting-blocks-item .filter li a:focus {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border-bottom: 1px solid #f1f1f1;
+    -webkit-box-shadow:  0px 2px 1px 0px rgba(0, 0, 0, 0.4);
+    box-shadow:  0px 2px 1px 0px rgba(0, 0, 0, 0.4);
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top,  #ffffff 0%, #cbcbcb 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cbcbcb)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#cbcbcb 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#cbcbcb 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#cbcbcb 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #ffffff 0%,#cbcbcb 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cbcbcb',GradientType=0 ); /* IE6-9 */
+}
+
+.voting-blocks-item .filter li {
+    padding: 0 6px;
+    border-right: 1px solid #808080;
+}
+
+.voting-blocks-item .filter li:first-child {
+    padding-left: 0;
+}
+
+.voting-blocks-item .filter li:last-child {
+    padding-right: 0;
+    border-right: none;
+}
+
+.voting-blocks-item .filter li a span {
+    display: block;
+}
+
+.voting-blocks-item .filter li a span strong {
+    color: #b1085e;
+    display: inline-block;
+    padding-left: 4px;
+}
+
+.voting-blocks .search {
+    margin: 24px 0 0 0;
+    width: 410px;
+    float: left;
+}
+
+.voting-blocks .own {
+    width: 240px;
+    margin: 24px 0 0 36px;
+    float: left;
+}
+
+.voting-blocks .own > a {
+    padding: 12px 0 10px;
+    text-align: center;
+    font-size: 16px;
+    display: block;
+}
+
+.voting-blocks .own > p {
+    font-size: 12px;
+    color: #292929;
+    margin: 2px 0 0 0;
+}
+
+.voting-blocks .own h2 {
+    padding: 0;
+    font-size: 13px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    color:#000000;
+    margin: 18px 0 0 0;
+}
+
+.voting-blocks .own ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+
+.voting-blocks .own ul li {
+    margin:  0 0 12px 0;
+    padding: 0 0 12px 0;
+    border-bottom: 1px dashed #c4c4c4;
+}
+
+.voting-blocks .own ul li .name {
+    margin: 0;
+    padding: 0;
+    color: #292929;
+    font-size: 13px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.voting-blocks .own ul li .name a {
+    color: #4b6cbf;
+
+}
+
+.voting-blocks .own ul li .count {
+    margin: 2px 0 0 0;
+    color: #484848;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.voting-blocks .own ul li img {
+    float: left;
+    width: 56px;
+    height: 56px;
+    border: 3px solid white;
+    margin: 8px 0 0 0;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+}
+
+.voting-blocks .own ul li .description {
+    float: left;
+    margin: 8px 0 0 14px;
+    width: 140px;
+    color: #484848;
+    font-size: 11px;
+}
+
+.voting-blocks .search h2 {
+    font-size: 15px;
+    color: #292929;
+    font-weight: normal;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    margin: 0 0 16px 0;
+}
+
+.voting-blocks .search ul {
+    list-style: decimal;
+    padding: 0 0 0 20px;
+    margin: 10px 0 0 0;
+    font-size: 15px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.voting-blocks .search ul li {
+    margin:  0 0 12px 0;
+    padding: 0 0 12px 0;
+    border-bottom: 1px dashed #c4c4c4;
+}
+
+.voting-blocks .search ul li > a {
+    float: right;
+    text-transform: uppercase;
+    font: bold 12px/1 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    display: block;
+    text-shadow: none;
+    padding: 6px 7px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.voting-blocks .search ul li .name {
+    font-size: 15px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    color: #4b6cbf;
+    text-decoration: underline;
+    margin: 0 0 4px 0;
+}
+
+.voting-blocks .search ul li .members {
+    font-size: 13px;
+    color: #484848;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.voting-blocks .search ul li img {
+    float: left;
+    width: 80px;
+    height: 68px;
+    border: 3px solid white;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+
+}
+
+.voting-blocks .search ul li .description {
+    float: left;
+    width: 200px;
+    margin: 0 0 0 16px;
+    color: #484848;
+    font-weight: normal;
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 12px;
 }

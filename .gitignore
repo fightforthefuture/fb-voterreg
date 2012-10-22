@@ -7,3 +7,4 @@ db.sqlite
 celerybeat-schedule.db
 env
 .DS_Store
+media/

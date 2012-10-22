@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load static from staticfiles %}
 {% load url from future %}
+{% load thumbnail %}
 
 {% block css %}
 {{ block.super }}
@@ -10,7 +11,7 @@
 {% endblock css %}
 
 {% block content %}
-<div class="voting-blocks white-box">
+<div class="voting-blocks white-box cf">
     <h1>The most powerful way to rally voters for your cause, site, or group</h1>
     <div class="note">
         <p><strong>Before you get started!</strong>  Three things to know about voting blocks:</p>
@@ -18,9 +19,42 @@
         <p><strong>2)</strong> When you create or join a voting block, you’ll be able to invite friends to join it, get them pledged, and see who has voted, whether it’s early voting, absentee, or on election day.</p>
         <p><strong>3)</strong> You can join multiple blocks and anyone can join any voting block (these are not private areas).</p>
     </div>
+    <div class="search">
+        <h2>Find voting blocks</h2>
+        {% if voting_blocks %}
+        <ul>
+            {% for mvb in voting_blocks %}
+            <li>
+                <a class="btn btn-blue" href="{% url 'main:voting_blocks_item_join' id=mvb.id %}">Join</a>
+                <p class="name"><a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
+                <p class="members">({{ mvb.votingblockmember_set.count }} members)</p>
+                <img src="{% thumbnail mvb.icon 80x68 crop %}" alt="{{ mvb.name }}">
+                <p class="description">{{ mvb.description }}</p>
+                <div class="cf"></div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <div class="own">
+        <a class="btn btn-green btn-large create" href="{% url 'main:voting_blocks_create' %}">Create Voting Block</a>
+        <p>(Before you create a new voting block, make sure one doesn’t exist already)</p>
+        {% if my_voting_blocks %}
+        <h2>My voting blocks</h2>
+        <ul>
+            {% for mvb in my_voting_blocks %}
+            <li class="cf">
+                <p class="name">{{ forloop.counter}}. <a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
+                <p class="count">({{ mvb.votingblockmember_set.count }} members)</p>
+                <img src="{% thumbnail mvb.icon 56x56 crop %}" alt="{{ mvb.name }}">
+                <p class="description">{{ mvb.description }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 
 
-    <a href="{% url 'main:voting_blocks_create' %}">Create Voting Block</a>
 </div>
 {% endblock %}
 

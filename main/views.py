@@ -14,12 +14,12 @@ from django.views.generic import TemplateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseNotAllowed
+from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
 from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
-from models import User, FriendshipBatch, BATCH_REGULAR
-from datetime import datetime, date
+from models import User, FriendshipBatch, BATCH_REGULAR, VotingBlock, VotingBlockMember
+from datetime import datetime, date, time
 from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
 from models import BATCH_BARELY_LEGAL, Friendship, BADGE_CUTOFFS
@@ -592,8 +592,12 @@ def unsubscribe(request):
 
 
 def voting_blocks(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+
     context = {
         "page": "voting_blocks",
+        "my_voting_blocks": [vbm.voting_block for vbm in VotingBlockMember.objects.select_related('voting_block').filter(member=user).order_by('-joined')],
+        "voting_blocks": VotingBlock.objects.all().order_by('-created_at')
     }
     return render_to_response(
         "voting_blocks.html",
@@ -607,6 +611,7 @@ def voting_blocks_create(request):
             user = User.objects.get(fb_uid=request.facebook["uid"])
             form.instance.created_by = user
             form.save()
+            return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': form.instance.id}))
     else:
         form = forms.VotingBlockForm()
     context = {
@@ -618,11 +623,44 @@ def voting_blocks_create(request):
         context,
         context_instance=RequestContext(request))
 
-def voting_blocks_item(request):
+def voting_blocks_item(request, id, filter='members'):
+    id = int(id)
+    filters = [
+        {'name': 'members', 'count': 0, 'title': 'Members'},
+        {'name': 'voted', 'count': 0, 'title': 'Voted'},
+        {'name': 'notvoted', 'count': 0, 'title': 'Haven\'t Voted'},
+        {'name': 'friends', 'count': 0, 'title': 'My Friends'},
+        {'name': 'invite', 'count': 0, 'title': 'Invite Friends'},
+    ]
+    voting_block = VotingBlock.objects.get(id=id)
+    user = User.objects.get(fb_uid=request.facebook["uid"])
     context = {
         "page": "voting_blocks",
-        }
+        "filters": filters,
+        "filter": filter,
+        "voting_block": voting_block,
+        "voting_block_members": VotingBlockMember.objects.filter(voting_block_id=id).order_by('joined')[:16],
+        "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id).count(),
+        "voting_block_members_today_count": VotingBlockMember.objects.filter(voting_block_id=id,
+            joined__gt=datetime.combine(datetime.now(), time.min)).count(),
+        "voting_block_joined": VotingBlockMember.objects.filter(member=user, voting_block=id).count() > 0
+    }
     return render_to_response(
         "voting_blocks_item.html",
         context,
         context_instance=RequestContext(request))
+
+def voting_blocks_item_join(request, id):
+    id = int(id)
+    try:
+        VotingBlockMember.objects.create(
+            member=User.objects.get(fb_uid=request.facebook["uid"]), voting_block_id=id, joined=datetime.now())
+    except:
+        pass
+    return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': id}))
+
+def voting_blocks_item_leave(request, id):
+    id = int(id)
+    VotingBlockMember.objects.filter(
+        member=User.objects.get(fb_uid=request.facebook["uid"]), voting_block=id).delete()
+    return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': id}))
