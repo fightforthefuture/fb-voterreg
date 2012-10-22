@@ -75,6 +75,8 @@ class FacebookMiddleware(object):
 
 class BadgeMiddleware(object):
     def process_request(self, request):
+        if not request.facebook:
+            return None
         user = User.objects.get(fb_uid=request.facebook['uid'])
         won_badges = user.wonbadge_set.filter(num__gt=0, message_shown=False)
         if len(won_badges) > 0:
@@ -90,3 +92,4 @@ class BadgeMiddleware(object):
                 "{0} friends {1}! You just earned a badge.".format(
                     won_badge.num, verb))
             user.wonbadge_set.all().update(message_shown=True)
+        return None
