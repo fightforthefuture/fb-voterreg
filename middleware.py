@@ -89,7 +89,7 @@ class BadgeMiddleware(object):
                 verb = "voted"
             messages.add_message(
                 request, messages.INFO,
-                "{0} friends {1}! You just earned a badge.".format(
+                "<div class=\"with-badges\"><span class=\"badge\">{0}</span> {0} friends {1}! You just earned a badge.</div>".format(
                     won_badge.num, verb))
             user.wonbadge_set.all().update(message_shown=True)
         return None
