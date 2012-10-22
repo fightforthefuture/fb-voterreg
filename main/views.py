@@ -590,7 +590,7 @@ def unsubscribe(request):
     )
     return _index_redirect(user)
 
-def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=1):
+def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
     filter = filter if filter in ['popular', 'near', 'friends'] else 'popular'
     result = {'filters': [], 'list': [] }
     myvbids = [myvb.id for myvb in myvbs]
