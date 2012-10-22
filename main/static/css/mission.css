@@ -106,11 +106,11 @@
 
 .mission-box-mass {
     float: left;
-    width: 263px;
+    width: 266px;
 }
 
 .mission-box-mass ul {
-    width: 263px;
+    width: 266px;
     list-style: none;
     padding: 0;
     margin: 0 0 6px 0;
@@ -146,10 +146,16 @@
     clear: both;
 }
 
+.mission-box-mass .uninvited {
+    margin-bottom: 18px;
+}
+
 .mission-box-badges {
     float: left;
     margin-left: 20px;
-    width: 402px;
+    width: 394px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .mission-box-badges h2 {
@@ -171,7 +177,8 @@
 
 .mission-box-badges *[class^=badge] {
     background: transparent url(../img/sprite.png) -140px -30px no-repeat;
-    width: 54px;
+    margin-right: -2px;
+    width: 52px;
     height: 60px;
     display: inline-block;
     text-align: center;
@@ -189,29 +196,29 @@
 
 .mission-box-badges .badge-orange {
     line-height: 60px;
-    background-position: -140px -30px;
+    background-position: -141px -30px;
 }
 
 .mission-box-badges .badge-orange.badge-all {
-    background-position: -140px -150px;
+    background-position: -141px -150px;
 }
 
 .mission-box-badges .badge-green {
     line-height: 60px;
-    background-position: -194px -30px;
+    background-position: -195px -30px;
 }
 
 .mission-box-badges .badge-green.badge-all {
-    background-position: -194px -150px;
+    background-position: -195px -150px;
 }
 
 .mission-box-badges .badge-blue {
     line-height: 56px;
-    background-position: -248px -30px
+    background-position: -249px -30px
 }
 
 .mission-box-badges .badge-blue.badge-all {
-    background-position: -248px -150px;
+    background-position: -249px -150px;
 }
 
 .mission-box-individual {

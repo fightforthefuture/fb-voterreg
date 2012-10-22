@@ -21,6 +21,9 @@ class FriendQuerySet(QuerySet):
                 Q(invited_with_batch=False) & Q(invited_individually=False)
             )
 
+    def invited_not_pledged(self):
+        return self.invited().filter(date_pledged__isnull=True)
+
     def voted(self, status=True):
         return self.filter(date_voted__isnull=not status)
 
