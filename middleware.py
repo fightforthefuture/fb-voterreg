@@ -1,10 +1,13 @@
 import facebook
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import messages
 from main.models import User, BADGE_INVITED, BADGE_PLEDGED
 import urllib
+from urllib2 import quote
+
 
 class FacebookMiddleware(object):
     def _get_fb_user_cookie(self, request):
@@ -68,10 +71,31 @@ class FacebookMiddleware(object):
 
         return None
 
+    def process_exception(self, request, exception):
+        """
+        Intercepts any GraphAPIError exceptions, which are almost always thrown
+        to an expired session key. Per Facebook's recommendation [1], we use a
+        JavaScript redirect in the response to send them back for
+        reauthorization and a new access token.
+
+        [1] https://developers.facebook.com/blog/post/2011/05/13/how-to--handle-expired-access-tokens/
+        """
+        if issubclass(exception.__class__, facebook.GraphAPIError):
+            reauth_url = 'https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s' % (
+                quote(settings.FACEBOOK_APP_ID),
+                quote(settings.FACEBOOK_CANVAS_PAGE + '?target=' + request.path),
+            )
+            return HttpResponse(
+                '<script>top.location.href="%s";</script>' % reauth_url
+            )
+
+        return None
+
     def process_response(self, request, response):
         # for MSIE 9 and 10.
         response['P3P'] = 'CP="IDC CURa ADMa OUR IND PHY ONL COM STA"'
         return response
+
 
 class BadgeMiddleware(object):
     def process_request(self, request):
