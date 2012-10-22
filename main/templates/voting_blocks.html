@@ -10,7 +10,16 @@
 {% endblock css %}
 
 {% block content %}
-<div class="voting-block-box">
+<div class="voting-blocks white-box">
+    <h1>The most powerful way to rally voters for your cause, site, or group</h1>
+    <div class="note">
+        <p><strong>Before you get started!</strong>  Three things to know about voting blocks:</p>
+        <p><strong>1)</strong> A voting block is a way to organize specific groups to vote (for example: "First Baptist Church of Detroit, MI", "Coffee Cafe Staff", "Fans of RugLovers.com") or to mobilize people anywhere in the country around a specific issue (like Gun Rights or Gun Control).</p>
+        <p><strong>2)</strong> When you create or join a voting block, you’ll be able to invite friends to join it, get them pledged, and see who has voted, whether it’s early voting, absentee, or on election day.</p>
+        <p><strong>3)</strong> You can join multiple blocks and anyone can join any voting block (these are not private areas).</p>
+    </div>
+
+
     <a href="{% url 'main:voting_blocks_create' %}">Create Voting Block</a>
 </div>
 {% endblock %}

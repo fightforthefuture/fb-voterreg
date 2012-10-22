@@ -24,6 +24,7 @@ from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
 from models import BATCH_BARELY_LEGAL, Friendship
 import logging
+import forms
 
 BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
 
@@ -608,7 +609,16 @@ def voting_blocks(request):
         context_instance=RequestContext(request))
 
 def voting_blocks_create(request):
+    if request.POST:
+        form = forms.VotingBlockForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = User.objects.get(fb_uid=request.facebook["uid"])
+            form.instance.created_by = user
+            form.save()
+    else:
+        form = forms.VotingBlockForm()
     context = {
+        "form": form,
         "page": "voting_blocks",
     }
     return render_to_response(
@@ -622,14 +632,5 @@ def voting_blocks_item(request):
         }
     return render_to_response(
         "voting_blocks_item.html",
-        context,
-        context_instance=RequestContext(request))
-
-def voting_blocks_join(request):
-    context = {
-        "page": "voting_blocks",
-        }
-    return render_to_response(
-        "voting_blocks_join.html",
         context,
         context_instance=RequestContext(request))

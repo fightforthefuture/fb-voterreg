@@ -304,7 +304,7 @@ class VotingBlock(models.Model):
 
     organization_name = models.CharField(max_length=40, null=True, blank=True)
     organization_website = models.URLField(null=True, blank=True)
-    organization_privace_policy = models.URLField(null=True, blank=True)
+    organization_privacy_policy = models.URLField(null=True, blank=True)
 
 class VotingBlockMember(models.Model):
 

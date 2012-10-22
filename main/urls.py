@@ -34,7 +34,6 @@ urlpatterns = patterns(
     url(r"^voting_blocks$", "voting_blocks", name="voting_blocks"),
     url(r"^voting_blocks/create$", "voting_blocks_create", name="voting_blocks_create"),
     url(r"^voting_blocks/(?P<id>\d+)$", "voting_blocks_item", name="voting_blocks_item"),
-    url(r"^voting_blocks/(?P<id>\d+)/join$", "voting_blocks_join", name="voting_blocks_join"),
 )
 
 urlpatterns += patterns(

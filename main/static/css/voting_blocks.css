@@ -1,3 +1,33 @@
+
+.voting-blocks .note {
+    padding: 22px;
+    border: 1px solid #d4cfb1;
+    color: #6d5305;
+    font-size: 13px;
+    background-color: #fff8a0;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    margin: 20px 0 0 0;
+}
+
+.voting-blocks .note p {
+    margin: 0;
+    padding: 0;
+}
+
+.voting-blocks .note p + p {
+    margin: 12px 0 0 0;
+}
+
+.voting-blocks .note a {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
+
+/* Create */
+
 .voting-blocks-create {
 
 }
@@ -35,7 +65,7 @@
 .voting-blocks-create .sample ul li {
 }
 
-.voting-blocks-create .sample ul li .title {
+.voting-blocks-create .sample ul li .name {
     font-size: 15px;
     font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
     color: #4b6cbf;
@@ -72,10 +102,11 @@
 }
 
 .voting-blocks-create .data p {
-    margin: 6px 0 10px 0;
+    margin: 6px 0 0 0;
     color: #292929;
     font-size: 12px;
     text-align: right;
+    float: right;
 }
 
 .voting-blocks-create .data input[type=text] {
@@ -93,7 +124,30 @@
     font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-.voting-blocks-create .data input[type=text] + input[type=text] {
+.voting-blocks-create .data .field-error input[type=text] {
+
+}
+
+.voting-blocks-create .data .field-error label {
+
+}
+
+.voting-blocks-create .data .field {
+    *zoom: 1;
+}
+
+.voting-blocks-create .data .field:after,
+.voting-blocks-create .data .field:before {
+    content: "";
+    display: table;
+}
+
+.voting-blocks-create .data .field:after {
+    clear: both;
+}
+
+
+.voting-blocks-create .data .field + .field {
     margin: 14px 0 0 0;
 }
 
@@ -103,6 +157,20 @@
 
 .voting-blocks-create .data input[type=file] {
     width: 160px;
+    display: inline;
+}
+
+.voting-blocks-create .data .field-error ul {
+    display: block;
+    padding: 0;
+    margin: 6px 0 0 0;
+    list-style: none;
+    float: left;
+    font-size: 12px;
+    color: #ff0000;
+}
+
+.voting-blocks-create .data .field-error ul li {
     display: inline;
 }
 
@@ -120,6 +188,8 @@
     font-weight: bold;
     text-decoration: underline;
 }
+
+
 .voting-blocks-create h2 {
     color: #292929;
     font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -156,6 +226,7 @@
     margin: 38px 0 0 0;
 }
 
-.voting-blocks-create .actions a {
+.voting-blocks-create .actions a,
+.voting-blocks-create .actions input {
     width: 192px;
 }
