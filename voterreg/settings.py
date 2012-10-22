@@ -62,7 +62,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    "middleware.FacebookMiddleware"
+    "middleware.FacebookMiddleware",
+    "middleware.BadgeMiddleware",
 )
 
 ROOT_URLCONF = 'voterreg.urls'
@@ -133,6 +134,7 @@ BROKER_BACKEND = "django"
 
 FACEBOOK_APP_ID = "258722907563918"
 FACEBOOK_APP_SECRET = "0ebace487828ff1de2d68b1f7ff1a6f5"
+FACEBOOK_APP_ACCESS_TOKEN = "258722907563918|0Ua1YPkst3FUB5c32FNDSLOBqwE"
 FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-dev/"
 FACEBOOK_OG_PLEDGE_ACTION = 'votewithfriends-dev:pledge'
 FACEBOOK_OG_VOTE_ACTION = 'votewithfriends-dev:vote'
@@ -190,6 +192,7 @@ if environment == 'staging':
     AWS_STORAGE_BUCKET_NAME = 'voterreg.fb.dev'
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb.dev"
     FACEBOOK_APP_ID = "381227845280044"
+    FACEBOOK_APP_ACCESS_TOKEN = "381227845280044|LtITwMOMXxZcktAtz0fQQbvD0e8"
     BASE_URL = "https://voterreg-facebook-staging.herokuapp.com"
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-stag/"
     USE_FAKE_VOTIZEN_API = True
@@ -204,7 +207,7 @@ if environment == 'production':
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
     FACEBOOK_OG_PLEDGE_ACTION = 'votewithfriends:pledge'
     FACEBOOK_OG_VOTE_ACTION = 'votewithfriends:vote'
-
+    FACEBOOK_APP_ACCESS_TOKEN = environ.get("FACEBOOK_APP_ACCESS_TOKEN", "")
 
 if environment == 'dev':
     BASE_URL = "http://local.voterreg.org:8000"

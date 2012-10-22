@@ -2,6 +2,10 @@ $(function() {
     var UPDATE_INTERVAL = 5000;
 
     function showFriendRequestDialog(friendList, batchID, batchType) {
+        if (DEBUG_APP_REQUESTS) {
+            friendsInvited(batchID);
+            return;
+        }
         _gaq.push(["_trackPageview", "/show_batch_invite"]);
         _kmq.push(["record", "Opened batch invite dialog"]);
         FB.ui(

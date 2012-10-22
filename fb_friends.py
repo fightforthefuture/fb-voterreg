@@ -1,7 +1,8 @@
 import facebook
 from voterapi import fetch_voter_from_fb_profile
 from main.models import User, Friendship, BATCH_NEARBY, \
-    BATCH_FAR_FROM_HOME, BATCH_BARELY_LEGAL
+    BATCH_FAR_FROM_HOME, BATCH_BARELY_LEGAL, WonBadge, \
+    LastAppNotification, BADGE_PLEDGED, BADGE_VOTED
 from django.db import IntegrityError
 from fb_utils import FacebookProfile
 from datetime import datetime, date
@@ -134,15 +135,20 @@ def fetch_friends(fb_uid, access_token):
 
     _update_registered_status_of_all(user.id, friends)
 
-def update_friends_of(user_id, access_token):
+def _award_badges(friendship):
+    user = friendship.user
+    pledge_awarded = WonBadge.award_badge(user, BADGE_PLEDGED)
+    voted_awarded = WonBadge.award_badge(user, BADGE_VOTED)
+    LastAppNotification.notify_user(user)
+
+def update_friends_of(user_id):
     # modify any existing Friendship records that has this User on 
     # the friend side.
-    # add Friendship records for existing Users in our system.
     user = User.objects.get(id=user_id)
     if not user.is_admirable():
         return # no reason to modify Friendship records.
     friendships = Friendship.objects.filter(fb_uid=user.fb_uid)
     for friendship in friendships:
-        # TODO: maybe give inviter credit
         friendship.update_from(user)
         friendship.save()
+        _award_badges(friendship)

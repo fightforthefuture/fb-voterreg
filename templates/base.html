@@ -134,6 +134,7 @@
     <script>
       var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
       var SINGLE_USER_INVITED_URL = "{% url 'main:single_user_invited' %}";
+      var DEBUG_APP_REQUESTS = {% if DEBUG_APP_REQUESTS %}true{% else %}false{% endif %};
       FB.init({
         appId  : '{{FACEBOOK_APP_ID}}',
         frictionlessRequests: true

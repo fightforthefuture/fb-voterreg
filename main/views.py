@@ -22,11 +22,9 @@ from models import User, FriendshipBatch, BATCH_REGULAR
 from datetime import datetime, date
 from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
-from models import BATCH_BARELY_LEGAL, Friendship
+from models import BATCH_BARELY_LEGAL, Friendship, BADGE_CUTOFFS
 import logging
 import forms
-
-BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
 
 
 class OGObjectView(TemplateView):
@@ -96,8 +94,7 @@ def _unpledge(request):
         user = User.objects.get(fb_uid=request.facebook["uid"])
         user.date_pledged = None
         user.save()
-        update_friends_of.delay(
-            user.id, request.facebook["access_token"])
+        update_friends_of.delay(user.id)
         messages.add_message(
             request, messages.INFO,
             # Translators: message displayed to users when they unpledge
@@ -175,8 +172,7 @@ def my_vote_pledge(request):
         user.registered = True
         user.used_registration_widget = True
         user.save()
-        update_friends_of.delay(
-            user.id, request.facebook["access_token"])
+        update_friends_of.delay(user.id)
         messages.add_message(
             request, messages.INFO,
             # Translators: message displayed to users in green bar when they register to vote
@@ -235,8 +231,7 @@ def my_vote_vote(request):
             redirect_view = 'main:invite_friends_2'
         user.save()
 
-        update_friends_of.delay(
-            user.id, request.facebook["access_token"])
+        update_friends_of.delay(user.id)
 
         return redirect(redirect_view)
 
@@ -267,8 +262,7 @@ def fetch_me(request):
         except Exception as e:
             logging.exception("error sending join email")
         if user.registered:
-            update_friends_of.delay(
-                user.id, request.facebook["access_token"])
+            update_friends_of.delay(user.id)
         _fetch_fb_friends(request)
     redirect_url = reverse("main:pledge") if user.registered \
         else reverse("main:register")
@@ -387,8 +381,7 @@ def submit_pledge(request):
     user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
-    update_friends_of.delay(
-        user.id, request.facebook["access_token"])
+    update_friends_of.delay(user.id)
     messages.add_message(
         request, messages.INFO,
 
@@ -584,7 +577,6 @@ def mark_mission_batch_invited(request, batch_type):
     return { "html": html, 
              "num_invited": num_invited,
              "num_friends": user.friendship_set.filter(batch_type=batch_type).count() }
-
 
 def unsubscribe(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
