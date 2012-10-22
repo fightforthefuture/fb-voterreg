@@ -593,9 +593,9 @@ def unsubscribe(request):
 
 def voting_blocks(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
-
     context = {
         "page": "voting_blocks",
+        "voting_block_note": request.COOKIES.get('voting_block_note', None),
         "my_voting_blocks": [vbm.voting_block for vbm in VotingBlockMember.objects.select_related('voting_block').filter(member=user).order_by('-joined')],
         "voting_blocks": VotingBlock.objects.all().order_by('-created_at')
     }

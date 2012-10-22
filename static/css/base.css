@@ -470,6 +470,22 @@ div.content {
     background-position: 0 -92px;
 }
 
+.icon-close-brown {
+    height: 9px;
+    width: 9px;
+    line-height: 9px;
+    background-position: -220px 0;
+    vertical-align: baseline;
+}
+
+.icon-plus {
+    height: 15px;
+    width: 14px;
+    line-height: 9px;
+    background-position: -240px 1px;
+    vertical-align: top;
+}
+
 .main-content {
     width: 660px;
     margin: 0 auto;

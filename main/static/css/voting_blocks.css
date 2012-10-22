@@ -19,11 +19,220 @@
     margin: 12px 0 0 0;
 }
 
-.voting-blocks .note a {
+.voting-blocks .note p a {
     font-weight: bold;
     text-decoration: underline;
 }
 
+.voting-blocks .note .close {
+    cursor: pointer;
+    margin: 16px auto 0;
+    display: block;
+    width: 70px;
+    text-align: center;
+}
+
+.voting-blocks .search {
+    margin: 24px 0 0 0;
+    width: 410px;
+    float: left;
+}
+
+.voting-blocks .search .input {
+    width: 250px;
+}
+
+
+.voting-blocks .search .input input {
+    border: 1px solid #cacaca;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 15px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing: border-box;
+    padding: 8px 30px 7px 32px;
+    outline: none;
+    background-color: #f0f2f7;
+    -webkit-box-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.13);
+    box-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.13);
+}
+
+.voting-blocks .search .input:before {
+    display: block;
+    position: absolute;
+    margin: 10px 0 0 8px;
+    content: "";
+    height: 16px;
+    width: 16px;
+    background: transparent url(../img/sprite.png) -260px 0 no-repeat;
+}
+
+.voting-blocks .search .input .clear {
+    display: block;
+    position: absolute;
+    margin: -23px 0 0 226px;
+    cursor: pointer;
+    height: 14px;
+    width: 14px;
+    background: transparent url(../img/sprite.png) -280px 0 no-repeat;
+    outline: none;
+}
+
+.voting-blocks .search h2 {
+    font-size: 15px;
+    color: #292929;
+    font-weight: normal;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    margin: 0 0 11px 0;
+}
+
+.voting-blocks .search ul {
+    list-style: decimal;
+    padding: 0 0 0 20px;
+    margin: 10px 0 0 0;
+    font-size: 15px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.voting-blocks .search ul li {
+    margin:  0 0 12px 0;
+    padding: 0 0 12px 0;
+    border-bottom: 1px dashed #c4c4c4;
+}
+
+.voting-blocks .search ul li > a {
+    float: right;
+    text-transform: uppercase;
+    font: bold 12px/1 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    display: block;
+    text-shadow: none;
+    padding: 6px 7px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.voting-blocks .search ul li .name {
+    font-size: 15px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    color: #4b6cbf;
+    text-decoration: underline;
+    margin: 0 0 4px 0;
+}
+
+.voting-blocks .search ul li .members {
+    font-size: 13px;
+    color: #484848;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.voting-blocks .search ul li img {
+    float: left;
+    width: 80px;
+    height: 68px;
+    border: 3px solid white;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+
+}
+
+.voting-blocks .search ul li .description {
+    float: left;
+    width: 200px;
+    margin: 0 0 0 16px;
+    color: #484848;
+    font-weight: normal;
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 12px;
+}
+
+
+.voting-blocks .own {
+    width: 240px;
+    margin: 24px 0 0 36px;
+    float: left;
+}
+
+.voting-blocks .own > a {
+    padding: 12px 0 10px;
+    text-align: center;
+    font-size: 16px;
+    display: block;
+}
+
+.voting-blocks .own > a i {
+    padding-right: 4px;
+}
+
+.voting-blocks .own > p {
+    font-size: 12px;
+    color: #292929;
+    margin: 2px 0 0 0;
+}
+
+.voting-blocks .own h2 {
+    padding: 0;
+    font-size: 13px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    color:#000000;
+    margin: 18px 0 0 0;
+}
+
+.voting-blocks .own ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+
+.voting-blocks .own ul li {
+    margin:  0 0 12px 0;
+    padding: 0 0 12px 0;
+    border-bottom: 1px dashed #c4c4c4;
+}
+
+.voting-blocks .own ul li .name {
+    margin: 0;
+    padding: 0;
+    color: #292929;
+    font-size: 13px;
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.voting-blocks .own ul li .name a {
+    color: #4b6cbf;
+
+}
+
+.voting-blocks .own ul li .count {
+    margin: 2px 0 0 0;
+    color: #484848;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.voting-blocks .own ul li img {
+    float: left;
+    width: 56px;
+    height: 56px;
+    border: 3px solid white;
+    margin: 8px 0 0 0;
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
+}
+
+.voting-blocks .own ul li .description {
+    float: left;
+    margin: 8px 0 0 14px;
+    width: 140px;
+    color: #484848;
+    font-size: 11px;
+}
 
 
 /* Create */
@@ -380,157 +589,4 @@
     color: #b1085e;
     display: inline-block;
     padding-left: 4px;
-}
-
-.voting-blocks .search {
-    margin: 24px 0 0 0;
-    width: 410px;
-    float: left;
-}
-
-.voting-blocks .own {
-    width: 240px;
-    margin: 24px 0 0 36px;
-    float: left;
-}
-
-.voting-blocks .own > a {
-    padding: 12px 0 10px;
-    text-align: center;
-    font-size: 16px;
-    display: block;
-}
-
-.voting-blocks .own > p {
-    font-size: 12px;
-    color: #292929;
-    margin: 2px 0 0 0;
-}
-
-.voting-blocks .own h2 {
-    padding: 0;
-    font-size: 13px;
-    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
-    color:#000000;
-    margin: 18px 0 0 0;
-}
-
-.voting-blocks .own ul {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 0 0;
-}
-
-.voting-blocks .own ul li {
-    margin:  0 0 12px 0;
-    padding: 0 0 12px 0;
-    border-bottom: 1px dashed #c4c4c4;
-}
-
-.voting-blocks .own ul li .name {
-    margin: 0;
-    padding: 0;
-    color: #292929;
-    font-size: 13px;
-    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
-}
-
-.voting-blocks .own ul li .name a {
-    color: #4b6cbf;
-
-}
-
-.voting-blocks .own ul li .count {
-    margin: 2px 0 0 0;
-    color: #484848;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.voting-blocks .own ul li img {
-    float: left;
-    width: 56px;
-    height: 56px;
-    border: 3px solid white;
-    margin: 8px 0 0 0;
-    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
-}
-
-.voting-blocks .own ul li .description {
-    float: left;
-    margin: 8px 0 0 14px;
-    width: 140px;
-    color: #484848;
-    font-size: 11px;
-}
-
-.voting-blocks .search h2 {
-    font-size: 15px;
-    color: #292929;
-    font-weight: normal;
-    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
-    margin: 0 0 16px 0;
-}
-
-.voting-blocks .search ul {
-    list-style: decimal;
-    padding: 0 0 0 20px;
-    margin: 10px 0 0 0;
-    font-size: 15px;
-    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
-}
-
-.voting-blocks .search ul li {
-    margin:  0 0 12px 0;
-    padding: 0 0 12px 0;
-    border-bottom: 1px dashed #c4c4c4;
-}
-
-.voting-blocks .search ul li > a {
-    float: right;
-    text-transform: uppercase;
-    font: bold 12px/1 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    display: block;
-    text-shadow: none;
-    padding: 6px 7px;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-    -webkit-box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
-}
-
-.voting-blocks .search ul li .name {
-    font-size: 15px;
-    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
-    color: #4b6cbf;
-    text-decoration: underline;
-    margin: 0 0 4px 0;
-}
-
-.voting-blocks .search ul li .members {
-    font-size: 13px;
-    color: #484848;
-    font-weight: bold;
-    margin: 0 0 10px 0;
-    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
-}
-
-.voting-blocks .search ul li img {
-    float: left;
-    width: 80px;
-    height: 68px;
-    border: 3px solid white;
-    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
-
-}
-
-.voting-blocks .search ul li .description {
-    float: left;
-    width: 200px;
-    margin: 0 0 0 16px;
-    color: #484848;
-    font-weight: normal;
-    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-size: 12px;
 }
