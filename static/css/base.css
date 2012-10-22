@@ -850,6 +850,23 @@ div.content {
     box-shadow:  0px 2px 6px 0px rgba(0, 0, 0, 0.26);
 }
 
+.notification .with-badges {
+    line-height: 58px;
+}
+
+.notification .badge {
+    background: transparent url(../img/sprite.png) -140px -30px no-repeat;
+    width: 54px;
+    height: 60px;
+    display: inline-block;
+    text-align: center;
+    font-family: BebasNeueRegular;
+    font-size: 18px;
+    color: #fff;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.75);
+    filter: dropshadow(color=rgba(0, 0, 0, 0.75), offx=0, offy=1);
+}
+
 .boxes {
     display: block;
     width: 738px;

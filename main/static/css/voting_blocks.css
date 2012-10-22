@@ -106,8 +106,7 @@
 
 .voting-blocks .search ul li > a {
     float: right;
-    text-transform: uppercase;
-    font: bold 12px/1 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font: bold 14px/1 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     display: block;
     text-shadow: none;
     padding: 6px 7px;

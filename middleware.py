@@ -91,9 +91,16 @@ class FacebookMiddleware(object):
 
         return None
 
+    def process_response(self, request, response):
+        # for MSIE 9 and 10.
+        response['P3P'] = 'CP="IDC CURa ADMa OUR IND PHY ONL COM STA"'
+        return response
+
 
 class BadgeMiddleware(object):
     def process_request(self, request):
+        if not request.facebook:
+            return None
         user = User.objects.get(fb_uid=request.facebook['uid'])
         won_badges = user.wonbadge_set.filter(num__gt=0, message_shown=False)
         if len(won_badges) > 0:
@@ -106,6 +113,7 @@ class BadgeMiddleware(object):
                 verb = "voted"
             messages.add_message(
                 request, messages.INFO,
-                "{0} friends {1}! You just earned a badge.".format(
+                "<div class=\"with-badges\"><span class=\"badge\">{0}</span> {0} friends {1}! You just earned a badge.</div>".format(
                     won_badge.num, verb))
             user.wonbadge_set.all().update(message_shown=True)
+        return None
