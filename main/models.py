@@ -324,12 +324,15 @@ class VotingBlock(models.Model):
     created_by = models.ForeignKey(User)
     organization_name = models.CharField(max_length=40, null=True, blank=True)
     organization_website = models.URLField(null=True, blank=True)
-    organization_privace_policy = models.URLField(null=True, blank=True)
+    organization_privacy_policy = models.URLField(null=True, blank=True)
 
 class VotingBlockMember(models.Model):
     voting_block = models.ForeignKey(VotingBlock)
     member = models.ForeignKey(User)
     joined = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (('voting_block', 'member',),)
 
 class WonBadge(models.Model):
     class Meta:

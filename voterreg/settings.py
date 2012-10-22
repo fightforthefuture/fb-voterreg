@@ -100,6 +100,7 @@ INSTALLED_APPS = (
     'kombu.transport.django',
     'djcelery',
     'south',
+    'easy_thumbnails',
     'main',
     'voterapi',
     'staticpages',

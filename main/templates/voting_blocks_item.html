@@ -3,14 +3,49 @@
 {% load i18n %}
 {% load static from staticfiles %}
 {% load url from future %}
+{% load thumbnail %}
 
 {% block css %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'css/voting_blocks.css' %}">
+<link rel="stylesheet" href="{% static 'css/voting_blocks.css' %}" xmlns="http://www.w3.org/1999/html">
 {% endblock css %}
 
 {% block content %}
-
+<div class="voting-blocks-item">
+    <h1>{{ voting_block.name }}</h1>
+    <h2>{{ voting_block.description }}</h2>
+    <div class="info cf">
+        <img src="{% thumbnail voting_block.icon 436x280 crop %}" alt="{{ voting_block.name }}">
+        <div class="data">
+            <p class="count"><strong>{{ voting_block_members_count }}</strong> members</p>
+            <p class="count"><strong>{{ voting_block_members_today_count }}</strong> new today</p>
+            {% if voting_block_joined %}
+            <a class="leave" href="{% url 'main:voting_blocks_item_leave' id=voting_block.id %}">Leave this voting block</a>
+            {% else %}
+            <a class="btn btn-green btn-large join" href="{% url 'main:voting_blocks_item_join' id=voting_block.id %}">Join this voting block</a>
+            {% endif %}
+            {% if voting_block.organization_name %}
+            <p class="organization">This voting block belongs to an organization: <a target="_blank" href="{{ voting_block.organization_website }}">"{{ voting_block.organization_name }}"</a>.
+               When you join, they can use your name and email according to their <a target="_blank" href="{{ voting_block.organization_privacy_policy }}">Privacy policy</a>.</p>
+            {% endif %}
+        </div>
+    </div>
+    <ul class="filter">
+        {% for f in filters %}
+        <li class="{% if f.name == filter %} active{% endif %}">
+            <a href="{% url 'main:voting_blocks_item_filter' id=voting_block.id filter=f.name %}">
+                <span>{{ f.title }} <strong>({{ f.count }})</strong></span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="white-box">
+        <div id="friends">
+            {% include "_invite_friends_page.html" %}
+            {% include "_invite_friends_buttons.html" %}
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 
