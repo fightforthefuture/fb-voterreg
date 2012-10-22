@@ -313,8 +313,8 @@ def pledge(request):
 def _invite_friends_2_qs(user, section, start_index=0):
     if section == "not_invited":
         f_qs = user.friends.personally_invited(status=False).order_by('?')
-    elif section == "invited":
-        f_qs = user.friends.personally_invited()
+    elif section == "not_pledged":
+        f_qs = user.friends.invited_not_pledged()
     elif section == "registered":
         f_qs = user.friends.registered()
     elif section == "pledged":
@@ -333,8 +333,7 @@ def invite_friends_2(request, section="not_invited"):
         "section": section,
         "num_registered": user.friends.registered().count(),
         "num_pledged": user.friends.pledged().count(),
-        "num_invited": user.friends.invited().count(),
-        "num_individually_invited": user.friends.personally_invited().count(),
+        "num_not_pledged": user.friends.invited_not_pledged().count(),
         "num_uninvited": user.friends.personally_invited(status=False).count(),
         "num_friends": user.num_friends or 0,
         "num_voted": user.friends.voted().count()
