@@ -1,1 +1,18 @@
-404
+{% extends "base-error.html" %}
+
+{% load url from future %}
+
+{% block meta_title %}404 - {{ block.super }}{% endblock meta_title %}
+
+{% block error_type %}404{% endblock error_type %}
+
+{% block header %}Page Not Found{% endblock header %}
+
+{% block copy %}
+    <p>So&hellip;that’s awkward. You’re looking for something, and we can’t find it. Perhaps you are looking to do one of the following?</p>
+    <ul>
+        <li><a href="{% url 'main:my_vote' %}?force">Prepare yourself to vote</a></li>
+        <li><a href="{% url 'main:invite_friends_2' %}">Make sure your friends vote</a></li>
+        <li><a href="{% url 'main:missions' %}">Complete missions and earn international fame.</a></li>
+    </ul>
+{% endblock copy %}

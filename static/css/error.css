@@ -1,0 +1,57 @@
+body{
+    background: url(../img/header/tile.png);
+}
+
+    #error{
+        background: #FFF;
+        width: 470px;
+        padding: 40px;
+        margin: 200px auto;
+        position: relative;
+    }
+        #error a{
+            color: #3b5597;
+        }
+        #error h1{
+            width: 140px;
+            height: 103px;
+            background: url(../img/header/logo.png) no-repeat;
+            position: absolute;
+            top: -133px;
+            left: 0;
+            overflow: hidden;
+            text-indent: -999em;
+        }
+        #error h2{
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            top: -55px;
+            right: 0;
+            color: #ecea20;
+            text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.33);
+            font: bold 48px/1 Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+        }
+        #error h3{
+            margin: 0 0 16px;
+            font: bold 24px/1.13 Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+            color: #3b5597;
+            text-align: center;
+        }
+        #error p{
+            margin: 10px 0;
+        }
+        #error ul{
+            margin: 10px 0 0;
+            padding: 0 0 0 18px;
+            list-style: disc outside;
+        }
+        #error p,
+        #error li{
+            font: 15px/1.4 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            color: #333;
+        }
+        #error li{
+            font-size: 14px;
+            line-height: 1.72;
+        }

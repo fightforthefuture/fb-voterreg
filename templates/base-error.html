@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>{% block meta_title %}Fight for the Future{% endblock %}</title>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.modal.css' %}">
+        <link rel="stylesheet" href="{% static 'css/error.css' %}">
+        {% block css %}{% endblock %}
+        <!--[if lt IE 9]>
+            <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-35232596-1']);
+            _gaq.push(['_trackPageview']);
+            var _kmq = _kmq || [];
+            var _kmk = _kmk || '{{ KM_CODE }}';
+            setTimeout(function() {
+                function addScript(src) {
+                    var sc = document.createElement('script'); sc.type = 'text/javascript'; sc.async = true; sc.src = src;
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sc, s);
+                }
+                addScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js');
+                addScript('//i.kissmetrics.com/i.js');
+                addScript('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+            }, 1);
+            {% if my_uid %}_kmq.push(['identify', '{{ my_uid }}']);{% endif %}
+            {% if traffic_source %}_kmq.push(['record', 'Traffic source: {{ traffic_source }}']);{% endif %}
+        </script>
+    </head>
+    <body>
+
+        <div id="error">
+            <h1>Vote With Friends</h1>
+            <h2>{% block error_type %}Error{% endblock error_type %}</h2>
+            <h3>{% block header %}Uh oh!{% endblock header %}</h3>
+            {% block copy %}
+                <p>Pus-ghettios!</p>
+            {% endblock copy %}
+        </div>
+
+    </body>
+</html>

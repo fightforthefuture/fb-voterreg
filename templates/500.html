@@ -1,1 +1,18 @@
-500
+{% extends "base-error.html" %}
+
+{% load url from future %}
+
+{% block meta_title %}500 - {{ block.super }}{% endblock meta_title %}
+
+{% block error_type %}500{% endblock error_type %}
+
+{% block header %}Server Error{% endblock header %}
+
+{% block copy %}
+    <p>Uh oh, something is broken. Perhaps one of these things are working?</p>
+    <ul>
+        <li><a href="{% url 'main:my_vote' %}?force">Prepare yourself to vote</a></li>
+        <li><a href="{% url 'main:invite_friends_2' %}">Make sure your friends vote</a></li>
+        <li><a href="{% url 'main:missions' %}">Complete missions and earn international fame.</a></li>
+    </ul>
+{% endblock copy %}
