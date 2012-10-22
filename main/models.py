@@ -369,6 +369,7 @@ class LastAppNotification(models.Model):
     pledged_count = models.IntegerField(default=0)
     voted_count = models.IntegerField(default=0)
     notification_date = models.DateTimeField(null=True)
+    notification_scheduled = models.BooleanField(default=False)
 
     def _user_needs_notification(self):
         return self.user.friends.pledged().count() > self.pledged_count or \
@@ -389,6 +390,7 @@ class LastAppNotification(models.Model):
         self.pledged_count = self.user.friends.pledged().count()
         self.voted_count = self.user.friends.voted().count()
         self.notification_date = datetime.now()
+        self.notification_scheduled = False
         self.save()
 
     def _make_template(self):
@@ -433,10 +435,14 @@ class LastAppNotification(models.Model):
             if self._is_before_threshold():
                 self._send()
             else:
+                if self.notification_scheduled:
+                    return
                 from tasks import send_notification
                 send_notification.apply_async(
                     args=[self.id],
                     countdown=self._seconds_to_schedule())
+                self.notification_scheduled = True
+                self.save()
 
 def _fill_in_display_ordering(sender, instance, **kwargs):
     instance.display_ordering = \

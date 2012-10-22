@@ -22,7 +22,7 @@ from models import User, FriendshipBatch, BATCH_REGULAR, VotingBlock, VotingBloc
 from datetime import datetime, date, time
 from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
-from models import BATCH_BARELY_LEGAL, Friendship, BADGE_CUTOFFS
+from models import BATCH_NEARBY, Friendship, BADGE_CUTOFFS
 import logging
 import forms
 
@@ -313,8 +313,8 @@ def pledge(request):
 def _invite_friends_2_qs(user, section, start_index=0):
     if section == "not_invited":
         f_qs = user.friends.personally_invited(status=False).order_by('?')
-    elif section == "invited":
-        f_qs = user.friends.personally_invited()
+    elif section == "not_pledged":
+        f_qs = user.friends.invited_not_pledged()
     elif section == "registered":
         f_qs = user.friends.registered()
     elif section == "pledged":
@@ -333,8 +333,7 @@ def invite_friends_2(request, section="not_invited"):
         "section": section,
         "num_registered": user.friends.registered().count(),
         "num_pledged": user.friends.pledged().count(),
-        "num_invited": user.friends.invited().count(),
-        "num_individually_invited": user.friends.personally_invited().count(),
+        "num_not_pledged": user.friends.invited_not_pledged().count(),
         "num_uninvited": user.friends.personally_invited(status=False).count(),
         "num_friends": user.num_friends or 0,
         "num_voted": user.friends.voted().count()
@@ -520,7 +519,7 @@ def _mission_friends_qs(user, batch_type, start_index=0):
     return user.friendship_set.filter(
         batch_type=batch_type).order_by("fb_uid")[start_index:(start_index + 12)]
 
-def mission(request, batch_type=BATCH_BARELY_LEGAL):
+def mission(request, batch_type=BATCH_NEARBY):
     batch_type = int(batch_type)
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)

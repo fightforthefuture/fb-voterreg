@@ -50,7 +50,7 @@ $(function() {
             });
     }
 
-    $(document).on("click", ".mass-invites a.invite", function(e) {
+    $(document).on("click", ".mission-box-mass a.invite", function(e) {
         var fbuids = [];
         var $uninvited = $(this).parents(".uninvited");
         $uninvited.find("img").each(function() {

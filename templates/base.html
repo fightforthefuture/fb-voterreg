@@ -105,7 +105,7 @@
     {% if messages %}
     <div class="notification">
         {% for message in messages %}
-        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</div>
         {% endfor %}
     </div>
     {% endif %}
