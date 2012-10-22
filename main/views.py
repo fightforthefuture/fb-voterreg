@@ -22,7 +22,7 @@ from models import User, FriendshipBatch, BATCH_REGULAR, VotingBlock, VotingBloc
 from datetime import datetime, date, time
 from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
-from models import BATCH_BARELY_LEGAL, Friendship, BADGE_CUTOFFS
+from models import BATCH_NEARBY, Friendship, BADGE_CUTOFFS
 import logging
 import forms
 
@@ -519,7 +519,7 @@ def _mission_friends_qs(user, batch_type, start_index=0):
     return user.friendship_set.filter(
         batch_type=batch_type).order_by("fb_uid")[start_index:(start_index + 12)]
 
-def mission(request, batch_type=BATCH_BARELY_LEGAL):
+def mission(request, batch_type=BATCH_NEARBY):
     batch_type = int(batch_type)
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)
