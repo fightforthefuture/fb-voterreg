@@ -3,7 +3,7 @@ import requests
 import urllib
 from urlparse import urlparse
 import sys
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib import messages
 from django.conf import settings
 from django.core.urlresolvers import resolve
@@ -590,19 +590,82 @@ def unsubscribe(request):
     )
     return _index_redirect(user)
 
+def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=1):
+    filter = filter if filter in ['popular', 'near', 'friends'] else 'popular'
+    result = {'filters': [], 'list': [] }
+    myvbids = [myvb.id for myvb in myvbs]
+
+    #popular
+    popularq = VotingBlock.objects\
+        .filter(~Q(id__in=myvbids))\
+        .annotate(count=Count('votingblockmember'))
+    if text:
+        popularq = popularq.filter(Q(name__contains=text) | Q(description__contains=text))
+    result['filters'].append({'name': 'popular', 'title': 'Most popular', 'active': filter == 'popular'})
+    query = popularq.order_by('-count')
+
+    #near
+    nearq = VotingBlock.objects\
+        .filter(~Q(id__in=myvbids))\
+        .filter(Q(created_by__location_city=user.location_city, created_by__location_state=user.location_state)\
+                | Q(created_by__location_state=user.location_state))\
+        .extra(select={'distance': "CASE WHEN location_city == '%s' AND location_state == '%s' THEN 2 WHEN location_state == '%s' THEN 1 ELSE 0 END"\
+                % (user.location_city, user.location_state, user.location_state,)})\
+        .order_by('-distance')
+    if text:
+        nearq = nearq.filter(Q(name__contains=text) | Q(description__contains=text))
+    result['filters'].append({'name': 'near', 'count': nearq.count(), 'title': 'Near me', 'active': filter == 'near'})
+    if filter == 'near':
+        query = nearq
+
+    #friends
+    friendsq = VotingBlock.objects\
+        .filter(~Q(id__in=myvbids))\
+        .filter(votingblockmember__member__friendship__fb_uid=user.fb_uid)\
+        .distinct()\
+        .annotate(count=Count('votingblockmember'))
+    if text:
+        friendsq = friendsq.filter(Q(name__contains=text) | Q(description__contains=text))
+    result['filters'].append({'name': 'friends', 'count': friendsq.count(), 'title': 'Friends are members', 'active': filter == 'friends'})
+    if filter == 'friends':
+        query = friendsq.order_by('-count')
+
+    #apply
+    #TODO: full text search
+    result['list'] = query[skip:skip+take]
+
+    return result
+
 
 def voting_blocks(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    myvbs = VotingBlock.objects.filter(votingblockmember__member=user).order_by('-votingblockmember__joined')
     context = {
         "page": "voting_blocks",
         "voting_block_note": request.COOKIES.get('voting_block_note', None),
-        "my_voting_blocks": [vbm.voting_block for vbm in VotingBlockMember.objects.select_related('voting_block').filter(member=user).order_by('-joined')],
-        "voting_blocks": VotingBlock.objects.all().order_by('-created_at')
+        "my_voting_blocks": myvbs,
+        "voting_blocks": _voting_blocks_search(user, myvbs, 'popular')
     }
     return render_to_response(
         "voting_blocks.html",
         context,
         context_instance=RequestContext(request))
+
+def voting_blocks_search(request):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    myvbs = VotingBlock.objects.filter(votingblockmember__member=user)
+    skip = int(request.GET.get('skip', 0))
+    filter = request.GET.get('filter', None)
+    text = request.GET.get('text', None)
+    if skip > 0:
+        template = "_voting_blocks_results_list.html"
+    else:
+        template = "_voting_blocks_results.html"
+    return render_to_response(
+        template,
+        { 'voting_blocks': _voting_blocks_search(user, myvbs, filter, text, skip) },
+        context_instance=RequestContext(request))
+
 
 def voting_blocks_create(request):
     if request.POST:

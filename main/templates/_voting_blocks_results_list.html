@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+{% load thumbnail %}
+
+{% for mvb in voting_blocks.list %}
+    <li>
+        <a class="btn btn-blue" href="{% url 'main:voting_blocks_item_join' id=mvb.id %}">Join</a>
+        <p class="name"><a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
+        <p class="members">({{ mvb.votingblockmember_set.count }} members)</p>
+        <img src="{% thumbnail mvb.icon 80x68 crop %}" alt="{{ mvb.name }}">
+        <p class="description">{{ mvb.description }}</p>
+        <div class="cf"></div>
+    </li>
+{% endfor %}

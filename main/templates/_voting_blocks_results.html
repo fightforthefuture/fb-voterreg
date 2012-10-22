@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+{% load thumbnail %}
+
+<div class="cf">
+    <ul class="search-filters">
+        {% for f in voting_blocks.filters %}
+        <li data-filter="{{ f.name }}" class="{% if f.active %}active{% endif %}"><span tabindex="0">{{ f.title }}{% if f.count >= 0 %} ({{ f.count }}){% endif %}</span></li>
+        {% endfor %}
+    </ul>
+</div>​
+{% if voting_blocks.list %}
+<ul class="search-list">
+    {% include '_voting_blocks_results_list.html' %}
+</ul>
+<a href="javascript:void(0)" id="load_more_voting_blocks" class="load-more">
+    <span id="load_more_voting_blocks_label">Load More Voting Blocks</span>
+    <span id="load_more_voting_blocks_loading" style="display: none">Voting Blocks Loading...</span>
+</a>
+{% else %}
+<p>No voting blocks were found.</p>
+{% endif %}
