@@ -68,6 +68,11 @@ class FacebookMiddleware(object):
 
         return None
 
+    def process_response(self, request, response):
+        # for MSIE 9 and 10.
+        response['P3P'] = 'CP="IDC CURa ADMa OUR IND PHY ONL COM STA"'
+        return response
+
 class BadgeMiddleware(object):
     def process_request(self, request):
         user = User.objects.get(fb_uid=request.facebook['uid'])
