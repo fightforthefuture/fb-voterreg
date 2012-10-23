@@ -116,6 +116,7 @@ def _unpledge(request):
 
 @csrf_exempt
 def index(request):
+    request.session['after'] = request.GET.get("after", None)
     if request.method == "POST":
         response = _post_index(request)
         if response:
@@ -135,8 +136,11 @@ def index(request):
 
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    after = request.session.get('after', None)
 
     if user.pledged and user.registered and user.voted and not 'nav' in request.GET:
+        if after:
+            return redirect(after)
         return redirect('main:invite_friends_2')
 
     if user.pledged and user.registered:
@@ -147,6 +151,9 @@ def my_vote(request):
         # repeatedly annoying them.
         if 'force' in request.GET:
             return redirect('main:my_vote_vote')
+
+        if after:
+            return redirect(after)
 
         return redirect('main:invite_friends_2')
 
@@ -197,6 +204,7 @@ def my_vote_pledge(request):
 
 def my_vote_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    after = request.session.get('after', None)
 
     if request.method == 'GET':
         return render_to_response("my_vote_vote.html", {
@@ -233,7 +241,10 @@ def my_vote_vote(request):
                 # Translators: message displayed to users in when they mark themselves as having voted.
                 _("Your voice was heard! Make sure your friends' voices are also heard:")
             )
-            redirect_view = 'main:invite_friends_2'
+            if after:
+                redirect_view = after
+            else:
+                redirect_view = 'main:invite_friends_2'
         else:
             user.date_voted = None
             messages.add_message(
@@ -241,7 +252,10 @@ def my_vote_vote(request):
                 # Translators: message displayed to users in when they mark themselves as not having voted.
                 _("Got it, you haven't voted yet. Don't forget!")
             )
-            redirect_view = 'main:invite_friends_2'
+            if after:
+                redirect_view = after
+            else:
+                redirect_view = 'main:invite_friends_2'
         user.save()
 
         update_friends_of.delay(user.id)
