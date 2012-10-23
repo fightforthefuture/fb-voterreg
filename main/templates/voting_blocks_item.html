@@ -29,7 +29,7 @@
             <p class="organization">This voting block belongs to an organization: <a target="_blank" href="{{ voting_block.organization_website }}">"{{ voting_block.organization_name }}"</a>.
                When you join, they can use your name and email according to their <a target="_blank" href="{{ voting_block.organization_privacy_policy }}">Privacy policy</a>.</p>
             {% endif %}
-            <div class="social white-box">
+            <div class="social">
                 <fb:like href="{{ voting_block.share_url }}" send="true" layout="button_count" width="175" show_faces="false"></fb:like>
                 <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ voting_block.share_url }}" data-text="{{ voting_block.name }}" data-count="none" data-dnt="true">Tweet</a>
             </div>
