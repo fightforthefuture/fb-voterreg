@@ -710,7 +710,6 @@
     font-weight: normal;
 }
 
-
 .customfile-input { position: absolute; height: 100px; cursor: pointer;  z-index: 999; top:0; left: 0;
     background: transparent; border: 0; opacity: 0; -moz-opacity: 0; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);
 }
@@ -782,3 +781,11 @@
     box-shadow: inset 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
 }
 .customfile-focus .customfile-button {   }
+
+.social{
+    margin-top: 12px;
+}
+    .social .twitter-share-button{
+        position: relative;
+        top: 3px;
+    }

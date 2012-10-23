@@ -1,0 +1,19 @@
+{% load staticfiles %}
+{% load thumbnail %}
+{% load url from future %}
+<html>
+    <head>
+        <title>Redirecting</title>
+        <meta property="fb:app_id" content="{{ facebook_app_id }}" />
+        <meta property="og:title" content="{{ block.name }}" />
+        <meta property="og:description" content="{{ block.description }}" />
+        <meta property="og:image" content="{% thumbnail block.icon 200x200 crop %}" />
+        <meta property="og:url" content="{{ base_url }}{% url 'main:voting_block_share' block.pk %}" />
+        <meta property="og:type" content="website" />
+    </head>
+    <body>
+        <script type="text/javascript">
+            window.top.location.assign('{{ canvas_url }}?target={% url 'main:voting_blocks_item' block.pk %}');
+        </script>
+    </body>
+</html>

@@ -31,6 +31,10 @@
             <p class="organization">This voting block belongs to an organization: <a target="_blank" href="{{ voting_block.organization_website }}">"{{ voting_block.organization_name }}"</a>.
                When you join, they can use your name and email according to their <a target="_blank" href="{{ voting_block.organization_privacy_policy }}">Privacy policy</a>.</p>
             {% endif %}
+            <div class="social">
+                <fb:like href="{{ voting_block.share_url }}" send="true" layout="button_count" width="175" show_faces="false"></fb:like>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ voting_block.share_url }}" data-text="{{ voting_block.name }}" data-count="none" data-dnt="true">Tweet</a>
+            </div>
         </div>
     </div>
     <ul class="sections">
@@ -59,4 +63,6 @@
     var LOAD_MORE_URL = "{% url 'main:voting_blocks_item_page' id=voting_block.id section=section %}";
 </script>
 <script src="{% static 'js/invite_friend_grid.js' %}"></script>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 {% endblock %}
+

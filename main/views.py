@@ -12,6 +12,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template.loader import render_to_string
 from django.template.context import RequestContext
 from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -48,6 +49,22 @@ class OGObjectView(TemplateView):
         }
         context['og_namespace'] = namespace_map[environment]
 
+        return context
+
+
+class VotingBlockShareView(DetailView):
+    """
+
+    """
+    model = VotingBlock
+    template_name = 'voting_blocks_share.html'
+    context_object_name = 'block'
+
+    def get_context_data(self, **kwargs):
+        context = super(VotingBlockShareView, self).get_context_data(**kwargs)
+        context['facebook_app_id'] = settings.FACEBOOK_APP_ID
+        context['canvas_url'] = settings.FACEBOOK_CANVAS_PAGE
+        context['base_url'] = settings.BASE_URL
         return context
 
 

@@ -1,6 +1,9 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
+from main.views import VotingBlockShareView
+
+
 urlpatterns = patterns(
     "main.views",
     url(r"^$", "index", name="index"),
@@ -48,4 +51,7 @@ urlpatterns += patterns(
     url(r"^no_cookies$",
         TemplateView.as_view(template_name="no_cookies.html"),
         name="no_cookies"),
+    url(r"^voting_blocks/share/(?P<pk>\d+)$",
+        VotingBlockShareView.as_view(),
+        name="voting_block_share"),
 )

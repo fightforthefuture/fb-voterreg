@@ -183,7 +183,9 @@ if environment in ["production", "staging"]:
 
     KM_CODE = "8be66fb91e7ca782ba39688f6448862be1698c4e"
 
-    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    STATICFILES_STORAGE = THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE
+
     AWS_ACCESS_KEY_ID = 'AKIAIFSCVO2GAEACNIVA'
     AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY", "")
 
