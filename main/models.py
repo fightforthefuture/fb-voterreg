@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
@@ -320,6 +321,7 @@ class Friendship(models.Model):
         return "https://graph.facebook.com/{0}/picture?type=square".format(
             self.fb_uid)
 
+
 class VotingBlock(models.Model):
     name = models.CharField(max_length=80)
     description = models.CharField(max_length=160)
@@ -329,6 +331,14 @@ class VotingBlock(models.Model):
     organization_name = models.CharField(max_length=40, null=True, blank=True)
     organization_website = models.URLField(null=True, blank=True)
     organization_privacy_policy = models.URLField(null=True, blank=True)
+
+    @property
+    def share_url(self):
+        return '%s%s' % (
+            settings.BASE_URL,
+            reverse('main:voting_block_share', args=[self.pk]),
+        )
+
 
 class VotingBlockMember(models.Model):
     voting_block = models.ForeignKey(VotingBlock)
