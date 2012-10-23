@@ -30,19 +30,21 @@
             {% endif %}
         </div>
     </div>
-    <ul class="filter">
-        {% for f in filters %}
-        <li class="{% if f.name == filter %} active{% endif %}">
-            <a href="{% url 'main:voting_blocks_item_filter' id=voting_block.id filter=f.name %}">
-                <span>{{ f.title }} <strong>({{ f.count }})</strong></span>
+    <ul class="sections">
+        {% for s in sections %}
+        <li class="{% if s.name == section %} active{% endif %}">
+            <a href="{% url 'main:voting_blocks_item' id=voting_block.id section=s.name %}">
+                <span>{{ s.title }} <strong>({{ s.count }})</strong></span>
             </a>
         </li>
         {% endfor %}
     </ul>
     <div class="white-box">
-        <div id="friends">
+        <div class="cf" id="friends">
             {% include "_invite_friends_page.html" %}
+            {% if friends %}
             {% include "_invite_friends_buttons.html" %}
+            {% endif %}
         </div>
     </div>
 </div>
@@ -50,4 +52,8 @@
 
 
 {% block scripts %}
+<script>
+    var LOAD_MORE_URL = "{% url 'main:voting_blocks_item_page' id=voting_block.id section=section %}";
+</script>
+<script src="{% static 'js/invite_friend_grid.js' %}"></script>
 {% endblock %}

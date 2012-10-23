@@ -23,25 +23,15 @@
     </div>
     {% endif %}
     <div class="search">
+        <div class="search-loading"></div>
         <h2>Find voting blocks</h2>
-        <div class="input">
+        <div class="search-input">
             <input type="text" placeholder="Search" />
             <span class="clear" tabindex="0"></span>
         </div>
-        {% if voting_blocks %}
-        <ul>
-            {% for mvb in voting_blocks %}
-            <li>
-                <a class="btn btn-blue" href="{% url 'main:voting_blocks_item_join' id=mvb.id %}">Join</a>
-                <p class="name"><a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
-                <p class="members">({{ mvb.votingblockmember_set.count }} members)</p>
-                <img src="{% thumbnail mvb.icon 80x68 crop %}" alt="{{ mvb.name }}">
-                <p class="description">{{ mvb.description }}</p>
-                <div class="cf"></div>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+        <div class="search-results">
+            {% include '_voting_blocks_results.html' %}
+        </div>
     </div>
     <div class="own">
         <a class="btn btn-green btn-large create" href="{% url 'main:voting_blocks_create' %}"><i class="icon-plus"></i> Create Voting Block</a>
@@ -66,5 +56,8 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    SEARCH_URL = '{% url "main:voting_blocks_search" %}';
+</script>
 <script src="{% static 'js/voting_blocks.js' %}"></script>
 {% endblock %}
