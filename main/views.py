@@ -214,6 +214,9 @@ def my_vote_vote(request):
                 'access_token': request.facebook['access_token'],
                 'fb:explicitly_shared': 'true',
             })
+            if share.status_code != 200:
+                print share.content
+
         user.explicit_share_vote = explicit_share
 
         if 'yes' in request.POST:
@@ -387,6 +390,8 @@ def submit_pledge(request):
             'access_token': request.facebook['access_token'],
             'fb:explicitly_shared': 'true',
         })
+        if share.status_code != 200:
+            print share.content
     user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
