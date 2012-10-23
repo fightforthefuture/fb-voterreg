@@ -321,8 +321,8 @@ class Friendship(models.Model):
             self.fb_uid)
 
 class VotingBlock(models.Model):
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=90)
+    name = models.CharField(max_length=80)
+    description = models.CharField(max_length=160)
     icon = models.ImageField(upload_to='voting_blocks')
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User)

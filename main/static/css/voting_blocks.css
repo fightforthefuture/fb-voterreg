@@ -213,7 +213,8 @@
     font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
     color: #4b6cbf;
     text-decoration: underline;
-    margin: 0 0 4px 0;
+    word-wrap: break-word;
+    margin: 0 70px 4px 0;
 }
 
 .voting-blocks .search ul.search-list li .members {
@@ -236,12 +237,13 @@
 
 .voting-blocks .search ul.search-list li .description {
     float: left;
-    width: 200px;
+    width: 280px;
     margin: 0 0 0 16px;
     color: #484848;
     font-weight: normal;
     font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
     font-size: 12px;
+    word-wrap: break-word;
 }
 
 
@@ -274,6 +276,7 @@
     font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
     color:#000000;
     margin: 18px 0 0 0;
+    font-weight: normal;
 }
 
 .voting-blocks .own ul {
@@ -298,7 +301,7 @@
 
 .voting-blocks .own ul li .name a {
     color: #4b6cbf;
-
+    word-wrap: break-word;
 }
 
 .voting-blocks .own ul li .count {
@@ -321,9 +324,10 @@
 .voting-blocks .own ul li .description {
     float: left;
     margin: 8px 0 0 14px;
-    width: 140px;
+    width: 160px;
     color: #484848;
     font-size: 11px;
+    word-wrap: break-word;
 }
 
 
@@ -548,6 +552,7 @@
     margin: 0 auto;
     font-weight: normal;
     text-align: center;
+    word-wrap: break-word;
 }
 
 .voting-blocks-item h2 {
@@ -557,6 +562,7 @@
     margin: 0 auto 0;
     font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: normal;
+    word-wrap: break-word;
 }
 
 .voting-blocks-item .info {
@@ -592,7 +598,8 @@
     font-size: 44px;
 }
 
-.voting-blocks-item .info .data .join {
+.voting-blocks-item .info .data .join,
+.voting-blocks-item .info .data .invite{
     display: block;
     margin: 10px 0 0 0;
     font-size: 16px;
@@ -603,6 +610,7 @@
     color: #3f3f3f;
     text-decoration: underline;
     font-weight: bold;
+    display: inline-block;
     margin: 10px 0 0 0;
     font-size: 12px;
 }
@@ -681,4 +689,24 @@
     color: #b1085e;
     display: inline-block;
     padding-left: 4px;
+}
+
+#voting-block-create-organization-modal {
+    background-color: #FFF8A0;
+}
+
+#voting-block-create-organization-modal .modal-header {
+    border: none;
+}
+
+#voting-block-create-organization-modal .modal-header h3 {
+    color: #6D5305;
+}
+
+#voting-block-create-organization-modal .modal-body {
+    color: #6D5305;
+    margin: 0 20px;
+    font-size: 16px;
+    line-height: 1.6em;
+    font-weight: normal;
 }

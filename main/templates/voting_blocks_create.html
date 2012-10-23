@@ -22,7 +22,7 @@
             </div>
             <div class="field{% if form.description.errors %} field-error{% endif %}">
                 {{ form.description }}
-                <p class="help">80 chars</p>
+                <p class="help">160 chars</p>
                 {{ form.description.errors }}
             </div>
             <div class="field{% if form.icon.errors %} field-error{% endif %}">
@@ -34,20 +34,20 @@
             <p class="info">Here is how it will look:</p>
             <ul>
                 <li>
-                    <p id="sample-name" class="name">Voting block name</p>
+                    <p id="sample-name" class="name">{% if form.name.value %}{{ form.name.value }}{% else %}Voting block name{% endif %}</p>
                     <p class="members">(1,234 members)</p>
                     <img src="{% static 'img/voting-block.png' %}" />
-                    <p id="sample-description" class="description">Description / share text</p>
+                    <p id="sample-description" class="description">{% if form.description.value %}{{ form.description.value }}{% else %}Description / share text{% endif %}</p>
                 </li>
             </ul>
         </div>
     </div>
     <div class="note">
-        <strong>Note</strong>: Before making a new block, search <a href="#">here</a> to be sure someone else hasn't already set one up.
+        <strong>Note</strong>: Before making a new block, search <a href="{% url 'main:voting_blocks' %}">here</a> to be sure someone else hasn't already set one up.
         If you create a voting block for a specific location, include the location the title
         (like this: Girl Scout parents of Westchester MA").
     </div>
-    <h2>Collect contact information? <em>(Optional and for qualifying organizations only. <a href="#">Learn more</a>)</em></h2>
+    <h2>Collect contact information? <em>(Optional and for qualifying organizations only. <a role="button" data-toggle="modal" href="#voting-block-create-organization-modal">Learn more</a>)</em></h2>
     <div class="block cf">
         <div class="data">
             <div class="field{% if form.organization_name.errors %} field-error{% endif %}">
@@ -66,8 +66,8 @@
         <div class="sample">
             <p class="info">Here is how it will look:</p>
             <p class="organization">This voting block belonges to an orginization:
-                <a target="_blank" id="sample-organization-website" href="#">“<span id="sample-organization-name">Organization Name</span>”</a>. When you join, they can use
-                your name and email according to their <a target="_blank" id="sample-organization-privacy-policy" href="#">Privacy Policy</a>.</p>
+                <a target="_blank" id="sample-organization-website" href="{% if form.organization_website.value %}{{ form.organization_website.value }}{% else %}#{% endif %}"><span id="sample-organization-name">{% if form.organization_name.value %}{{ form.organization_name.value }}{% else %}Organization Name{% endif %}</span></a>.
+                When you join, they can use your name and email according to their <a target="_blank" id="sample-organization-privacy-policy" href="{% if form.organization_privacy_policy.value %}{{ form.organization_privacy_policy.value }}{% else %}#{% endif %}">Privacy Policy</a>.</p>
         </div>
     </div>
     <div class="actions cf">
@@ -75,6 +75,10 @@
         <input type="submit" class="btn btn-large btn-green" value="Save" />
     </div>
 </form>
+{% endblock %}
+
+{% block modals %}
+{% include "_voting_blocks_create_organization_modal.html" with modal_id="voting-block-create-organization-modal" %}
 {% endblock %}
 
 {% block scripts %}

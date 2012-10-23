@@ -59,7 +59,11 @@
 {% else %}{% if not request.is_ajax %}
         
     <div class="empty">
+        {% if voting_block %}
+        {% url 'main:voting_blocks_item' id=voting_block.id section='not_invited' as invite_url %}
+        {% else %}
         {% url 'main:invite_friends_2' 'not_invited' as invite_url %}
+        {% endif %}
         <p>
             {% comment %}Translators: message displayed on Invite Friends page when the user has no uninvited friends{% endcomment %}
             {% if section == "not_invited" %}{% blocktrans %}You've invited all your friends. Thanks for inviting so many people!{% endblocktrans %}{% endif %}
@@ -74,9 +78,9 @@
             {% comment %}Translators: message displayed on Invite Friends page when the user has no friends who haven't voted{% endcomment %}
             {% if section == "not_voted" %}{% blocktrans %}None of your friends have told us that they are not voting. Can you <a href="{{ invite_url }}">make sure they do so</a>?{% endblocktrans %}{% endif %}
             {% comment %}Translators: message displayed on Voting Blocks Members{% endcomment %}
-            {% if section == "members" %}{% blocktrans %}Empty voting block.{% endblocktrans %}{% endif %}
+            {% if section == "members" %}{% blocktrans %}There is not members in this voting block. Why don't you <a href="{{ invite_url }}">invite some friends</a>?{% endblocktrans %}{% endif %}
             {% comment %}Translators: message displayed on Voting Block Friends page{% endcomment %}
-            {% if section == "friends" %}{% blocktrans %}None of your friends are in this voting block.{% endblocktrans %}{% endif %}
+            {% if section == "friends" %}{% blocktrans %}None of your friends are in this voting block. Why don't you <a href="{{ invite_url }}">invite some</a>?{% endblocktrans %}{% endif %}
         </p>
     </div>
 

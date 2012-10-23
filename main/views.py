@@ -608,7 +608,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
         .filter(~Q(id__in=myvbids))\
         .filter(Q(created_by__location_city=user.location_city, created_by__location_state=user.location_state)\
                 | Q(created_by__location_state=user.location_state))\
-        .extra(select={'distance': "CASE WHEN location_city == '%s' AND location_state == '%s' THEN 2 WHEN location_state == '%s' THEN 1 ELSE 0 END"\
+        .extra(select={'distance': "CASE WHEN location_city='%s' AND location_state='%s' THEN 2 WHEN location_state='%s' THEN 1 ELSE 0 END"\
                 % (user.location_city, user.location_state, user.location_state,)})\
         .order_by('-distance')
     if text:
@@ -673,6 +673,7 @@ def voting_blocks_create(request):
             user = User.objects.get(fb_uid=request.facebook["uid"])
             form.instance.created_by = user
             form.save()
+            VotingBlockMember.objects.create(member=user, voting_block=form.instance, joined=datetime.now())
             return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': form.instance.id}))
     else:
         form = forms.VotingBlockForm()
@@ -735,7 +736,8 @@ def voting_blocks_item_page(request, id, section):
     friends = _members_qs(user, section, voting_block)[start:start+16]
     return render_to_response(
         "_invite_friends_page.html",
-        { "friends": friends },
+        { "friends": friends,
+          "voting_block":voting_block },
         context_instance=RequestContext(request))
 
 

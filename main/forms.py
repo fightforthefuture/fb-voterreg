@@ -33,7 +33,7 @@ class VotingBlockForm(forms.ModelForm):
             'description': forms.TextInput(attrs={'placeholder': 'Description / share text'}),
             'organization_name': forms.TextInput(attrs={'placeholder': '"Organization Name"'}),
             'organization_website': forms.TextInput(attrs={'placeholder': 'Website'}),
-            'organization_privacy_policy': forms.TextInput(attrs={'placeholder': 'Link to Privacy'})
+            'organization_privacy_policy': forms.TextInput(attrs={'placeholder': 'Link to Privacy Policy'})
         }
 
 

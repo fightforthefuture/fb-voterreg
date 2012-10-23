@@ -15,11 +15,12 @@
     <h1>{{ voting_block.name }}</h1>
     <h2>{{ voting_block.description }}</h2>
     <div class="info cf">
-        <img src="{% thumbnail voting_block.icon 436x280 crop %}" alt="{{ voting_block.name }}">
+        <img src="{% thumbnail voting_block.icon 436x280 crop %}" onerror="this.onerror=''; this.src='{% static 'img/voting-block-436x280.png' %}'; return true;">
         <div class="data">
             <p class="count"><strong>{{ voting_block_members_count }}</strong> members</p>
             <p class="count"><strong>{{ voting_block_members_today_count }}</strong> new today</p>
             {% if voting_block_joined %}
+            <a class="btn btn-blue btn-large invite" href="{% url 'main:voting_blocks_item' id=voting_block.id section='not_invited' %}">Invite Friends</a>
             <a class="leave" href="{% url 'main:voting_blocks_item_leave' id=voting_block.id %}">Leave this voting block</a>
             {% else %}
             <a class="btn btn-green btn-large join" href="{% url 'main:voting_blocks_item_join' id=voting_block.id %}">Join this voting block</a>

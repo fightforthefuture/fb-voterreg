@@ -1,0 +1,18 @@
+{% extends "_base_modal.html" %}
+
+{% load i18n %}
+
+{% comment %}Translators: title of modal displayed when the user click on voting block "learn more" organization link.{% endcomment %}
+{% block title %}{% trans "Collect contact information" %}{% endblock %}
+
+{% block body %}
+    {% comment %}Translators: body text of modal displayed when the user click on voting block "learn more" organization link.{% endcomment %}
+    <p>{% blocktrans %}We will only deliver contact information to a verified representative of the organization listed in the name / website fields
+       on this page.  It must be a non-profit or equivalent organization.  To make sure that your organization qualifies, and for information
+       about the timing of data delivery, contact us at <a href="mailto:info@votewithfriends.net">info@votewithfriends.net</a>.{% endblocktrans %}</p>
+{% endblock %}
+
+{% block footer %}
+    {% comment %}Translators: text of close button when the user click on voting block "learn more" organization link.{% endcomment %}
+    <button class="btn btn-large btn-cancel" data-dismiss="modal" aria-hidden="true"><i class="icon-cancel"></i> {% trans "Close" %}</button>
+{% endblock %}
