@@ -64,6 +64,7 @@ class VotingBlockShareView(DetailView):
         context = super(VotingBlockShareView, self).get_context_data(**kwargs)
         context['facebook_app_id'] = settings.FACEBOOK_APP_ID
         context['canvas_url'] = settings.FACEBOOK_CANVAS_PAGE
+        context['base_url'] = settings.BASE_URL
         return context
 
 

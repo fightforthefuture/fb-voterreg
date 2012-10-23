@@ -7,7 +7,7 @@
         <meta property="og:title" content="{{ block.name }}" />
         <meta property="og:description" content="{{ block.description }}" />
         <meta property="og:image" content="{{ MEDIA_URL }}{{ block.icon }}" />
-        <meta property="og:url" content="{{ canvas_url }}?target={% url 'main:voting_block_share' block.pk %}" />
+        <meta property="og:url" content="{{ base_url }}{% url 'main:voting_block_share' block.pk %}" />
         <meta property="og:type" content="website" />
     </head>
     <body>
