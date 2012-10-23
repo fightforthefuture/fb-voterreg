@@ -1,4 +1,5 @@
 import facebook
+from os import environ
 import requests
 import urllib
 from urlparse import urlparse
@@ -38,6 +39,15 @@ class OGObjectView(TemplateView):
         context['base_url'] = settings.BASE_URL
         context['canvas_url'] = settings.FACEBOOK_CANVAS_PAGE
         context['facebook_app_id'] = settings.FACEBOOK_APP_ID
+
+        environment = environ.get("RACK_ENV", 'dev')
+        namespace_map = {
+            'dev': '-dev',
+            'staging': '-stag',
+            'production': '',
+        }
+        context['og_namespace'] = namespace_map[environment]
+
         return context
 
 
@@ -199,8 +209,8 @@ def my_vote_vote(request):
         explicit_share = request.POST.get('tell-friends', '') == 'on'
         if explicit_share:
             og_url = opengraph_url(request, settings.FACEBOOK_OG_VOTE_ACTION)
-            requests.post(og_url, params={
-                'website': settings.BASE_URL + reverse('vote_object'),
+            share = requests.post(og_url, params={
+                'election_obj': settings.BASE_URL + reverse('vote_object'),
                 'access_token': request.facebook['access_token'],
                 'fb:explicitly_shared': 'true',
             })
@@ -373,7 +383,7 @@ def submit_pledge(request):
     if explicit_share:
         og_url = opengraph_url(request, settings.FACEBOOK_OG_PLEDGE_ACTION)
         share = requests.post(og_url, params={
-            'website': settings.BASE_URL + reverse('pledge_object'),
+            'vote_obj': settings.BASE_URL + reverse('pledge_object'),
             'access_token': request.facebook['access_token'],
             'fb:explicitly_shared': 'true',
         })

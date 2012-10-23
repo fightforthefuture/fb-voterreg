@@ -8,7 +8,7 @@
         <meta property="og:description" content="I just pledged to vote--and you should too! Install this app to make sure your friends and family vote this election. See who's voting and send reminders! Don't just vote; Vote with Friends :)" />
         <meta property="og:image" content="{% static 'img/share.png' %}" />
         <meta property="og:url" content="{{ base_url }}{% url pledge_object %}" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="votewithfriends{{ og_namespace }}:vote_obj" />
     </head>
     <body>
         <script type="text/javascript">

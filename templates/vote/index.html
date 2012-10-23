@@ -4,11 +4,11 @@
     <head>
         <title>Redirecting</title>
         <meta property="fb:app_id" content="{{ facebook_app_id }}" />
-        <meta property="og:title" content="...in the 2012 elections" />
+        <meta property="og:title" content="The 2012 Elections" />
         <meta property="og:description" content="I just voted--and you should too! Install this app to make sure your friends and family vote this election. See who's voting and send reminders! Don't just vote; Vote with Friends :)" />
         <meta property="og:image" content="{% static 'img/share-voted.png' %}" />
         <meta property="og:url" content="{{ base_url }}{% url vote_object %}" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="votewithfriends{{ og_namespace }}:election_obj" />
     </head>
     <body>
         <script type="text/javascript">
