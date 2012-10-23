@@ -710,3 +710,11 @@
     line-height: 1.6em;
     font-weight: normal;
 }
+
+.social{
+    margin-top: 12px;
+}
+    .social .twitter-share-button{
+        position: relative;
+        top: 3px;
+    }
