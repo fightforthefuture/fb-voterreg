@@ -99,7 +99,7 @@
             <li><a href="{% url 'main:missions' %}" {% if page == "missions" %}class="selected"{% endif %}>MISSIONS</a></li>
             <li><a href="{% url 'main:my_vote' %}?force" {% if page == "my_vote" %}class="selected"{% endif %}>MY VOTE</a></li>
             <li><a href="{% url 'main:invite_friends_2' %}" {% if page == "friends" %}class="selected"{% endif %}>MY FRIENDS</a></li>
-            <li><a href="{% url 'main:voting_blocks' %}" {% if page == "voting_blocks" %}class="selected"{% endif %}>VOTING BLOCKS</a></li>
+            {% comment %}<li><a href="{% url 'main:voting_blocks' %}" {% if page == "voting_blocks" %}class="selected"{% endif %}>VOTING BLOCKS</a></li>{% endcomment %}
           </ul>
       {% endblock nav %}
     {% if messages %}
