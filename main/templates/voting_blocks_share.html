@@ -7,7 +7,7 @@
         <meta property="fb:app_id" content="{{ facebook_app_id }}" />
         <meta property="og:title" content="{{ block.name }}" />
         <meta property="og:description" content="{{ block.description }}" />
-        <meta property="og:image" content="{% thumbnail block.icon 320x0 %}" />
+        <meta property="og:image" content="{% thumbnail block.icon 436x280 crop %}" />
         <meta property="og:url" content="{{ base_url }}{% url 'main:voting_block_share' block.pk %}" />
         <meta property="og:type" content="website" />
     </head>
