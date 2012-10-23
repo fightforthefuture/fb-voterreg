@@ -1,4 +1,5 @@
 import facebook
+from os import environ
 import requests
 import urllib
 from urlparse import urlparse
@@ -38,6 +39,15 @@ class OGObjectView(TemplateView):
         context['base_url'] = settings.BASE_URL
         context['canvas_url'] = settings.FACEBOOK_CANVAS_PAGE
         context['facebook_app_id'] = settings.FACEBOOK_APP_ID
+
+        environment = environ.get("RACK_ENV", 'dev')
+        namespace_map = {
+            'dev': '-dev',
+            'staging': '-stag',
+            'production': '',
+        }
+        context['og_namespace'] = namespace_map[environment]
+
         return context
 
 
@@ -106,6 +116,7 @@ def _unpledge(request):
 
 @csrf_exempt
 def index(request):
+    request.session['after'] = request.GET.get("after", None)
     if request.method == "POST":
         response = _post_index(request)
         if response:
@@ -125,8 +136,11 @@ def index(request):
 
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    after = request.session.get('after', None)
 
     if user.pledged and user.registered and user.voted and not 'nav' in request.GET:
+        if after:
+            return redirect(after)
         return redirect('main:invite_friends_2')
 
     if user.pledged and user.registered:
@@ -137,6 +151,9 @@ def my_vote(request):
         # repeatedly annoying them.
         if 'force' in request.GET:
             return redirect('main:my_vote_vote')
+
+        if after:
+            return redirect(after)
 
         return redirect('main:invite_friends_2')
 
@@ -187,6 +204,7 @@ def my_vote_pledge(request):
 
 def my_vote_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    after = request.session.get('after', None)
 
     if request.method == 'GET':
         return render_to_response("my_vote_vote.html", {
@@ -199,11 +217,14 @@ def my_vote_vote(request):
         explicit_share = request.POST.get('tell-friends', '') == 'on'
         if explicit_share:
             og_url = opengraph_url(request, settings.FACEBOOK_OG_VOTE_ACTION)
-            requests.post(og_url, params={
-                'website': settings.BASE_URL + reverse('vote_object'),
+            share = requests.post(og_url, params={
+                'election_obj': settings.BASE_URL + reverse('vote_object'),
                 'access_token': request.facebook['access_token'],
                 'fb:explicitly_shared': 'true',
             })
+            print 'Explicit share vote response: %s' % share.status_code
+            print share.content
+
         user.explicit_share_vote = explicit_share
 
         if 'yes' in request.POST:
@@ -220,7 +241,10 @@ def my_vote_vote(request):
                 # Translators: message displayed to users in when they mark themselves as having voted.
                 _("Your voice was heard! Make sure your friends' voices are also heard:")
             )
-            redirect_view = 'main:invite_friends_2'
+            if after:
+                redirect_view = after
+            else:
+                redirect_view = 'main:invite_friends_2'
         else:
             user.date_voted = None
             messages.add_message(
@@ -228,7 +252,10 @@ def my_vote_vote(request):
                 # Translators: message displayed to users in when they mark themselves as not having voted.
                 _("Got it, you haven't voted yet. Don't forget!")
             )
-            redirect_view = 'main:invite_friends_2'
+            if after:
+                redirect_view = after
+            else:
+                redirect_view = 'main:invite_friends_2'
         user.save()
 
         update_friends_of.delay(user.id)
@@ -373,10 +400,12 @@ def submit_pledge(request):
     if explicit_share:
         og_url = opengraph_url(request, settings.FACEBOOK_OG_PLEDGE_ACTION)
         share = requests.post(og_url, params={
-            'website': settings.BASE_URL + reverse('pledge_object'),
+            'vote_obj': settings.BASE_URL + reverse('pledge_object'),
             'access_token': request.facebook['access_token'],
             'fb:explicitly_shared': 'true',
         })
+        print 'Explicit share pledge response: %s' % share.status_code
+        print share.content
     user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
