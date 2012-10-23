@@ -26,7 +26,7 @@
                 {{ form.description.errors }}
             </div>
             <div class="field{% if form.icon.errors %} field-error{% endif %}">
-                <label>Add Image:</label> {{ form.icon }}
+                {{ form.icon }}
                 {{ form.icon.errors }}
             </div>
         </div>
@@ -82,6 +82,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'js/jquery.fileinput.js' %}"></script>
 <script src="{% static 'js/voting_blocks_create.js' %}"></script>
 {% endblock %}
 

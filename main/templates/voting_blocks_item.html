@@ -18,7 +18,9 @@
         <img src="{% thumbnail voting_block.icon 436x280 crop %}" onerror="this.onerror=''; this.src='{% static 'img/voting-block-436x280.png' %}'; return true;">
         <div class="data">
             <p class="count"><strong>{{ voting_block_members_count }}</strong> members</p>
+            {% if voting_block_members_today_count > 0 %}
             <p class="count"><strong>{{ voting_block_members_today_count }}</strong> new today</p>
+            {% endif %}
             {% if voting_block_joined %}
             <a class="btn btn-blue btn-large invite" href="{% url 'main:voting_blocks_item' id=voting_block.id section='not_invited' %}">Invite Friends</a>
             <a class="leave" href="{% url 'main:voting_blocks_item_leave' id=voting_block.id %}">Leave this voting block</a>

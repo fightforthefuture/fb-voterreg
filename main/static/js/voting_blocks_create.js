@@ -14,4 +14,5 @@ $(function() {
     $('#id_organization_privacy_policy').bind('keyup change', function(){
         $('#sample-organization-privacy-policy').attr('href', $('#id_organization_privacy_policy').val() == '' ? '#' : $('#id_organization_privacy_policy').val());
     });
+    $('input[type=file]').customFileInput();
 });

@@ -547,7 +547,6 @@
 .voting-blocks-item h1 {
     font-size: 53px;
     font-family: BebasNeueRegular, Helvetica, Arial;
-    text-transform: uppercase;
     color: #3e4b63;
     margin: 0 auto;
     font-weight: normal;
@@ -710,3 +709,76 @@
     line-height: 1.6em;
     font-weight: normal;
 }
+
+
+.customfile-input { position: absolute; height: 100px; cursor: pointer;  z-index: 999; top:0; left: 0;
+    background: transparent; border: 0; opacity: 0; -moz-opacity: 0; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+}
+.customfile {
+    cursor: pointer;
+    overflow: hidden;
+    padding: 2px;
+    border: 1px solid #BABFC6;
+    background-color: #EAEEF5;
+    font-size: 13px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+.customfile-disabled {
+    opacity: .5; filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0); cursor: default;
+}
+.customfile-feedback {
+    display: block;
+    margin: 8px;
+    font-size: 13px;
+    color: #999;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}
+.customfile-feedback-populated {
+    color: #000;
+}
+.customfile-button {
+    float: right;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none !important;
+    border: 1px solid #0C1E51;
+    color: white;
+    padding: 5px;
+    font-weight: normal;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    text-align: center;
+    vertical-align: middle;
+    filter: dropshadow(color=#000000, offx=1, offy=1);
+    background: #385290;
+    background: -moz-linear-gradient(top, #385290 0%, #354D87 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#385290), color-stop(100%,#354D87));
+    background: -webkit-linear-gradient(top, #385290 0%,#354D87 100%);
+    background: -o-linear-gradient(top, #385290 0%,#354D87 100%);
+    background: -ms-linear-gradient(top, #385290 0%,#354D87 100%);
+    background: linear-gradient(to bottom, #385290 0%,#354D87 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#385290', endColorstr='#354d87',GradientType=0 );
+
+}
+.customfile-hover .customfile-button, .customfile-focus .customfile-button  {
+    -webkit-box-shadow: inset 0px -2px 5px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0px -2px 5px 0px rgba(0, 0, 0, 0.1);
+}
+.customfile-focus .customfile-button {   }
