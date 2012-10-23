@@ -172,6 +172,10 @@ class User(models.Model):
         return self.registered or self.pledged or \
             self.invited_friends or self.voted
 
+    def picture_thumbnail_url(self):
+        return "https://graph.facebook.com/{0}/picture?type=square".format(
+            self.fb_uid)
+
 class Mission(models.Model):
     class Meta:
         unique_together = (("user", "type",),)

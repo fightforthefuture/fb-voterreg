@@ -619,18 +619,18 @@
     color: #151515;
 }
 
-.voting-blocks-item .filter {
+.voting-blocks-item .sections {
     display: table;
     margin: 22px auto 12px;
     padding: 0;
 }
 
-.voting-blocks-item .filter li {
+.voting-blocks-item .sections li {
     display: table-cell;
     padding: 0 0 3px 0; /* for box <a> shadow */
 }
 
-.voting-blocks-item .filter li a {
+.voting-blocks-item .sections li a {
     display: block;
     padding: 12px 18px 10px;
     text-decoration: none;
@@ -641,9 +641,9 @@
     border-bottom: 1px solid transparent;
 }
 
-.voting-blocks-item .filter li.active a,
-.voting-blocks-item .filter li a:hover,
-.voting-blocks-item .filter li a:focus {
+.voting-blocks-item .sections li.active a,
+.voting-blocks-item .sections li a:hover,
+.voting-blocks-item .sections li a:focus {
     -webkit-border-radius: 5px;
     border-radius: 5px;
     border-bottom: 1px solid #f1f1f1;
@@ -659,25 +659,25 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cbcbcb',GradientType=0 ); /* IE6-9 */
 }
 
-.voting-blocks-item .filter li {
+.voting-blocks-item .sections li {
     padding: 0 6px;
     border-right: 1px solid #808080;
 }
 
-.voting-blocks-item .filter li:first-child {
+.voting-blocks-item .sections li:first-child {
     padding-left: 0;
 }
 
-.voting-blocks-item .filter li:last-child {
+.voting-blocks-item .sections li:last-child {
     padding-right: 0;
     border-right: none;
 }
 
-.voting-blocks-item .filter li a span {
+.voting-blocks-item .sections li a span {
     display: block;
 }
 
-.voting-blocks-item .filter li a span strong {
+.voting-blocks-item .sections li a span strong {
     color: #b1085e;
     display: inline-block;
     padding-left: 4px;

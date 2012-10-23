@@ -34,10 +34,10 @@ urlpatterns = patterns(
     url(r"^voting_blocks$", "voting_blocks", name="voting_blocks"),
     url(r"^voting_blocks_search", "voting_blocks_search", name="voting_blocks_search"),
     url(r"^voting_blocks/create$", "voting_blocks_create", name="voting_blocks_create"),
-    url(r"^voting_blocks/(?P<id>\d+)$", "voting_blocks_item", name="voting_blocks_item"),
+    url(r"^voting_blocks/(?P<id>\d+)(?:/section/(?P<section>\w+))?$", "voting_blocks_item", name="voting_blocks_item"),
     url(r"^voting_blocks/(?P<id>\d+)/join$", "voting_blocks_item_join", name="voting_blocks_item_join"),
     url(r"^voting_blocks/(?P<id>\d+)/leave$", "voting_blocks_item_leave", name="voting_blocks_item_leave"),
-    url(r"^voting_blocks/(?P<id>\d+)/(?P<filter>\w+)$", "voting_blocks_item", name="voting_blocks_item_filter"),
+    url(r"^voting_blocks/(?P<id>\d+)/section/(?P<section>\w+)/page$", "voting_blocks_item_page", name="voting_blocks_item_page"),
 )
 
 urlpatterns += patterns(

@@ -685,23 +685,37 @@ def voting_blocks_create(request):
         context,
         context_instance=RequestContext(request))
 
-def voting_blocks_item(request, id, filter='members'):
+def _members_qs(user, section, voting_block):
+    if section == 'members':
+        return User.objects.filter(votingblockmember__voting_block=voting_block)
+    elif section == 'voted':
+        return User.objects.filter(votingblockmember__voting_block=voting_block, date_voted__isnull=False)
+    elif section == 'not_voted':
+        return User.objects.filter(votingblockmember__voting_block=voting_block, date_voted__isnull=True)
+    elif section == 'friends':
+        return User.objects.filter(votingblockmember__voting_block=voting_block, friendship__fb_uid=user.fb_uid)
+    elif section == 'not_invited':
+        return Friendship.objects.invited(False)
+
+def voting_blocks_item(request, id, section=None):
     id = int(id)
-    filters = [
-        {'name': 'members', 'count': 0, 'title': 'Members'},
-        {'name': 'voted', 'count': 0, 'title': 'Voted'},
-        {'name': 'notvoted', 'count': 0, 'title': 'Haven\'t Voted'},
-        {'name': 'friends', 'count': 0, 'title': 'My Friends'},
-        {'name': 'invite', 'count': 0, 'title': 'Invite Friends'},
-    ]
     voting_block = VotingBlock.objects.get(id=id)
     user = User.objects.get(fb_uid=request.facebook["uid"])
+    section = section or 'members'
+    sections = [
+        {'name': 'members', 'count': _members_qs(user, 'members', voting_block).count(), 'title': 'Members'},
+        {'name': 'voted', 'count': _members_qs(user, 'voted', voting_block).count(), 'title': 'Voted'},
+        {'name': 'not_voted', 'count': _members_qs(user, 'not_voted', voting_block).count(), 'title': 'Haven\'t Voted'},
+        {'name': 'friends', 'count': _members_qs(user, 'friends', voting_block).count(), 'title': 'My Friends'},
+        {'name': 'not_invited', 'count': _members_qs(user, 'not_invited', voting_block).count(), 'title': 'Invite Friends'},
+    ]
     context = {
         "page": "voting_blocks",
-        "filters": filters,
-        "filter": filter,
+        "sections": sections,
+        "section": section,
+        "dont_friendship": section != 'not_invited',
         "voting_block": voting_block,
-        "voting_block_members": VotingBlockMember.objects.filter(voting_block_id=id).order_by('joined')[:16],
+        "friends": _members_qs(user, section, voting_block)[:16],
         "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id).count(),
         "voting_block_members_today_count": VotingBlockMember.objects.filter(voting_block_id=id,
             joined__gt=datetime.combine(datetime.now(), time.min)).count(),
@@ -711,6 +725,19 @@ def voting_blocks_item(request, id, filter='members'):
         "voting_blocks_item.html",
         context,
         context_instance=RequestContext(request))
+
+@csrf_exempt
+def voting_blocks_item_page(request, id, section):
+    id = int(id)
+    voting_block = VotingBlock.objects.get(id=id)
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    start = int(request.POST.get('start', 0))
+    friends = _members_qs(user, section, voting_block)[start:start+16]
+    return render_to_response(
+        "_invite_friends_page.html",
+        { "friends": friends },
+        context_instance=RequestContext(request))
+
 
 def voting_blocks_item_join(request, id):
     id = int(id)

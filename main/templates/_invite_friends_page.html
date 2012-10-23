@@ -10,6 +10,8 @@
 
                 <h2>{{ friend.name }}</h2>
 
+                {% if not dont_friendship %}
+
                 {% if friend.voted %}
 
                     {% comment %}Translators: friend status in friend list if the friend has already voted{% endcomment %}
@@ -49,7 +51,7 @@
                         <a style="display: none" href="javascript:void(0)" class="invited invite btn btn-blue">{% blocktrans %}Send Reminder{% endblocktrans %}</a>
                     {% endif %}
                 </div>
-
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
@@ -69,6 +71,12 @@
             {% if section == "registered" %}{% blocktrans %}None of your friends are registered to vote. Do your civic duty and <a href="{{ invite_url }}">make sure they're registered</a>!{% endblocktrans %}{% endif %}
             {% comment %}Translators: message displayed on Invite Friends page when the user has no friends who have voted{% endcomment %}
             {% if section == "voted" %}{% blocktrans %}None of your friends have told us that they're voting. Can you <a href="{{ invite_url }}">make sure they do so</a>?{% endblocktrans %}{% endif %}
+            {% comment %}Translators: message displayed on Invite Friends page when the user has no friends who haven't voted{% endcomment %}
+            {% if section == "not_voted" %}{% blocktrans %}None of your friends have told us that they are not voting. Can you <a href="{{ invite_url }}">make sure they do so</a>?{% endblocktrans %}{% endif %}
+            {% comment %}Translators: message displayed on Voting Blocks Members{% endcomment %}
+            {% if section == "members" %}{% blocktrans %}Empty voting block.{% endblocktrans %}{% endif %}
+            {% comment %}Translators: message displayed on Voting Block Friends page{% endcomment %}
+            {% if section == "friends" %}{% blocktrans %}None of your friends are in this voting block.{% endblocktrans %}{% endif %}
         </p>
     </div>
 
