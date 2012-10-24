@@ -1,0 +1,21 @@
+{% extends "base-error.html" %}
+
+{% load url from future %}
+
+{% block meta_title %}Unsupport Browser - {{ block.super }}{% endblock meta_title %}
+
+{% block error_type %}Uh oh!{% endblock error_type %}
+
+{% block header %}Unsupported Browser{% endblock header %}
+
+{% block copy %}
+    <p>Unfortunately, we are unable to support the web browser that you're currently using. If possible, please upgrade to the most recent version. If you're unable to do so, would you mind trying a different, supported browser?</p>
+    <p>Some of our favorites:</p>
+    <ul>
+        <li><a href="http://www.mozilla.org/en-US/firefox/new/" target="_parent">Mozilla Firefox</a></li>
+        <li><a href="https://www.google.com/intl/en/chrome/browser/" target="_parent">Google Chrome</a></li>
+        <li><a href="http://www.apple.com/safari/" target="_parent">Apple Safari</a></li>
+        <li><a href="http://www.opera.com/browser/" target="_parent">Opera</a></li>
+    </ul>
+    <p>Thanks for understanding!</p>
+{% endblock copy %}

@@ -64,6 +64,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     "middleware.FacebookMiddleware",
     "middleware.BadgeMiddleware",
+    "middleware.UAMiddleware",
 )
 
 ROOT_URLCONF = 'voterreg.urls'
