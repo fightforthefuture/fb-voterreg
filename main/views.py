@@ -357,7 +357,7 @@ def pledge(request):
 def _invite_friends_2_qs(user, section, start_index=0):
     if section == "not_invited":
         f_qs = user.friends.personally_invited(status=False).order_by('?')
-    elif section == "not_pledged":
+    elif section in ["not_pledged", "invited"]:
         f_qs = user.friends.invited_not_pledged()
     elif section == "registered":
         f_qs = user.friends.registered()
