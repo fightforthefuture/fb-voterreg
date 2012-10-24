@@ -420,7 +420,7 @@ class LastAppNotification(models.Model):
             template_suffix = " pledged to vote using Vote with Friends"
         friends = list(qs[:2])
         if count > 2:
-            template = "{{{0}}}, {{{1}}} and {{{2}}} other friend{3} {4}".format(
+            template = "{{{0}}}, {{{1}}} and {2} other friend{3} {4}".format(
                 friends[0].fb_uid, friends[1].fb_uid,
                 count - 2, 
                 "s" if count > 3 else "",
