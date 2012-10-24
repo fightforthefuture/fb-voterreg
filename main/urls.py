@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
-from main.views import VotingBlockShareView
+from main.views import NotificationCheckView, VotingBlockShareView
 
 
 urlpatterns = patterns(
@@ -54,4 +54,7 @@ urlpatterns += patterns(
     url(r"^voting_blocks/share/(?P<pk>\d+)$",
         VotingBlockShareView.as_view(),
         name="voting_block_share"),
+    url(r"^notifications$",
+        NotificationCheckView.as_view(),
+        name="notifications"),
 )

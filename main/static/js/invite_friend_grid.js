@@ -26,7 +26,7 @@ $(function() {
                 method: "send",
                 to: fbuid,
                 name: "Vote. And help me get all our friends to vote.",
-                link: FACEBOOK_CANVAS_PAGE
+                link: window['INVITE_TARGET_URL'] || window['FACEBOOK_CANVAS_PAGE']
             },
             function(response) {
                 inviteFriendSucceeded(fbuid, $link);

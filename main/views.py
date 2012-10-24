@@ -68,6 +68,10 @@ class VotingBlockShareView(DetailView):
         return context
 
 
+class NotificationCheckView(TemplateView):
+    template_name = 'notifications.html'
+
+
 def _post_index(request):
     query_string = request.META["QUERY_STRING"]
     redirect_uri = settings.FACEBOOK_CANVAS_PAGE
@@ -743,7 +747,7 @@ def _members_qs(user, section, voting_block):
     elif section == 'friends':
         return User.objects.filter(votingblockmember__voting_block=voting_block, friendship__fb_uid=user.fb_uid)
     elif section == 'not_invited':
-        return Friendship.objects.invited(False)
+        return user.friends.invited(False)
 
 def voting_blocks_item(request, id, section=None):
     id = int(id)
