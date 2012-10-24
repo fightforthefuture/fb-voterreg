@@ -578,6 +578,8 @@ def mission(request, batch_type=BATCH_NEARBY):
     uninvited_batch_2 = None if len(recs) < 2 else recs[1]
     num_invited = user.friends.filter(batch_type=batch_type).invited().count()
     num_pledged = user.friends.filter(batch_type=batch_type).pledged().count()
+    num_friends = user.friends.filter(batch_type=batch_type).count()
+    badge_cutoffs = filter(lambda x: x<=num_friends, BADGE_CUTOFFS)
     context = {
         "page": "missions",
         "batch_type": batch_type,
@@ -587,8 +589,8 @@ def mission(request, batch_type=BATCH_NEARBY):
         "friends": _mission_friends_qs(user, batch_type), 
         "num_invited": num_invited,
         "num_pledged": num_pledged,
-        "num_friends": user.friends.filter(batch_type=batch_type).count(),
-        "badge_cutoffs": BADGE_CUTOFFS }
+        "num_friends": num_friends,
+        "badge_cutoffs": badge_cutoffs }
     return render_to_response(
         "mission.html",
         context,
