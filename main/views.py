@@ -68,6 +68,10 @@ class VotingBlockShareView(DetailView):
         return context
 
 
+class NotificationCheckView(TemplateView):
+    template_name = 'notifications.html'
+
+
 def _post_index(request):
     query_string = request.META["QUERY_STRING"]
     redirect_uri = settings.FACEBOOK_CANVAS_PAGE

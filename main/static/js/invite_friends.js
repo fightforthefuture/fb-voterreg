@@ -29,6 +29,7 @@ $(function() {
             { "batch_id": batchID },
             function(result) {
                 $('[data-batch-id="' + batchID + '"]').slideUp();
+                $(window).trigger('checkNotifications');
             });
     }
 

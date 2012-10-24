@@ -9,6 +9,7 @@ $(function() {
             MARK_MISSION_BATCH_INVITED,
             { "batch_id": batchID },
             function(result) {
+                $(window).trigger('checkNotifications');
                 // TODO: hide loading animation
                 if ($next.find(".invited:visible").length > 0) {
                     $next.html(result["html"]);
