@@ -398,7 +398,7 @@ class LastAppNotification(models.Model):
 
     def _seconds_to_schedule(self):
         return 60 + APP_NOTIFICATION_THRESHOLD - \
-            (datetime.now() - self.notification_date)
+            (datetime.now() - self.notification_date).total_seconds()
 
     def _mark_as_notified(self):
         self.pledged_count = self.user.friends.pledged().count()
