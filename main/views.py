@@ -575,6 +575,7 @@ def mission(request, batch_type=BATCH_NEARBY):
     num_invited = user.friends.filter(batch_type=batch_type).invited().count()
     num_pledged = user.friends.filter(batch_type=batch_type).pledged().count()
     context = {
+        "page": "missions",
         "batch_type": batch_type,
         "missions": user.mission_set.all(),
         "uninvited_batch_1": uninvited_batch_1,
