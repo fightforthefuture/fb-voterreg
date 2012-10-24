@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from models import VoterRecord, APIHitCount
+from models import VoterRecord
 import facebook
 from fb_utils import FacebookProfile
 from django.db import IntegrityError
@@ -8,7 +8,6 @@ from random import choice
 import time
 import string
 
-MAX_API_HITS = 100000
 _URL = "https://api.votizen.com/v1/voter/"
 _FETCH_VOTER_PARAMS = \
     set(["first_name", "middle_name", "last_name", "street",
@@ -68,9 +67,6 @@ def fetch_voter(**kwargs):
             return None
     if not all(k in _FETCH_VOTER_PARAMS for k, v in kwargs.items()):
         raise AttributeError("Invalid arguments")
-    hit_count = APIHitCount.next()
-    if hit_count > MAX_API_HITS:
-        return None
     params = kwargs.copy()
     params["api_key"] = settings.VOTIZEN_API_KEY
     response = requests.get(_URL, params=params).json

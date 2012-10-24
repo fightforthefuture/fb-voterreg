@@ -3,6 +3,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.contrib import messages
 from main.models import User, BADGE_INVITED, BADGE_PLEDGED
 import urllib
@@ -116,4 +117,22 @@ class BadgeMiddleware(object):
                 "<div class=\"with-badges\"><span class=\"badge\">{0}</span> {0} friends {1}! You just earned a badge.</div>".format(
                     won_badge.num, verb))
             user.wonbadge_set.all().update(message_shown=True)
+        return None
+
+
+class UAMiddleware(object):
+    """
+    Intercepts requests from user agents known to be unsupported, returning
+    them a message explaining that we do not support their browser and
+    proposing a course of action.
+    """
+    def process_request(self, request):
+        ua_string = request.META['HTTP_USER_AGENT']
+        bad_agents = [
+            'MSIE 6.',
+            'MSIE 7.',
+            'MSIE 8.',
+        ]
+        if any(agent in ua_string for agent in bad_agents):
+            return HttpResponse(render_to_string('unsupported_ua.html'))
         return None
