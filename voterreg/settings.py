@@ -169,7 +169,6 @@ if environment in ["production", "staging"]:
 
     INSTALLED_APPS += ("gunicorn", "storages",)
 
-    STATIC_URL = 'https://s3.amazonaws.com/voterreg.fb/'
     INSTALLATION = "production"
 
     VOTIZEN_API_KEY = environ.get("VOTIZEN_API_KEY", "")
@@ -202,6 +201,7 @@ if environment == 'staging':
     USE_FAKE_VOTIZEN_API = True
     FACEBOOK_OG_PLEDGE_ACTION = 'votewithfriends-stag:pledge'
     FACEBOOK_OG_VOTE_ACTION = 'votewithfriends-stag:vote'
+    STATIC_URL = 'https://s3.amazonaws.com/voterreg.fb.dev/'
 
 if environment == 'production':
     FACEBOOK_APP_ID = "220561354738022"
@@ -213,6 +213,7 @@ if environment == 'production':
     FACEBOOK_OG_PLEDGE_ACTION = 'votewithfriends:pledge'
     FACEBOOK_OG_VOTE_ACTION = 'votewithfriends:vote'
     FACEBOOK_APP_ACCESS_TOKEN = environ.get("FACEBOOK_APP_ACCESS_TOKEN", "")
+    STATIC_URL = 'https://s3.amazonaws.com/voterreg.fb/'
 
 if environment == 'dev':
     BASE_URL = "http://local.voterreg.org:8000"
