@@ -749,7 +749,8 @@ def _members_qs(user, section, voting_block):
     elif section == 'friends':
         return User.objects.filter(votingblockmember__voting_block=voting_block, friendship__fb_uid=user.fb_uid)
     elif section == 'not_invited':
-        return user.friends.invited(False)
+        return user.friends.filter(~Q(fb_uid__in=\
+            User.objects.filter(votingblockmember__voting_block=voting_block).values_list('fb_uid', flat=True)))
 
 def voting_blocks_item(request, id, section=None):
     id = int(id)
@@ -768,6 +769,7 @@ def voting_blocks_item(request, id, section=None):
         "sections": sections,
         "section": section,
         "dont_friendship": section != 'not_invited',
+        "dont_status": True,
         "voting_block": voting_block,
         "friends": _members_qs(user, section, voting_block)[:16],
         "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id).count(),

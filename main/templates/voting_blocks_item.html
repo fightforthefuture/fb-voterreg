@@ -57,13 +57,15 @@
     </div>
 </div>
 {% endblock %}
-//TODO: target=/my_vote&after=/voting_blocks/3
 
 {% block scripts %}
 <script>
     var LOAD_MORE_URL = "{% url 'main:voting_blocks_item_page' id=voting_block.id section=section %}";
     var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
-    var INVITE_TARGET_URL = "{{FACEBOOK_CANVAS_PAGE}}?target=/my_vote&after=/voting_blocks/{{ voting_block.id }}";
+    var INVITE_LINK = "{{FACEBOOK_CANVAS_PAGE}}?target=/my_vote&after=/voting_blocks/{{ voting_block.id }}/join";
+    var INVITE_NAME = "Join me in the {{ voting_block.name }} voting block";
+    var INVITE_DESCRIPTION = "{{ voting_block.description }}. The election is almost here. We need your help getting more of our friends to vote than ever before. Support this voting block, look up your friends' voting history, and help your friends vote this year.";
+    var INVITE_PICTURE = "https://s3.amazonaws.com/voterreg.fb/img/voting-block-436x280.png"; //"{% thumbnail mvb.icon 50X50 crop %}";
 </script>
 <script src="{% static 'js/invite_friend_grid.js' %}"></script>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>

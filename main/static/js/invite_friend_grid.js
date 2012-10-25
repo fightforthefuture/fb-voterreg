@@ -26,7 +26,10 @@ $(function() {
                 method: "send",
                 to: fbuid,
                 name: "Vote. And help me get all our friends to vote.",
-                link: window['INVITE_TARGET_URL'] || window['FACEBOOK_CANVAS_PAGE']
+                link: window['INVITE_LINK'] || window['FACEBOOK_CANVAS_PAGE'],
+                name: window['INVITE_NAME'],
+                description: window['INVITE_DESCRIPTION'],
+                picture: window['INVITE_PICTURE']
             },
             function(response) {
                 inviteFriendSucceeded(fbuid, $link);
