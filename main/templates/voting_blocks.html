@@ -12,7 +12,6 @@
 
 {% block content %}
 <div class="voting-blocks white-box cf">
-    <h1>The most powerful way to rally voters for your cause, site, or group</h1>
     {% if not voting_block_note %}
     <div class="note">
         <p><strong>Before you get started!</strong>  Three things to know about voting blocks:</p>
@@ -34,21 +33,25 @@
         </div>
     </div>
     <div class="own">
+        <h1>Rally your friends!</h1>
+        <p class="info">Voting blocks are a powerful way to rally and organize friends who support your cause, website, or group to vote on November 6th.</p>
         <a class="btn btn-green btn-large create" href="{% url 'main:voting_blocks_create' %}"><i class="icon-plus"></i> Create Voting Block</a>
         <p>Before you create a new voting block, make sure one doesn’t exist already</p>
         {% if my_voting_blocks %}
-        <h2>My voting blocks</h2>
-        <ul>
-            {% for mvb in my_voting_blocks %}
-            <li class="cf">
-                <p class="name">{{ forloop.counter}}. <a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
-                <p class="count">{{ mvb.votingblockmember_set.count }} members</p>
-                {% thumbnail mvb.icon 56x56 crop as imgsrc %}
-                <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-56x56.png' %}{% endif %}">
-                <p class="description">{{ mvb.description }}</p>
-            </li>
-            {% endfor %}
-        </ul>
+            <div class="mine">
+                <h2>My Voting Blocks</h2>
+                <ul>
+                    {% for mvb in my_voting_blocks %}
+                    <li class="cf">
+                        <p class="name">{{ forloop.counter}}. <a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
+                        <p class="count">{{ mvb.votingblockmember_set.count }} members</p>
+                        {% thumbnail mvb.icon 56x56 crop as imgsrc %}
+                        <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-56x56.png' %}{% endif %}">
+                        <p class="description">{{ mvb.description }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
     </div>
 
