@@ -158,12 +158,12 @@ def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     after = request.session.get('after', None)
 
-    if user.pledged and user.registered and user.voted and not 'nav' in request.GET:
+    if user.pledged and user.voted and not 'nav' in request.GET:
         if after:
             return redirect(after)
         return redirect('main:invite_friends_2')
 
-    if user.pledged and user.registered:
+    if user.pledged:
 
         # The user has explicitly navigated here, either from the navigation or
         # the pledge form, so we will show them the voting form. In other
@@ -177,31 +177,9 @@ def my_vote(request):
 
         return redirect('main:invite_friends_2')
 
-    elif user.registered:
-        return redirect('main:my_vote_pledge')
     else:
-        return redirect('main:my_vote_register')
+        return redirect('main:my_vote_pledge')
 
-
-def my_vote_register(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    context = {
-        "page": "register"
-    }
-    if user.location_city:
-        context["location"] = "{0}, {1}".format(
-            user.location_city, user.location_state)
-    if user.birthday:
-        context["birthday"] = user.birthday.strftime("%b %d, %Y")
-    return render_to_response(
-        "my_vote_register.html", 
-        {
-            'page': 'my_vote',
-            'section': 'register',
-            'user': user,
-            "name": user.name,
-        },
-        context_instance=RequestContext(request))
 
 def my_vote_pledge(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
@@ -348,9 +326,6 @@ def _send_join_email(user, request):
 def _friend_list(user):
     friends = list(user.friendship_set.order_by("-display_ordering")[:4])
     return sorted(friends, key=lambda f: f.name)
-
-def register(request):
-    return redirect('main:my_vote_register')
 
 
 def pledge(request):

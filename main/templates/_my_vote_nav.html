@@ -2,12 +2,6 @@
 
 <ul class="filters steps cf">
 
-    {% comment %}Translators: group of friends the user hasn't yet invited to the app{% endcomment %}
-    <li class="
-        {% if section == "register" %}selected {% endif %}
-        {% if not user.registered %}unhecked {% endif %}
-    "><a href="{% url 'main:my_vote_register' %}">Register</span></a></li>
-
     {% comment %}Translators: group of friends the user has invited to the app{% endcomment %}
     <li class="
         {% if section == "pledge" %}selected {% endif %}

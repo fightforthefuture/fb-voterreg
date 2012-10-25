@@ -21,7 +21,7 @@
         <li{% if section == "not_pledged" %} class="selected"{% endif %} id="not_pledged_friends"><a href="{% url 'main:invite_friends_2' 'not_pledged' %}">Not pledged yet <span class="count">(<span class="num">{{ num_not_pledged }}</span>)</span></a></li>
 
         {% comment %}Translators: group of friends the have registered to vote{% endcomment %}
-        <li{% if section == "registered" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'registered' %}">Registered <span class="count">({{ num_registered }})</span></a></li>
+        <li{% if section == "registered" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'registered' %}">Registered to Vote <span class="count">({{ num_registered }})</span></a></li>
 
         {% comment %}Translators: group of friends who have pledged to vote{% endcomment %}
         <li{% if section == "pledged" %} class="selected"{% endif %}><a href="{% url 'main:invite_friends_2' 'pledged' %}">Pledged <span class="count">({{ num_pledged }})</span></a></li>
