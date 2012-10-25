@@ -617,11 +617,13 @@ def unsubscribe(request):
 def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
     filter = filter if filter in ['popular', 'near', 'friends'] else 'popular'
     result = {'filters': [], 'list': [] }
+
     myvbids = [myvb.id for myvb in myvbs]
+    baseq = VotingBlock.objects.all()
+    #baseq = VotingBlock.objects.filter(~Q(id__in=myvbids))
 
     #popular
-    popularq = VotingBlock.objects\
-        .filter(~Q(id__in=myvbids))\
+    popularq = baseq\
         .annotate(count=Count('votingblockmember'))
     if text:
         popularq = popularq.filter(Q(name__icontains=text) | Q(description__icontains=text))
@@ -629,8 +631,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
     query = popularq.order_by('-count')
 
     #near
-    nearq = VotingBlock.objects\
-        .filter(~Q(id__in=myvbids))\
+    nearq = baseq\
         .filter(Q(created_by__location_city=user.location_city, created_by__location_state=user.location_state)\
                 | Q(created_by__location_state=user.location_state))\
         .extra(select={'distance': "CASE WHEN location_city='%s' AND location_state='%s' THEN 2 WHEN location_state='%s' THEN 1 ELSE 0 END"\
@@ -643,8 +644,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
         query = nearq
 
     #friends
-    friendsq = VotingBlock.objects\
-        .filter(~Q(id__in=myvbids))\
+    friendsq = baseq\
         .filter(votingblockmember__member__friendship__fb_uid=user.fb_uid)\
         .distinct()\
         .annotate(count=Count('votingblockmember'))
@@ -656,7 +656,11 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
 
     #apply
     #TODO: full text search
-    result['list'] = query[skip:skip+take]
+
+    result['list'] = []
+    for item in query[skip:skip+take]:
+        item.joined = item.id in myvbids
+        result['list'].append(item)
 
     return result
 
