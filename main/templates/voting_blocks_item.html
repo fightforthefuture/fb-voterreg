@@ -35,7 +35,7 @@
             {% endif %}
             <div class="social">
                 <fb:like href="{{ voting_block.share_url }}" send="true" layout="button_count" width="175" show_faces="false"></fb:like>
-                <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ voting_block.share_url }}" data-text="{{ voting_block.name }}" data-count="none" data-dnt="true">Tweet</a>
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ voting_block.share_url }}" data-text="Join '{{ voting_block.name }}' in Vote With Friends" data-count="none" data-dnt="true">Tweet</a>
             </div>
             <div class="permanent-link">
                 <input type="hidden" id="id_permanent_link" value="{{ voting_block.share_url }}">
