@@ -11,32 +11,32 @@
 
 {% block content %}
 <form class="voting-blocks-create white-box" method="post" enctype="multipart/form-data">
-    <h1>Creating a voting block</h1>
+    <h1>{% trans "Creating a voting block" %}</h1>
     {% csrf_token %}
     <div class="block cf">
         <div class="data">
             <div class="field{% if form.name.errors %} field-error{% endif %}">
                 {{ form.name }}
-                <p class="help">80 chars</p>
+                <p class="help">{% trans "80 chars" %}</p>
                 {{ form.name.errors }}
             </div>
             <div class="field{% if form.description.errors %} field-error{% endif %}">
                 {{ form.description }}
-                <p class="help">160 chars</p>
+                <p class="help">{% trans "160 chars" %}</p>
                 {{ form.description.errors }}
             </div>
             <div class="field{% if form.icon.errors %} field-error{% endif %}">
                 {{ form.icon }}
-                <p class="help">Optional</p>
+                <p class="help">{% trans "Optional" %}</p>
                 {{ form.icon.errors }}
             </div>
         </div>
         <div class="sample">
-            <p class="info">Your voting block with show this notice:</p>
+            <p class="info">{% trans "Here is how it will look:" %}</p>
             <ul>
                 <li>
                     <p id="sample-name" class="name">{% if form.name.value %}{{ form.name.value }}{% else %}Voting block name{% endif %}</p>
-                    <p class="members">1,234 members</p>
+                    <p class="members">{% trans "1,234 members" %}</p>
                     <img src="{% static 'img/voting-block.png' %}" />
                     <p id="sample-description" class="description">{% if form.description.value %}{{ form.description.value }}{% else %}Description / share text{% endif %}</p>
                 </li>
@@ -65,15 +65,16 @@
             </div>
         </div>
         <div class="sample">
-            <p class="info">Here is how it will look:</p>
-            <p class="organization">This voting block belonges to an orginization:
+            <p class="info">{% trans "Your voting block with show this notice:" %}</p>
+            <p class="organization">
+                This voting block belonges to an orginization:
                 <a target="_blank" id="sample-organization-website" href="{% if form.organization_website.value %}{{ form.organization_website.value }}{% else %}#{% endif %}"><span id="sample-organization-name">{% if form.organization_name.value %}{{ form.organization_name.value }}{% else %}Organization Name{% endif %}</span></a>.
                 When you join, they can use your name and email according to their <a target="_blank" id="sample-organization-privacy-policy" href="{% if form.organization_privacy_policy.value %}{{ form.organization_privacy_policy.value }}{% else %}#{% endif %}">Privacy Policy</a>.</p>
         </div>
     </div>
     <div class="actions cf">
-        <a class="btn btn-large" href="{% url 'main:voting_blocks' %}">Cancel</a>
-        <input type="submit" class="btn btn-large btn-green" value="Create Voting Block" />
+        <a class="btn btn-large" href="{% url 'main:voting_blocks' %}">{% trans "Cancel" %}</a>
+        <input type="submit" class="btn btn-large btn-green" value="{% trans "Create Voting Block" %}" />
     </div>
 </form>
 {% endblock %}
