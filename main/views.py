@@ -651,7 +651,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
         .filter(~Q(id__in=myvbids))\
         .annotate(count=Count('votingblockmember'))
     if text:
-        popularq = popularq.filter(Q(name__contains=text) | Q(description__contains=text))
+        popularq = popularq.filter(Q(name__icontains=text) | Q(description__icontains=text))
     result['filters'].append({'name': 'popular', 'title': 'Most popular', 'active': filter == 'popular'})
     query = popularq.order_by('-count')
 
@@ -664,7 +664,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
                 % (user.location_city, user.location_state, user.location_state,)})\
         .order_by('-distance')
     if text:
-        nearq = nearq.filter(Q(name__contains=text) | Q(description__contains=text))
+        nearq = nearq.filter(Q(name__icontains=text) | Q(description__icontains=text))
     result['filters'].append({'name': 'near', 'count': nearq.count(), 'title': 'Near me', 'active': filter == 'near'})
     if filter == 'near':
         query = nearq
@@ -676,7 +676,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
         .distinct()\
         .annotate(count=Count('votingblockmember'))
     if text:
-        friendsq = friendsq.filter(Q(name__contains=text) | Q(description__contains=text))
+        friendsq = friendsq.filter(Q(name__icontains=text) | Q(description__icontains=text))
     result['filters'].append({'name': 'friends', 'count': friendsq.count(), 'title': 'Friends are members', 'active': filter == 'friends'})
     if filter == 'friends':
         query = friendsq.order_by('-count')
