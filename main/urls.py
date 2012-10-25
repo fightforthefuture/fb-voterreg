@@ -51,7 +51,7 @@ urlpatterns += patterns(
     url(r"^no_cookies$",
         TemplateView.as_view(template_name="no_cookies.html"),
         name="no_cookies"),
-    url(r"^voting_blocks/share/(?P<pk>\d+)$",
+    url(r"^block/(?P<pk>\d+)$",
         VotingBlockShareView.as_view(),
         name="voting_block_share"),
     url(r"^notifications$",

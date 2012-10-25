@@ -335,7 +335,7 @@ class VotingBlock(models.Model):
     @property
     def share_url(self):
         return '%s%s' % (
-            settings.BASE_URL,
+            settings.SHARING_URL,
             reverse('main:voting_block_share', args=[self.pk]),
         )
 

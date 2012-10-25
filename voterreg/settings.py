@@ -197,6 +197,7 @@ if environment == 'staging':
     FACEBOOK_APP_ID = "381227845280044"
     FACEBOOK_APP_ACCESS_TOKEN = "381227845280044|LtITwMOMXxZcktAtz0fQQbvD0e8"
     BASE_URL = "https://voterreg-facebook-staging.herokuapp.com"
+    SHARING_URL = BASE_URL
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends-stag/"
     USE_FAKE_VOTIZEN_API = True
     FACEBOOK_OG_PLEDGE_ACTION = 'votewithfriends-stag:pledge'
@@ -205,6 +206,7 @@ if environment == 'staging':
 if environment == 'production':
     FACEBOOK_APP_ID = "220561354738022"
     BASE_URL = "https://voterreg-facebook.herokuapp.com"
+    SHARING_URL = "http://app.votewithfriends.net"
     FACEBOOK_CANVAS_PAGE = "https://apps.facebook.com/votewithfriends/"
     AWS_STORAGE_BUCKET_NAME = 'voterreg.fb'
     AWS_S3_CUSTOM_DOMAIN = "s3.amazonaws.com/voterreg.fb"
@@ -214,6 +216,7 @@ if environment == 'production':
 
 if environment == 'dev':
     BASE_URL = "http://local.voterreg.org:8000"
+    SHARING_URL = BASE_URL
     KM_CODE = "cccb2596f575fe692e22013c8329c5dbf98e4db7"
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
