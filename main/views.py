@@ -549,7 +549,6 @@ def mission(request, batch_type=BATCH_NEARBY):
     f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)
     recs = f_qs.filter(invite_date__isnull=True)[:2]
     uninvited_batch_1 = None if len(recs) < 1 else recs[0]
-    uninvited_batch_2 = None if len(recs) < 2 else recs[1]
     num_invited = user.friends.filter(batch_type=batch_type).invited().count()
     num_pledged = user.friends.filter(batch_type=batch_type).pledged().count()
     num_friends = user.friends.filter(batch_type=batch_type).count()
@@ -559,7 +558,6 @@ def mission(request, batch_type=BATCH_NEARBY):
         "batch_type": batch_type,
         "missions": user.mission_set.all(),
         "uninvited_batch_1": uninvited_batch_1,
-        "uninvited_batch_2": uninvited_batch_2,
         "friends": _mission_friends_qs(user, batch_type), 
         "num_invited": num_invited,
         "num_pledged": num_pledged,
