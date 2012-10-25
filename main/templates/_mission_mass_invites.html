@@ -1,0 +1,8 @@
+{% load url from future %}
+
+<div class="mission-box-mass">
+    <h2>Mass Invites</h2>
+    <div data-id="0" id="uninvited-0" class="uninvited">
+        {% include "_mission_uninvited_batch.html" with uninvited_batch=uninvited_batch %}
+    </div>
+</div>
