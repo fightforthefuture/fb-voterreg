@@ -791,3 +791,22 @@
         position: relative;
         top: 3px;
     }
+
+.permanent-link {
+    margin: 20px 0 0 0;
+}
+
+.permanent-link input {
+    border: 1px solid #BABFC6;
+    background-color: #EAEEF5;
+    font-size: 13px;
+    padding: 5px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    outline: none;
+    width: 228px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+}
