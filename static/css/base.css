@@ -1289,11 +1289,13 @@ a.load-more:hover{
 }
 
 .white-box h1 {
-    text-align: left;
-    font-size: 19px;
+    text-align: center;
+    font-size: 1.55em;
     margin: 0;
     font-family: Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: normal;
+    letter-spacing: -0.05em;
+    color: #3b5597;
 }
 
 .white-box h1 + p {
@@ -1302,4 +1304,10 @@ a.load-more:hover{
     margin: 3px 0 30px 0;
     padding:  0 0 12px;
     border-bottom: 1px solid #ddd;
+}
+
+.white-box p.info{
+    font-size: 15px;
+    line-height: 1.27;
+    margin-bottom: 12px;
 }
