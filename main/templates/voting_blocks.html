@@ -42,7 +42,7 @@
             {% for mvb in my_voting_blocks %}
             <li class="cf">
                 <p class="name">{{ forloop.counter}}. <a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
-                <p class="count">({{ mvb.votingblockmember_set.count }} members)</p>
+                <p class="count">{{ mvb.votingblockmember_set.count }} members</p>
                 {% thumbnail mvb.icon 56x56 crop as imgsrc %}
                 <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-56x56.png' %}{% endif %}">
                 <p class="description">{{ mvb.description }}</p>

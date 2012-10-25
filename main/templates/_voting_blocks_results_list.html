@@ -7,7 +7,7 @@
     <li>
         <a class="btn btn-blue" href="{% url 'main:voting_blocks_item_join' id=mvb.id %}">Join</a>
         <p class="name"><a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
-        <p class="members">({{ mvb.votingblockmember_set.count }} members)</p>
+        <p class="members">{{ mvb.votingblockmember_set.count }} members</p>
         {% thumbnail mvb.icon 80x68 crop as imgsrc %}
         <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-80x68.png' %}{% endif %}">
         <p class="description">{{ mvb.description }}</p>
