@@ -39,7 +39,7 @@
             </div>
             <div class="permanent-link">
                 {% url 'main:voting_blocks_item_join' id=voting_block.id as permanent_link %}
-                <input type="text" id="id_permanent_link" value="{{ FACEBOOK_CANVAS_PAGE }}?target={{ permanent_link|urlencode }}">
+                <input type="text" id="id_permanent_link" value="{{ voting_block.share_url }}">
                 {% clippy "id_permanent_link" "#EEEEEE" %}
             </div>
         </div>
