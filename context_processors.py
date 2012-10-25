@@ -46,7 +46,7 @@ def fb_user(request):
         return {
             'fb_user': data[0]
         }
-    except TypeError:
+    except (TypeError, facebook.GraphAPIError,):
         return {}
 
 
