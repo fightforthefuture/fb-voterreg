@@ -325,7 +325,7 @@ class Friendship(models.Model):
 class VotingBlock(models.Model):
     name = models.CharField(max_length=80)
     description = models.CharField(max_length=160)
-    icon = models.ImageField(upload_to='voting_blocks')
+    icon = models.ImageField(null=True, blank=True, upload_to='voting_blocks')
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User)
     organization_name = models.CharField(max_length=40, null=True, blank=True)

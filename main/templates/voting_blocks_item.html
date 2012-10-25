@@ -15,8 +15,8 @@
     <h1>{{ voting_block.name }}</h1>
     <h2>{{ voting_block.description }}</h2>
     <div class="info cf">
-        {% thumbnail mvb.icon 436x280 crop as imgsrc %}
-        <img src="{% if imgsrc %}{{ imgsrc }}{% else %}{% static 'img/voting-block-436x280.png' %}{% endif %}">
+        {% thumbnail voting_block.icon 436x280 crop as imgsrc %}
+        <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-436x280.png' %}{% endif %}">
         <div class="data">
             <p class="count"><strong>{{ voting_block_members_count }}</strong> members</p>
             {% if voting_block_members_today_count > 0 %}
@@ -59,13 +59,14 @@
 {% endblock %}
 
 {% block scripts %}
+{% thumbnail voting_block.icon 90X90 crop as fbimgsrc %}
 <script>
     var LOAD_MORE_URL = "{% url 'main:voting_blocks_item_page' id=voting_block.id section=section %}";
     var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
     var INVITE_LINK = "{{FACEBOOK_CANVAS_PAGE}}?target=/my_vote&after=/voting_blocks/{{ voting_block.id }}/join";
-    var INVITE_NAME = "Join me in the {{ voting_block.name }} voting block";
-    var INVITE_DESCRIPTION = "{{ voting_block.description }}. The election is almost here. We need your help getting more of our friends to vote than ever before. Support this voting block, look up your friends' voting history, and help your friends vote this year.";
-    var INVITE_PICTURE = "https://s3.amazonaws.com/voterreg.fb/img/voting-block-436x280.png"; //"{% thumbnail mvb.icon 50X50 crop %}";
+    var INVITE_NAME = "Join me in the {{ voting_block.name|escapejs }} voting block";
+    var INVITE_DESCRIPTION = "{{ voting_block.description|escapejs }}. The election is almost here. We need your help getting more of our friends to vote than ever before. Support this voting block, look up your friends' voting history, and help your friends vote this year.";
+    var INVITE_PICTURE = "{% if fbimgsrc %}{{ fbimgsrc.url }}{% else %}{% static 'img/voting-block-90x90.png' %}{% endif %}";
 </script>
 <script src="{% static 'js/invite_friend_grid.js' %}"></script>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
