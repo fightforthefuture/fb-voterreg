@@ -25,3 +25,11 @@ Want to develop locally? Easy! Here are the steps:
 
         heroku run 'python manage.py clearuser "Holmes Wilson"'
 
+
+## Heroku Deploy (staging)
+
+    git remote add staging git@heroku.com:voterreg-facebook-staging.git
+
+
+    git push staging master
+    heroku run --app=voterreg-facebook-staging ./manage.py collectstatic
