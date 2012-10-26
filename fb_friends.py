@@ -1,5 +1,5 @@
 import facebook
-from voterapi import fetch_voter_from_fb_profile
+from voterapi import fetch_voters_from_fb_profiles
 from main.models import User, Friendship, BATCH_NEARBY, \
     BATCH_FAR_FROM_HOME, BATCH_BARELY_LEGAL, WonBadge, \
     LastAppNotification, BADGE_PLEDGED, BADGE_VOTED
@@ -52,6 +52,9 @@ def _make_initial_batches(user, fb_friends, found_uids):
     return newly_found_uids
 
 def _make_main_batches(user_id, access_token, fb_friends, found_uids):
+    voters = fetch_voters_from_fb_profiles(
+        [FacebookProfile(f) for f in fb_friends if f["uid"] not in found_uids])
+    voter_map = dict((v.fb_uid, v) for v in voters)    
     for fb_friend in fb_friends:
         user = User.objects.get(id=user_id)
         uid = fb_friend["uid"]
@@ -62,7 +65,7 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
         user.update_friends_fetch()
         user.save()
         profile = FacebookProfile(fb_friend)
-        voter = fetch_voter_from_fb_profile(profile)
+        voter = voter_map[uid]
         f = Friendship.create_from_fb_profile(user, profile)
         if voter and voter.registered:
             f.registered = True
@@ -74,18 +77,20 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
 
 def _update_registered_status_of_all(user_id, fb_friends):
     user = User.objects.get(id=user_id)
+    profiles_to_update = []
     for fb_friend in fb_friends:
         f = Friendship.objects.filter(user=user, fb_uid=fb_friend["uid"]).all()[:1]
         if len(f) == 0:
             continue
         f = f[0]
         if not f.votizen_id:
-            profile = FacebookProfile(fb_friend)
-            voter = fetch_voter_from_fb_profile(profile)
-            if voter:
-                f.votizen_id = voter.id
-                f.registered = voter.registered
-                f.save()
+            profiles_to_update.append(FacebookProfile(fb_friend))
+    voters = fetch_voters_from_fb_profiles(profiles_to_update)
+    for voter in voters:
+        f = Friendship.objects.get(user=user, fb_uid=voter.fb_uid)
+        f.votizen_id = voter.id
+        f.registered = voter.registered
+        f.save()
 
 def _make_friendships(user_id, access_token, fb_friends):
     user = User.objects.get(id=user_id)
