@@ -824,5 +824,6 @@ def voting_blocks_item_leave(request, id):
     return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': id}))
 
 def test_logger_error(request):
-    logging.error("hit test logger error page")
+    from main.tasks import raise_exception
+    raise_exception.delay("what")
     return render_to_response("500.html")
