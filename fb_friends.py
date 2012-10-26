@@ -77,18 +77,20 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
 
 def _update_registered_status_of_all(user_id, fb_friends):
     user = User.objects.get(id=user_id)
+    profiles_to_update = []
     for fb_friend in fb_friends:
         f = Friendship.objects.filter(user=user, fb_uid=fb_friend["uid"]).all()[:1]
         if len(f) == 0:
             continue
         f = f[0]
         if not f.votizen_id:
-            profile = FacebookProfile(fb_friend)
-            voter = fetch_voter_from_fb_profile(profile)
-            if voter:
-                f.votizen_id = voter.id
-                f.registered = voter.registered
-                f.save()
+            profiles_to_update.append(FacebookProfile(fb_friend))
+    voters = fetch_voters_from_fb_profiles(profiles_to_update)
+    for voter in voters:
+        f = Friendship.objects.get(user=user, fb_uid=voter.fb_uid)
+        f.votizen_id = voter.id
+        f.registered = voter.registered
+        f.save()
 
 def _make_friendships(user_id, access_token, fb_friends):
     user = User.objects.get(id=user_id)

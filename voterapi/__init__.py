@@ -33,10 +33,10 @@ def _params_from_fb_profile(profile, include_address):
         params["city"] = profile.location_city
         params["state"] = profile.location_state
     if profile.dob_month:
-        params["dob_month"] = profile.dob_month
-        params["dob_day"] = profile.dob_day
+        params["dob_month"] = str(profile.dob_month)
+        params["dob_day"] = str(profile.dob_day)
     if profile.dob_year:
-        params["dob_year"] = profile.dob_year
+        params["dob_year"] = str(profile.dob_year)
     return params
 
 def fetch_voters_from_fb_profiles(fb_profiles):
@@ -68,8 +68,9 @@ def _fetch_voters_from_fb_profiles(fb_profiles):
     return voter_records
 
 def _relative_uri(profile, include_address):
-    return _RELATIVE_URL + "?" + urlencode(_params_from_fb_profile(
-            profile, include_address))
+    params = _params_from_fb_profile(profile, include_address)
+    return _RELATIVE_URL + "?" + urlencode(
+        dict([k, v.encode('utf-8')] for k, v in params.items()))
 
 def _batch_post(request_list):
 #    if settings.USE_FAKE_VOTIZEN_API:
@@ -141,7 +142,6 @@ def _fetch_voter_batch(unfetched_both_steps, unfetched_last_step, voter_records)
                 voter_records.append(VoterRecord.objects.get(
                         fb_uid=profile.uid))
     return unfetched_both_steps, unfetched_last_step
-    
 
 def fetch_voter_from_fb_profile(fb_profile):
     fb_uid = fb_profile.uid
