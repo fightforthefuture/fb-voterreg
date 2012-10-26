@@ -69,8 +69,13 @@ class FacebookMiddleware(object):
             request.session["fb_user"] = fb_user
             request.session.modified = True
         request.facebook = request.session.get("fb_user", None)
-
+        if not request.facebook and request.method == "GET":
+            retry_url = "{0}?target={1}".format(
+                settings.FACEBOOK_CANVAS_PAGE, request.path)
+            return HttpResponse(
+                "<script>top.location.href='{0}';</script>".format(retry_url))
         return None
+
 
     def process_exception(self, request, exception):
         """
