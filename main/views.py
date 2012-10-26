@@ -547,8 +547,7 @@ def mission(request, batch_type=BATCH_NEARBY):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)
     recs = f_qs.filter(invite_date__isnull=True)[:2]
-    uninvited_batch_1 = None if len(recs) < 1 else recs[0]
-    uninvited_batch_2 = None if len(recs) < 2 else recs[1]
+    uninvited_batch = None if len(recs) < 1 else recs[0]
     num_invited = user.friends.filter(batch_type=batch_type).invited().count()
     num_pledged = user.friends.filter(batch_type=batch_type).pledged().count()
     num_friends = user.friends.filter(batch_type=batch_type).count()
@@ -557,8 +556,7 @@ def mission(request, batch_type=BATCH_NEARBY):
         "page": "missions",
         "batch_type": batch_type,
         "missions": user.mission_set.all(),
-        "uninvited_batch_1": uninvited_batch_1,
-        "uninvited_batch_2": uninvited_batch_2,
+        "uninvited_batch": uninvited_batch,
         "friends": _mission_friends_qs(user, batch_type), 
         "num_invited": num_invited,
         "num_pledged": num_pledged,
@@ -618,11 +616,13 @@ def unsubscribe(request):
 def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
     filter = filter if filter in ['popular', 'near', 'friends'] else 'popular'
     result = {'filters': [], 'list': [] }
+
     myvbids = [myvb.id for myvb in myvbs]
+    baseq = VotingBlock.objects.all()
+    #baseq = VotingBlock.objects.filter(~Q(id__in=myvbids))
 
     #popular
-    popularq = VotingBlock.objects\
-        .filter(~Q(id__in=myvbids))\
+    popularq = baseq\
         .annotate(count=Count('votingblockmember'))
     if text:
         popularq = popularq.filter(Q(name__icontains=text) | Q(description__icontains=text))
@@ -630,8 +630,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
     query = popularq.order_by('-count')
 
     #near
-    nearq = VotingBlock.objects\
-        .filter(~Q(id__in=myvbids))\
+    nearq = baseq\
         .filter(Q(created_by__location_city=user.location_city, created_by__location_state=user.location_state)\
                 | Q(created_by__location_state=user.location_state))\
         .extra(select={'distance': "CASE WHEN location_city='%s' AND location_state='%s' THEN 2 WHEN location_state='%s' THEN 1 ELSE 0 END"\
@@ -644,8 +643,7 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
         query = nearq
 
     #friends
-    friendsq = VotingBlock.objects\
-        .filter(~Q(id__in=myvbids))\
+    friendsq = baseq\
         .filter(votingblockmember__member__friendship__fb_uid=user.fb_uid)\
         .distinct()\
         .annotate(count=Count('votingblockmember'))
@@ -657,7 +655,11 @@ def _voting_blocks_search(user, myvbs, filter=None, text=None, skip=0, take=10):
 
     #apply
     #TODO: full text search
-    result['list'] = query[skip:skip+take]
+
+    result['list'] = []
+    for item in query[skip:skip+take]:
+        item.joined = item.id in myvbids
+        result['list'].append(item)
 
     return result
 
@@ -722,14 +724,15 @@ def _members_qs(user, section, voting_block):
     elif section == 'friends':
         return User.objects.filter(votingblockmember__voting_block=voting_block, friendship__fb_uid=user.fb_uid)
     elif section == 'not_invited':
-        return user.friends.filter(~Q(fb_uid__in=\
-            User.objects.filter(votingblockmember__voting_block=voting_block).values_list('fb_uid', flat=True)))
+        #return user.friends.filter(~Q(fb_uid__in=\
+        #    User.objects.filter(votingblockmember__voting_block=voting_block).values_list('fb_uid', flat=True)))
+        return user.friends.filter(batch_type=BATCH_REGULAR)
 
 def voting_blocks_item(request, id, section=None):
     id = int(id)
     voting_block = VotingBlock.objects.get(id=id)
     user = User.objects.get(fb_uid=request.facebook["uid"])
-    section = section or 'members'
+    section = section or 'not_invited'
     sections = [
         {'name': 'members', 'count': _members_qs(user, 'members', voting_block).count(), 'title': 'Members'},
         {'name': 'voted', 'count': _members_qs(user, 'voted', voting_block).count(), 'title': 'Voted'},
@@ -741,15 +744,39 @@ def voting_blocks_item(request, id, section=None):
         "page": "voting_blocks",
         "sections": sections,
         "section": section,
-        "dont_friendship": section != 'not_invited',
-        "dont_status": True,
         "voting_block": voting_block,
-        "friends": _members_qs(user, section, voting_block)[:16],
         "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id).count(),
         "voting_block_members_today_count": VotingBlockMember.objects.filter(voting_block_id=id,
             joined__gt=datetime.combine(datetime.now(), time.min)).count(),
         "voting_block_joined": VotingBlockMember.objects.filter(member=user, voting_block=id).count() > 0
     }
+
+    if section == "not_invited":
+        batch_type = int(BATCH_REGULAR)
+        user = User.objects.get(fb_uid=request.facebook["uid"])
+        f_qs = FriendshipBatch.objects.filter(user=user, type=batch_type)
+        recs = f_qs.filter(invite_date__isnull=True)[:2]
+        uninvited_batch = None if len(recs) < 1 else recs[0]
+        num_invited = user.friends.filter(batch_type=batch_type).invited().count()
+        num_pledged = user.friends.filter(batch_type=batch_type).pledged().count()
+        num_friends = user.friends.filter(batch_type=batch_type).count()
+        badge_cutoffs = filter(lambda x: x<=num_friends, BADGE_CUTOFFS)
+        context.update({
+            "batch_type": batch_type,
+            "uninvited_batch": uninvited_batch,
+            "friends": _mission_friends_qs(user, batch_type),
+            "num_invited": num_invited,
+            "num_pledged": num_pledged,
+            "num_friends": num_friends,
+            "badge_cutoffs": badge_cutoffs
+        })
+    else:
+        context.update({
+            "dont_friendship": True,
+            "dont_status": True,
+            "friends": _members_qs(user, section, voting_block)[:16],
+        })
+
     return render_to_response(
         "voting_blocks_item.html",
         context,
@@ -761,11 +788,20 @@ def voting_blocks_item_page(request, id, section):
     voting_block = VotingBlock.objects.get(id=id)
     user = User.objects.get(fb_uid=request.facebook["uid"])
     start = int(request.POST.get('start', 0))
-    friends = _members_qs(user, section, voting_block)[start:start+16]
+    context = { "voting_block": voting_block }
+    if section == "not_invited":
+        context.update({
+            'friends': _mission_friends_qs(user, BATCH_REGULAR, start)
+        })
+    else:
+        context.update({
+            'friends': _members_qs(user, section, voting_block)[start:start+16],
+            "dont_friendship": True,
+            "dont_status": True,
+        })
     return render_to_response(
         "_invite_friends_page.html",
-        { "friends": friends,
-          "voting_block":voting_block },
+        context,
         context_instance=RequestContext(request))
 
 

@@ -5,7 +5,9 @@
 
 {% for mvb in voting_blocks.list %}
     <li>
+        {% if not mvb.joined %}
         <a class="btn btn-blue" href="{% url 'main:voting_blocks_item_join' id=mvb.id %}">Join</a>
+        {% endif %}
         <p class="name"><a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
         <p class="members">{{ mvb.votingblockmember_set.count }} members</p>
         {% thumbnail mvb.icon 80x68 crop as imgsrc %}

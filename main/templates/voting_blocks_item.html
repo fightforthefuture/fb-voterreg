@@ -54,12 +54,26 @@
         {% endfor %}
     </ul>
     <div class="white-box">
-        <div class="cf" id="friends">
-            {% include "_invite_friends_page.html" %}
-            {% if friends %}
-            {% include "_invite_friends_buttons.html" %}
-            {% endif %}
-        </div>
+        {% if section == "not_invited" %}
+            <div class="cf">
+                {% include "_mission_mass_invites.html" %}
+                {% include "_mission_badges.html" %}
+            </div>
+            <div class="mission-box-individual">
+                <h2 class="cf">Individual Invites</h2>
+                <div id="friends">
+                    {% include "_invite_friends_page.html" %}
+                    {% include "_invite_friends_buttons.html" %}
+                </div>
+            </div>
+        {% else %}
+            <div class="cf" id="friends">
+                {% include "_invite_friends_page.html" %}
+                {% if friends %}
+                {% include "_invite_friends_buttons.html" %}
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -69,12 +83,15 @@
 <script>
     var LOAD_MORE_URL = "{% url 'main:voting_blocks_item_page' id=voting_block.id section=section %}";
     var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
+    var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
+    var MARK_MISSION_BATCH_INVITED = "{% url 'main:mark_mission_batch_invited' batch_type %}";
     var INVITE_LINK = "{{FACEBOOK_CANVAS_PAGE}}?target=/my_vote&after=/voting_blocks/{{ voting_block.id }}/join";
     var INVITE_NAME = "Join me in the {{ voting_block.name|escapejs }} voting block";
     var INVITE_DESCRIPTION = "{{ voting_block.description|escapejs }}. The election is almost here. We need your help getting more of our friends to vote than ever before. Support this voting block, look up your friends' voting history, and help your friends vote this year.";
     var INVITE_PICTURE = "{% if fbimgsrc %}{{ fbimgsrc.url }}{% else %}{% static 'img/voting-block-90x90.png' %}{% endif %}";
 </script>
 <script src="{% static 'js/invite_friend_grid.js' %}"></script>
+<script src="{% static 'js/mass_invites.js' %}"></script>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 {% endblock %}
 

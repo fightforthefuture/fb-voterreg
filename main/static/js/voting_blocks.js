@@ -76,6 +76,7 @@ $(function() {
 
     function checkScroll() {
         FB.Canvas.getPageInfo(function(info) {
+            if ($("#load_more_voting_blocks").length == 0) return;
             var buttonTop = $("#load_more_voting_blocks").offset().top - $(document).scrollTop();
             var scrollTop = info.clientHeight + info.offsetTop + info.scrollTop;
             if (scrollTop > buttonTop + 100) {

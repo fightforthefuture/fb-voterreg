@@ -1,0 +1,12 @@
+{% load url from future %}
+
+<div class="mission-box-badges">
+    <h2><strong id="num-invited">{{ num_invited }}</strong> Friend{{ num_invited|pluralize }} Invited</h2>
+    <div class="invited-badges">
+        {% include "_mission_badge_list.html" with num=num_invited type="orange" %}
+    </div>
+    <h2><strong>{{ num_pledged }}</strong> Friend{{ num_pledged|pluralize }} Pledged to Vote</h2>
+    <div class="uninvited-badges">
+        {% include "_mission_badge_list.html" with num=num_pledged type="green" %}
+    </div>
+</div>

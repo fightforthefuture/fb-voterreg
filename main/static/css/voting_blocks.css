@@ -585,7 +585,7 @@
 }
 
 
-.voting-blocks-item h1 {
+.voting-blocks-item > h1 {
     font-size: 53px;
     font-family: BebasNeueRegular, Helvetica, Arial;
     color: #3e4b63;
@@ -595,7 +595,7 @@
     word-wrap: break-word;
 }
 
-.voting-blocks-item h2 {
+.voting-blocks-item > h2 {
     color: #3b579a;
     text-align: center;
     font-size: 16px;
