@@ -73,20 +73,25 @@ def _relative_uri(profile, include_address):
         dict([k, v.encode('utf-8')] for k, v in params.items()))
 
 def _batch_post(request_list):
-#    if settings.USE_FAKE_VOTIZEN_API:
-#        elems = []
-#        for request in requests:
-#            if random() < 0.1:
-#                elems.push({ "status_code": 403 })
-#            elif random() < 0.1:
-#    else:
-    batch_url = _BATCH_URL + "?" + urlencode(
-        { "api_key": settings.VOTIZEN_API_KEY,
-          "format": "json"})
-    response = requests.post(
-        batch_url, 
-        data={ "batch": json.dumps(request_list) })
-    return response.status_code, response.json
+    if settings.USE_FAKE_VOTIZEN_API:
+        elems = []
+        for request in request_list:
+            objects = []
+            if choice([True, True, False]):
+                objects = [ { "id": "".join([choice(string.letters) for i in range(10)]),
+                              "is_registered_voter": choice([True, False]) } ]
+            body = json.dumps({ "objects": objects })
+            elems.append({ "body": body, "status_code": 200 })
+        time.sleep(0.8)
+        return 200, elems
+    else:
+        batch_url = _BATCH_URL + "?" + urlencode(
+            { "api_key": settings.VOTIZEN_API_KEY,
+              "format": "json"})
+        response = requests.post(
+            batch_url, 
+            data={ "batch": json.dumps(request_list) })
+        return response.status_code, response.json
 
 def _fetch_profiles(profiles, include_address):
     request_list = [ { "method": "GET",
