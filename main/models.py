@@ -345,6 +345,14 @@ class VotingBlock(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def has_backing_organization(self):
+        """
+        We operationally define a voting block as having a backing org if the
+        organization_name and organization_privacy_policy have non-null values.
+        """
+        return self.organization_name and self.organization_privacy_policy
+
 
 class VotingBlockMember(models.Model):
     voting_block = models.ForeignKey(VotingBlock)
