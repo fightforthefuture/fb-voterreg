@@ -66,7 +66,8 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
         if Friendship.objects.filter(user=user, fb_uid=uid).count() > 0:
             continue
         if uid not in voter_map:
-            logging.error("found uid not in voter map: {0}".format(uid))
+            from main.tasks import raise_exception
+            raise_exception.delay("found uid not in voter map: {0}".format(uid))
             continue
         profile = FacebookProfile(fb_friend)
         voter = voter_map[uid]

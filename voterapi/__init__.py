@@ -102,7 +102,8 @@ def _fetch_profiles(profiles, include_address):
     if status_code != 200:
         return profiles, [], []
     if len(request_list) > len(voters):
-        logging.error(
+        from main.tasks import raise_exception
+        raise_exception.delay(
             "posted {0} records to votizen but got {1} back".format(
                 len(request_list), len(voters)))
     index = 0

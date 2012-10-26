@@ -14,3 +14,7 @@ def send_notification(notification_id):
     from models import LastAppNotification
     notification = LastAppNotification.objects.get(id=notification_id)
     notification.send()
+
+@task()
+def raise_exception(text):
+    raise Exception(text)
