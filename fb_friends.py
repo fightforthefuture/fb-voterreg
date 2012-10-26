@@ -8,8 +8,6 @@ from fb_utils import FacebookProfile
 from datetime import datetime, date
 import logging
 
-logger = logging.getLogger(__name__)
-
 def _create_from_existing_users(user, fb_friends):
     """ Creates Friendships using existing Users """
     found_uids = set()
@@ -68,7 +66,7 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
         if Friendship.objects.filter(user=user, fb_uid=uid).count() > 0:
             continue
         if uid not in voter_map:
-            logger.error("found uid not in voter map: {0}".format(uid))
+            logging.error("found uid not in voter map: {0}".format(uid))
             continue
         profile = FacebookProfile(fb_friend)
         voter = voter_map[uid]

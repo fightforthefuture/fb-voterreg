@@ -7,6 +7,7 @@ from main.views import NotificationCheckView, VotingBlockShareView
 urlpatterns = patterns(
     "main.views",
     url(r"^$", "index", name="index"),
+    url(r"^logger_error$", "test_logger_error"),
     url(r"^fetch_me$", "fetch_me", name="fetch_me"),
     url(r"^fetch_friends$", "fetch_friends", name="fetch_friends"),
     url(r"^my_vote$", "my_vote", name="my_vote"),
