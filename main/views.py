@@ -15,8 +15,9 @@ from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseRedirect
+from django.core.urlresolvers import NoReverseMatch, reverse
+from django.http import Http404, HttpResponse, HttpResponseNotAllowed, \
+    HttpResponseRedirect
 from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
@@ -146,7 +147,10 @@ def index(request):
     if user.data_fetched:
         target_url = request.GET.get("target", None)
         if target_url:
-            return redirect(target_url)
+            try:
+                return redirect(target_url)
+            except NoReverseMatch:
+                raise Http404
         else:
             return _index_redirect(user, query_string)
     return render_to_response(
