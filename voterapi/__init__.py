@@ -29,7 +29,7 @@ def _params_from_fb_profile(profile, include_address):
     params = {
         "first_name": profile.first_name,
         "last_name": profile.last_name }
-    if include_address and profile.location_city:
+    if include_address and profile.location_city and profile.location_state:
         params["city"] = profile.location_city
         params["state"] = profile.location_state
     if profile.dob_month:
@@ -37,7 +37,6 @@ def _params_from_fb_profile(profile, include_address):
         params["dob_day"] = profile.dob_day
     if profile.dob_year:
         params["dob_year"] = profile.dob_year
-    params["api_key"] = settings.VOTIZEN_API_KEY
     return params
 
 def fetch_voters_from_fb_profiles(fb_profiles):
@@ -65,7 +64,7 @@ def _fetch_voters_from_fb_profiles(fb_profiles):
                 unfetched_last_step, 
                 voter_records)
         if len(unfetched_both_steps) > 0 or len(unfetched_last_step) > 0:
-            time.sleep(random())
+            time.sleep(0.5 + random())
     return voter_records
 
 def _relative_uri(profile, include_address):
@@ -80,23 +79,21 @@ def _batch_post(request_list):
 #                elems.push({ "status_code": 403 })
 #            elif random() < 0.1:
 #    else:
-    body = json.dumps(request_list)
-    return requests.post(_BATCH_URL, data=body)
+    batch_url = _BATCH_URL + "?" + urlencode(
+        { "api_key": settings.VOTIZEN_API_KEY,
+          "format": "json"})
+    response = requests.post(
+        batch_url, 
+        data={ "batch": json.dumps(request_list) })
+    return response.status_code, response.json
 
 def _fetch_profiles(profiles, include_address):
     request_list = [ { "method": "GET",
                        "relative_uri": _relative_uri(p, include_address) }
                      for p in profiles]
-    body = json.dumps(request_list)
-    print(body)
-    response = requests.post(_BATCH_URL, data=body)
-    print(response)
-    print(response.status_code)
-    print(response.text)
-    print(response.json)
-    if response.status_code != 200:
+    status_code, voters = _batch_post(request_list)
+    if status_code != 200:
         return profiles, [], []
-    voters = response.json
     index = 0
     unfetched = []
     voter_records = []
@@ -104,7 +101,6 @@ def _fetch_profiles(profiles, include_address):
     for voter in voters:
         if voter['status_code'] == 200:
             body = json.loads(voter["body"])
-            print(body)
             if "objects" in body and len(body["objects"]) > 0:
                 obj = body["objects"][0]
                 v = VoterRecord(
@@ -113,32 +109,37 @@ def _fetch_profiles(profiles, include_address):
                     registered=obj["is_registered_voter"])
                 try:
                     v.save()
+                    voter_records.append(v)
                 except IntegrityError:
-                    pass
-                voter_records.add(v)
+                    voter_records.append(VoterRecord.objects.get(fb_uid=profiles[index].uid))
             else:
-                not_found.add(profiles[index])
+                not_found.append(profiles[index])
         else:
-            unfetched.add(profiles[index])
+            unfetched.append(profiles[index])
         index += 1
     return unfetched, voter_records, not_found
 
 def _fetch_voter_batch(unfetched_both_steps, unfetched_last_step, voter_records):
-    unfetched_both_steps, new_voter_records, not_found_profiles = \
-        _fetch_profiles(unfetched_both_steps, False)
-    unfetched_last_step.extend(not_found_profiles)
-    voter_records.extend(new_voter_records)
-    unfetched_last_step, new_voter_records, not_found_profiles = \
-        _fetch_profiles(unfetched_last_step, True)
-    voter_records.extend(new_voter_records)
-    for profile in not_found_profiles:
-        try:
-            VoterRecord(
+    if len(unfetched_both_steps) > 0:
+        unfetched_both_steps, new_voter_records, not_found_profiles = \
+            _fetch_profiles(unfetched_both_steps, False)
+        unfetched_last_step.extend(not_found_profiles)
+        voter_records.extend(new_voter_records)
+    if len(unfetched_last_step) > 0:
+        unfetched_last_step, new_voter_records, not_found_profiles = \
+            _fetch_profiles(unfetched_last_step, True)
+        voter_records.extend(new_voter_records)
+        for profile in not_found_profiles:
+            v = VoterRecord(
                 fb_uid=profile.uid,
                 votizen_id="",
-                registered=False).save()
-        except IntegrityError:
-            pass
+                registered=False)
+            try:
+                v.save()
+                voter_records.append(v)
+            except IntegrityError:
+                voter_records.append(VoterRecord.objects.get(
+                        fb_uid=profile.uid))
     return unfetched_both_steps, unfetched_last_step
     
 
