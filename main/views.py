@@ -345,7 +345,7 @@ def _invite_friends_2_qs(user, section, start_index=0):
         f_qs = user.friends.pledged()
     elif section == "voted":
         f_qs = user.friends.voted()
-    return f_qs[start_index:(start_index + 16)]
+    return f_qs[start_index:(start_index + 64)]
 
 
 def invite_friends_2(request, section="not_invited"):
@@ -767,7 +767,7 @@ def voting_blocks_item(request, id, section=None):
         context.update({
             "batch_type": batch_type,
             "uninvited_batch": uninvited_batch,
-            "friends": _mission_friends_qs(user, batch_type),
+            "friends": _invite_friends_2_qs(user, 'not_invited'),
             "num_invited": num_invited,
             "num_pledged": num_pledged,
             "num_friends": num_friends,
@@ -777,7 +777,7 @@ def voting_blocks_item(request, id, section=None):
         context.update({
             "dont_friendship": True,
             "dont_status": True,
-            "friends": _members_qs(user, section, voting_block)[:16],
+            "friends": _members_qs(user, section, voting_block)[:64],
         })
 
     return render_to_response(
@@ -794,11 +794,11 @@ def voting_blocks_item_page(request, id, section):
     context = { "voting_block": voting_block }
     if section == "not_invited":
         context.update({
-            'friends': _mission_friends_qs(user, BATCH_REGULAR, start)
+            'friends': _invite_friends_2_qs(user, 'not_invited', start)
         })
     else:
         context.update({
-            'friends': _members_qs(user, section, voting_block)[start:start+16],
+            'friends': _members_qs(user, section, voting_block)[start:start+64],
             "dont_friendship": True,
             "dont_status": True,
         })
