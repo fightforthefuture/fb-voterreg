@@ -102,7 +102,10 @@ class BadgeMiddleware(object):
     def process_request(self, request):
         if not request.facebook:
             return None
-        user = User.objects.get(fb_uid=request.facebook['uid'])
+        try:
+            user = User.objects.get(fb_uid=request.facebook['uid'])
+        except User.DoesNotExist:
+            return None
         won_badges = user.wonbadge_set.filter(num__gt=0, message_shown=False)
         if len(won_badges) > 0:
             won_badge = won_badges[0]
