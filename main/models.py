@@ -125,7 +125,7 @@ class User(models.Model):
             datetime.now() - self.friends_fetch_last_activity
         if time_since_last_fetch.days > 0:
             return True
-        if time_since_last_fetch.seconds > 30:
+        if time_since_last_fetch.seconds > 600:
             return True
         return False # process is still running.
 

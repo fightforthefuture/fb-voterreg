@@ -6,6 +6,9 @@ from main.models import User, Friendship, BATCH_NEARBY, \
 from django.db import IntegrityError
 from fb_utils import FacebookProfile
 from datetime import datetime, date
+import logging
+
+logger = logging.getLogger(__name__)
 
 def _create_from_existing_users(user, fb_friends):
     """ Creates Friendships using existing Users """
@@ -54,16 +57,19 @@ def _make_initial_batches(user, fb_friends, found_uids):
 def _make_main_batches(user_id, access_token, fb_friends, found_uids):
     voters = fetch_voters_from_fb_profiles(
         [FacebookProfile(f) for f in fb_friends if f["uid"] not in found_uids])
-    voter_map = dict((v.fb_uid, v) for v in voters)    
+    voter_map = dict((v.fb_uid, v) for v in voters)
+    user = User.objects.get(id=user_id)
+    user.update_friends_fetch()
+    user.save()
     for fb_friend in fb_friends:
-        user = User.objects.get(id=user_id)
         uid = fb_friend["uid"]
         if uid in found_uids:
             continue
         if Friendship.objects.filter(user=user, fb_uid=uid).count() > 0:
             continue
-        user.update_friends_fetch()
-        user.save()
+        if uid not in voter_map:
+            logger.error("found uid not in voter map: {0}".format(uid))
+            continue
         profile = FacebookProfile(fb_friend)
         voter = voter_map[uid]
         f = Friendship.create_from_fb_profile(user, profile)

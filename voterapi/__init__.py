@@ -9,6 +9,9 @@ import json
 import facebook
 import time
 import string
+import logging
+
+logger = logging.getLogger(__name__)
 
 _URL = "https://api.votizen.com/v1/voter/"
 _RELATIVE_URL = "/v1/voter/"
@@ -100,6 +103,10 @@ def _fetch_profiles(profiles, include_address):
     status_code, voters = _batch_post(request_list)
     if status_code != 200:
         return profiles, [], []
+    if len(request_list) > len(voters):
+        logger.error(
+            "posted {0} records to votizen but got {1} back".format(
+                len(request_list), len(voters)))
     index = 0
     unfetched = []
     voter_records = []
