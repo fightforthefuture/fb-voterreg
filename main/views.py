@@ -289,8 +289,7 @@ def fetch_me(request):
         if user.registered:
             update_friends_of.delay(user.id)
         _fetch_fb_friends(request)
-    redirect_url = reverse("main:pledge") if user.registered \
-        else reverse("main:register")
+    redirect_url = reverse("main:pledge")
     return HttpResponse(redirect_url, content_type="text/plain")
 
 def _send_join_email(user, request):
