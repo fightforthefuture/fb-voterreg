@@ -177,6 +177,9 @@ class User(models.Model):
         return "https://graph.facebook.com/{0}/picture?type=square".format(
             self.fb_uid)
 
+    def __unicode__(self):
+        return '%s %s (fb:%s)' % (self.first_name, self.last_name, self.fb_uid,)
+
 class Mission(models.Model):
     class Meta:
         unique_together = (("user", "type",),)
@@ -338,6 +341,9 @@ class VotingBlock(models.Model):
             settings.SHARING_URL,
             reverse('main:voting_block_share', args=[self.pk]),
         )
+
+    def __unicode__(self):
+        return self.name
 
 
 class VotingBlockMember(models.Model):
