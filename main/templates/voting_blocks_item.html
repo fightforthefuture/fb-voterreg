@@ -84,7 +84,9 @@
     var LOAD_MORE_URL = "{% url 'main:voting_blocks_item_page' id=voting_block.id section=section %}";
     var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
     var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
-    var MARK_MISSION_BATCH_INVITED = "{% url 'main:mark_mission_batch_invited' batch_type %}";
+    {% if batch_type %}
+        var MARK_MISSION_BATCH_INVITED = "{% url 'main:mark_mission_batch_invited' batch_type %}";
+    {% endif %}
     var INVITE_LINK = "{{FACEBOOK_CANVAS_PAGE}}?target=/my_vote&after=/voting_blocks/{{ voting_block.id }}/join";
     var INVITE_NAME = "Join me in the {{ voting_block.name|escapejs }} voting block";
     var INVITE_DESCRIPTION = "{{ voting_block.description|escapejs }}. The election is almost here. We need your help getting more of our friends to vote than ever before. Support this voting block, look up your friends' voting history, and help your friends vote this year.";
