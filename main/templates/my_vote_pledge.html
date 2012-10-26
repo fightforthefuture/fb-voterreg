@@ -4,11 +4,11 @@
 {% load static from staticfiles %}
 {% load url from future %}
 
+{% block nav %}{% endblock nav %}
+
 {% block content %}
 
     <div class="main-content cf">
-
-        {% include "_my_vote_nav.html" %}
 
         <div class="main-content-message">
 
@@ -21,7 +21,7 @@
             {% else %}
 
                 {% comment %}Translators: title of page where users are asked to pledge to vote{% endcomment %}
-                <h2>{% trans "Will you pledge to vote in this election?" %}</h2>
+                <h2>{% trans "Do you pledge to vote in this election?" %}</h2>
 
             {% endif %}
         </div>
@@ -41,9 +41,6 @@
                 {% comment %}Translators: text of the button a user presses to pledge to vote{% endcomment %}
                 <a id="pledge" href="javascript:void(0)" class="btn btn-large btn-green"><i class="icon-ok"></i> {% trans "Yes, I pledge to vote" %}</a>
 
-                {% comment %}Translators: text of the button a user presses declining to pledge to vote{% endcomment %}
-                <a href="{% url 'main:invite_friends_2' %}" class="btn btn-large"><i class="icon-cancel"></i> {% trans "No, not ready to pledge yet" %}</a>
-
             {% endif %}
 
         </div>
@@ -53,12 +50,15 @@
             {% if not user.pledged %}
                 
                 {% comment %}Translators: consent to post action to timeline{% endcomment %}
-                <p><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell my friends I'm voting (this will post to your Timeline){% endblocktrans %}</a></p>
+                <p class="check-container"><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell my friends I'm voting (this will post to your Timeline){% endblocktrans %}</a></p>
+
+                {% if voting_block and voting_block.has_backing_organization %}
+                    <p class="check-container"><label for="join-block"><input type="checkbox" name="join-block" id="join-block" checked="checked" /> Join the <strong>{{ voting_block.name }}</strong> voting block? This will share your name and email with {% if voting_block.organization_website %}<a href="{{ voting_block.organization_website }}" target="_blank">{% endif %}{{ voting_block.organization_name }}{% if voting_block.organization_website %}</a>{% endif %} (<a href="{{ voting_block.organization_privacy_policy }}" target="_blank">Privacy Policy</a>)</a></p>
+                {% endif %}
+
+                <a href="{% url 'main:invite_friends_2' %}" id="deny">No, I can't pledge yet</a>
 
             {% endif %}
-
-            {% comment %}Translators: tagline of page where users are asked to pledge to vote{% endcomment %}
-            <p>{% blocktrans %}<strong>Why does pledging matter?</strong> Because your friends will see that you've pledged. So just by pledging, you're encouraging your friends to vote.{% endblocktrans %}</p>
 
         </div>
 

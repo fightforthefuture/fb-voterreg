@@ -65,9 +65,9 @@
             </div>
         </div>
         <div class="sample">
-            <p class="info">{% trans "Your voting block with show this notice:" %}</p>
+            <p class="info">{% trans "Your voting block will show this notice:" %}</p>
             <p class="organization">
-                This voting block belonges to an orginization:
+                This voting block belongs to an orginization:
                 <a target="_blank" id="sample-organization-website" href="{% if form.organization_website.value %}{{ form.organization_website.value }}{% else %}#{% endif %}"><span id="sample-organization-name">{% if form.organization_name.value %}{{ form.organization_name.value }}{% else %}Organization Name{% endif %}</span></a>.
                 When you join, they can use your name and email according to their <a target="_blank" id="sample-organization-privacy-policy" href="{% if form.organization_privacy_policy.value %}{{ form.organization_privacy_policy.value }}{% else %}#{% endif %}">Privacy Policy</a>.</p>
         </div>

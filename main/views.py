@@ -4,6 +4,7 @@ import requests
 import urllib
 from urlparse import urlparse
 import sys
+from django.db import IntegrityError
 from django.db.models import Q, Count
 from django.contrib import messages
 from django.conf import settings
@@ -137,6 +138,7 @@ def _unpledge(request):
 @csrf_exempt
 def index(request):
     request.session['after'] = request.GET.get("after", None)
+    request.session['block_id'] = request.GET.get("block", None)
     if request.method == "POST":
         response = _post_index(request)
         if response:
@@ -160,28 +162,25 @@ def index(request):
 def my_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     after = request.session.get('after', None)
+    block_id = request.session.get('block_id', None)
+    force = 'force' in request.GET
 
-    if user.pledged and user.voted and not 'nav' in request.GET:
-        if after:
-            return redirect(after)
-        return redirect('main:invite_friends_2')
+    if block_id:
+        try:
+            request.session['block'] = VotingBlock.objects.get(pk=int(block_id))
+        except VotingBlock.DoesNotExist:
+            pass
 
-    if user.pledged:
-
-        # The user has explicitly navigated here, either from the navigation or
-        # the pledge form, so we will show them the voting form. In other
-        # cases, we want to send them to the invite friends page to avoid
-        # repeatedly annoying them.
-        if 'force' in request.GET:
-            return redirect('main:my_vote_vote')
-
-        if after:
-            return redirect(after)
-
-        return redirect('main:invite_friends_2')
-
-    else:
+    if force or not user.pledged:
         return redirect('main:my_vote_pledge')
+
+    elif user.pledged and after:
+        return redirect(after)
+
+    elif user.pledged and block_id:
+        return redirect(reverse("main:voting_blocks_item", args=[block_id,]))
+
+    return redirect('main:invite_friends_2')
 
 
 def my_vote_pledge(request):
@@ -200,6 +199,7 @@ def my_vote_pledge(request):
         'page': 'my_vote',
         'section': 'pledge',
         'user': user,
+        'voting_block': request.session.get('block', None)
     }, context_instance=RequestContext(request))
 
 
@@ -345,7 +345,7 @@ def _invite_friends_2_qs(user, section, start_index=0):
         f_qs = user.friends.pledged()
     elif section == "voted":
         f_qs = user.friends.voted()
-    return f_qs[start_index:(start_index + 16)]
+    return f_qs[start_index:(start_index + 64)]
 
 
 def invite_friends_2(request, section="not_invited"):
@@ -392,7 +392,9 @@ def missions(request):
 
 @render_json
 def submit_pledge(request):
+    next = reverse("main:my_vote")
     user = User.objects.get(fb_uid=request.facebook["uid"])
+
     explicit_share = request.GET.get('explicit_share', None) == 'true'
     if explicit_share:
         og_url = opengraph_url(request, settings.FACEBOOK_OG_PLEDGE_ACTION)
@@ -404,6 +406,20 @@ def submit_pledge(request):
         print 'Explicit share pledge response: %s' % share.status_code
         print share.content
     user.explicit_share = explicit_share
+
+    join_block = request.GET.get('join_block', None) == 'true'
+    if join_block:
+        block = request.session['block']
+        try:
+            VotingBlockMember.objects.create(
+                member=user,
+                voting_block_id=block.pk,
+                joined=datetime.now(),
+            )
+        except IntegrityError:
+            pass
+        next = reverse("main:voting_blocks_item", args=[block.pk,])
+
     user.date_pledged = datetime.now()
     user.save()
     update_friends_of.delay(user.id)
@@ -413,7 +429,7 @@ def submit_pledge(request):
         # Translators: message displayed to users in green bar when they pledge to vote
         _("Thank you for pledging to vote!")
     )
-    return {"next": reverse("main:my_vote") + '?force'}
+    return {"next": next}
 
 
 @render_json
@@ -767,7 +783,7 @@ def voting_blocks_item(request, id, section=None):
         context.update({
             "batch_type": batch_type,
             "uninvited_batch": uninvited_batch,
-            "friends": _mission_friends_qs(user, batch_type),
+            "friends": _invite_friends_2_qs(user, 'not_invited'),
             "num_invited": num_invited,
             "num_pledged": num_pledged,
             "num_friends": num_friends,
@@ -777,7 +793,7 @@ def voting_blocks_item(request, id, section=None):
         context.update({
             "dont_friendship": True,
             "dont_status": True,
-            "friends": _members_qs(user, section, voting_block)[:16],
+            "friends": _members_qs(user, section, voting_block)[:64],
         })
 
     return render_to_response(
@@ -794,11 +810,11 @@ def voting_blocks_item_page(request, id, section):
     context = { "voting_block": voting_block }
     if section == "not_invited":
         context.update({
-            'friends': _mission_friends_qs(user, BATCH_REGULAR, start)
+            'friends': _invite_friends_2_qs(user, 'not_invited', start)
         })
     else:
         context.update({
-            'friends': _members_qs(user, section, voting_block)[start:start+16],
+            'friends': _members_qs(user, section, voting_block)[start:start+64],
             "dont_friendship": True,
             "dont_status": True,
         })

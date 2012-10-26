@@ -29,10 +29,11 @@
             {% else %}
             <a class="btn btn-green btn-large join" href="{% url 'main:voting_blocks_item_join' id=voting_block.id %}">Join this voting block</a>
             {% endif %}
-            {% if voting_block.organization_name %}
-            <p class="organization">This voting block belongs to an organization: <a target="_blank" href="{{ voting_block.organization_website }}">"{{ voting_block.organization_name }}"</a>.
-               When you join, they can use your name and email according to their <a target="_blank" href="{{ voting_block.organization_privacy_policy }}">Privacy policy</a>.</p>
+
+            {% if voting_block.has_backing_organization %}
+                <p class="organization">This voting block belongs to an organization: {% if voting_block.organization_website %}<a target="_blank" href="{{ voting_block.organization_website }}">{% endif %}"{{ voting_block.organization_name }}"{% if voting_block.organization_website %}</a>{% endif %}. When you join, they can use your name and email according to their <a target="_blank" href="{{ voting_block.organization_privacy_policy }}">Privacy policy</a>.</p>
             {% endif %}
+
             <div class="social">
                 <fb:like href="{{ voting_block.share_url }}" send="true" layout="button_count" width="175" show_faces="false"></fb:like>
                 <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ voting_block.share_url }}" data-text="Join '{{ voting_block.name }}' in Vote With Friends" data-count="none" data-dnt="true">Tweet</a>

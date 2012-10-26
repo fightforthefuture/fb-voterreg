@@ -533,6 +533,24 @@ div.content {
     font-size: 15px;
 }
 
+    .main-content-message p.check-container{
+        display: block;
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.36;
+        margin-top: 24px;
+        position: relative;
+        padding-left: 20px;
+    }
+        .main-content-message p.check-container input{
+            position: absolute;
+            top: 4px;
+            left: 0;
+        }
+        .main-content-message p.check-container + p.check-container{
+            margin-top: 6px;
+        }
+
 .main-content-right {
     text-align: right;
     margin: 0px 40px 0 40px;
@@ -1456,4 +1474,10 @@ a.load-more:hover{
     color: #848484;
     font-weight: normal;
     margin: 0 0 12px 0;
+}
+
+#deny{
+    display: inline-block;
+    margin-top: 24px;
+    font-size: 13px;
 }
