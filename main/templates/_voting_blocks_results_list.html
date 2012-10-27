@@ -7,8 +7,8 @@
     <li>
         <p class="name"><a href="{% url 'main:voting_blocks_item' id=mvb.id %}">{{ mvb.name }}</a></p>
         <p class="members">{{ mvb.votingblockmember_set.count }} members</p>
-        {% thumbnail mvb.icon 80x68 crop as imgsrc %}
-        <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-80x68.png' %}{% endif %}">
+        {% thumbnail mvb.icon 80x51 crop as imgsrc %}
+        <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-80x51.png' %}{% endif %}">
         <p class="description">{{ mvb.description }}</p>
         <div class="cf"></div>
     </li>

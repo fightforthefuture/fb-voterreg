@@ -228,7 +228,7 @@
 .voting-blocks .search ul.search-list li img {
     float: left;
     width: 80px;
-    height: 68px;
+    height: 51px;
     border: 3px solid white;
     -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
@@ -353,7 +353,7 @@
 .voting-blocks .own ul li img {
     float: left;
     width: 56px;
-    height: 56px;
+    height: 36px;
     border: 3px solid white;
     margin: 8px 0 0 0;
     -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.22);
