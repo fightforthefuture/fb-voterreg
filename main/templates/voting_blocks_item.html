@@ -24,7 +24,7 @@
             <p class="count"><strong>{{ voting_block_members_today_count }}</strong> new today</p>
             {% endif %}
             {% if voting_block_joined %}
-            <a class="btn btn-blue btn-large invite" href="{% url 'main:voting_blocks_item' id=voting_block.id section='not_invited' %}">Invite Friends</a>
+            <a id="invite-custom" class="btn btn-blue btn-large invite" href="javascript:void(0)">Invite Friends</a>
             <a class="leave" href="{% url 'main:voting_blocks_item_leave' id=voting_block.id %}">Leave this voting block</a>
             {% else %}
             <a class="btn btn-green btn-large join" href="{% url 'main:voting_blocks_item_join' id=voting_block.id %}">Join this voting block</a>
@@ -95,6 +95,7 @@
 </script>
 <script src="{% static 'js/invite_friend_grid.js' %}"></script>
 <script src="{% static 'js/mass_invites.js' %}"></script>
+<script src="{% static 'js/voting_blocks_item.js' %}"></script>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 {% endblock %}
 
