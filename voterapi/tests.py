@@ -48,6 +48,11 @@ class FBFriendsTest(unittest.TestCase):
     def setUp(self):
         VoterRecord.objects.all().delete()
 
+    def _assert_uids_present(self, voters):
+        for i in range(3):
+            uid = "uid{0}".format(i)
+            self.assertTrue(len([v for v in voters if v.fb_uid == uid]) == 1)
+
     def test_fetch_friends_initial_miss(self):
         counter = [0]
         requests = []
@@ -67,6 +72,7 @@ class FBFriendsTest(unittest.TestCase):
         self.assertTrue(_includes_addresses(requests[1]))
         self.assertEquals(3, len(voters))
         self.assertEquals(2, len([v for v in voters if v.registered]))
+        self._assert_uids_present(voters)
 
     def test_fail_on_first_request(self):
         counter = [0]
@@ -86,6 +92,7 @@ class FBFriendsTest(unittest.TestCase):
         self.assertEquals(3, len(voters))
         self.assertFalse(_includes_addresses(requests[2]))
         self.assertEquals(2, len([v for v in voters if v.registered]))
+        self._assert_uids_present(voters)
         
     def test_fail_on_second_request(self):
         counter = [0]
@@ -105,6 +112,7 @@ class FBFriendsTest(unittest.TestCase):
         self.assertEquals(3, len(voters))
         self.assertTrue(_includes_addresses(requests[2]))
         self.assertEquals(2, len([v for v in voters if v.registered]))
+        self._assert_uids_present(voters)
 
     def test_preexisting_voter_record(self):
         v = VoterRecord(
@@ -123,3 +131,5 @@ class FBFriendsTest(unittest.TestCase):
         self.assertEquals(2, len(requests))
         self.assertEquals(3, len(voters))
         self.assertEquals(1, len([v for v in voters if v.registered]))
+        self._assert_uids_present(voters)
+
