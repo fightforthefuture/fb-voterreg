@@ -409,7 +409,6 @@ def submit_pledge(request):
         })
         print 'Explicit share pledge response: %s' % share.status_code
         print share.content
-    user.explicit_share = explicit_share
 
     join_block = request.GET.get('join_block', None) == 'true'
     if join_block:
@@ -424,8 +423,11 @@ def submit_pledge(request):
             pass
         next = reverse("main:voting_blocks_item", args=[block.pk,])
 
+    user = User.objects.get(id=user.id)
+    user.explicit_share = explicit_share
     user.date_pledged = datetime.now()
     user.save()
+
     update_friends_of.delay(user.id)
     messages.add_message(
         request, messages.INFO,
