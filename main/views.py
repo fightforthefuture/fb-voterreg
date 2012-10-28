@@ -418,14 +418,15 @@ def submit_pledge(request):
     join_block = request.GET.get('join_block', None) == 'true'
     if join_block:
         block = request.session['block']
-        try:
-            VotingBlockMember.objects.create(
-                member=user,
-                voting_block_id=block.pk,
-                joined=datetime.now(),
-            )
-        except IntegrityError:
-            pass
+        if not VotingBlockMember.objects.filter(
+            member=user, voting_block_id=block.pk).exists():
+            try:
+                VotingBlockMember.objects.create(
+                    member=user,
+                    voting_block_id=block.pk,
+                    joined=datetime.now())
+            except IntegrityError:
+                pass
         next = reverse("main:voting_blocks_item", args=[block.pk,])
 
     update_friends_of.delay(user.id)
