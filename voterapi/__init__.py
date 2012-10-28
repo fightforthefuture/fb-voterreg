@@ -60,11 +60,8 @@ def _fetch_voters_from_fb_profiles(fb_profiles):
             voter_records.append(rec)
         else:
             unfetched_both_steps.append(profile)
-    fb_uids = set([r.fb_uid for r in voter_records])
-    uids = set([p.uid for p in fb_profiles])
     unfetched_last_step = []
     while len(unfetched_both_steps) > 0 or len(unfetched_last_step) > 0:
-        segments_len = len(unfetched_both_steps) + len(unfetched_last_step) + len(voter_records)
         unfetched_both_steps, unfetched_last_step = \
             _fetch_voter_batch(
                 unfetched_both_steps, 
