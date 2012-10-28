@@ -23,7 +23,7 @@ from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User, FriendshipBatch, BATCH_REGULAR, VotingBlock, VotingBlockMember
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
 from models import BATCH_NEARBY, Friendship, BADGE_CUTOFFS
@@ -846,7 +846,21 @@ def voting_blocks_item_leave(request, id):
         member=User.objects.get(fb_uid=request.facebook["uid"]), voting_block=id).delete()
     return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': id}))
 
-def test_logger_error(request):
-    from main.tasks import raise_exception
-    raise_exception.delay("what")
-    return render_to_response("500.html")
+def demo_transaction_error(request):
+    v = VotingBlockMember.objects.all()[0]
+    error = "none"
+    try:
+        VotingBlockMember.objects.create(
+            member=v.member,
+            voting_block_id=v.voting_block_id,
+            joined=datetime.now())
+    except IntegrityError:
+        error = "integrity"
+        pass
+
+    from random import choice
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    user.date_pledged = user.date_pledged + choice([2, -2]) * timedelta(seconds=2)
+    user.save()
+
+    return HttpResponse(error)
