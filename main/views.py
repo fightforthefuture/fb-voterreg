@@ -141,8 +141,9 @@ def index(request):
         response = _post_index(request)
         if response:
             return response
-    request.session['after'] = request.GET.get("after", None)
-    request.session['block_id'] = request.GET.get("block", None)
+    request.session['after'] = request.REQUEST.get("after", None)
+    request.session['block_id'] = request.REQUEST.get("block", None)
+    request.session.modified = True
     user = User.objects.get(fb_uid=request.facebook["uid"])
     query_string = request.META["QUERY_STRING"]
     if user.data_fetched:
