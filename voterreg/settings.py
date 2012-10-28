@@ -216,6 +216,7 @@ if environment == 'production':
     STATIC_URL = 'https://s3.amazonaws.com/voterreg.fb/'
 
 if environment == 'dev':
+    INSTALLATION = "dev"
     BASE_URL = "http://local.voterreg.org:8000"
     SHARING_URL = BASE_URL
     KM_CODE = "cccb2596f575fe692e22013c8329c5dbf98e4db7"
