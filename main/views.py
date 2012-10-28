@@ -185,17 +185,20 @@ def my_vote(request):
 
 
 def my_vote_pledge(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    if request.GET.get("from_widget", False):
-        user.registered = True
-        user.used_registration_widget = True
-        user.save()
-        update_friends_of.delay(user.id)
-        messages.add_message(
-            request, messages.INFO,
-            # Translators: message displayed to users in green bar when they register to vote
-            _("Thank you for registering to vote!")
-        )
+    if not request.facebook:
+        # assuming optimizely server.
+        user = { "pledged": False }
+    else:
+        user = User.objects.get(fb_uid=request.facebook["uid"])
+        if request.GET.get("from_widget", False):
+            user.registered = True
+            user.used_registration_widget = True
+            user.save()
+            update_friends_of.delay(user.id)
+            messages.add_message(
+                request, messages.INFO,
+                # Translators: message displayed to users in green bar when they register to vote
+                _("Thank you for registering to vote!"))
     return render_to_response("my_vote_pledge.html", {
         'page': 'my_vote',
         'section': 'pledge',
