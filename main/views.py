@@ -137,12 +137,12 @@ def _unpledge(request):
 
 @csrf_exempt
 def index(request):
-    request.session['after'] = request.GET.get("after", None)
-    request.session['block_id'] = request.GET.get("block", None)
     if request.method == "POST":
         response = _post_index(request)
         if response:
             return response
+    request.session['after'] = request.GET.get("after", None)
+    request.session['block_id'] = request.GET.get("block", None)
     user = User.objects.get(fb_uid=request.facebook["uid"])
     query_string = request.META["QUERY_STRING"]
     if user.data_fetched:
