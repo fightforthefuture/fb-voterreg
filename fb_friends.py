@@ -12,7 +12,7 @@ def _create_from_existing_users(user, fb_friends):
     """ Creates Friendships using existing Users """
     found_uids = set()
     for fb_friend in fb_friends:
-        uid = fb_friend["uid"]
+        uid = str(fb_friend["uid"])
         results = User.objects.filter(fb_uid=uid)[:1]
         if len(results) > 0:
             found_uids.add(uid)
@@ -34,7 +34,7 @@ def _initial_batch_type(user, profile):
 def _make_initial_batches(user, fb_friends, found_uids):
     newly_found_uids = set()
     for fb_friend in fb_friends:
-        uid = fb_friend["uid"]
+        uid = str(fb_friend["uid"])
         if uid in found_uids:
             continue
         profile = FacebookProfile(fb_friend)
@@ -60,14 +60,10 @@ def _make_main_batches(user_id, access_token, fb_friends, found_uids):
     user.update_friends_fetch()
     user.save()
     for fb_friend in fb_friends:
-        uid = fb_friend["uid"]
+        uid = str(fb_friend["uid"])
         if uid in found_uids:
             continue
         if Friendship.objects.filter(user=user, fb_uid=uid).count() > 0:
-            continue
-        if uid not in voter_map:
-            from main.tasks import raise_exception
-            raise_exception.delay("found uid not in voter map: {0}".format(uid))
             continue
         profile = FacebookProfile(fb_friend)
         voter = voter_map[uid]
@@ -84,7 +80,7 @@ def _update_registered_status_of_all(user_id, fb_friends):
     user = User.objects.get(id=user_id)
     profiles_to_update = []
     for fb_friend in fb_friends:
-        f = Friendship.objects.filter(user=user, fb_uid=fb_friend["uid"]).all()[:1]
+        f = Friendship.objects.filter(user=user, fb_uid=str(fb_friend["uid"])).all()[:1]
         if len(f) == 0:
             continue
         f = f[0]

@@ -77,7 +77,7 @@ class FacebookProfile(object):
             self._init_from_fql(profile)
 
     def _init_from_fql(self, record):
-        self.uid = record["uid"]
+        self.uid = str(record["uid"])
         location = record.get("current_location", None) or {}
         self.location = location.get("name", None)
         self.location_city = location.get("city", None)
@@ -90,7 +90,7 @@ class FacebookProfile(object):
         self._init(record)
 
     def _init_from_profile(self, profile):
-        self.uid = profile["id"]
+        self.uid = str(profile["id"])
         location = profile.get("location", None)
         if location and location.get("name", False):
             self.location = location.get("name")

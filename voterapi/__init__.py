@@ -48,9 +48,6 @@ def fetch_voters_from_fb_profiles(fb_profiles):
         total_segment_length += len(current_segment)
         new_voter_records = _fetch_voters_from_fb_profiles(current_segment)
         voter_records.extend(new_voter_records)
-    if total_segment_length != len(fb_profiles):
-        _raise_exception("segmenting is incorrect: {0} vs {1}".format(
-                total_segment_length, len(fb_profiles)))
     return voter_records
 
 def _fetch_voters_from_fb_profiles(fb_profiles):
@@ -63,12 +60,11 @@ def _fetch_voters_from_fb_profiles(fb_profiles):
             voter_records.append(rec)
         else:
             unfetched_both_steps.append(profile)
+    fb_uids = set([r.fb_uid for r in voter_records])
+    uids = set([p.uid for p in fb_profiles])
     unfetched_last_step = []
     while len(unfetched_both_steps) > 0 or len(unfetched_last_step) > 0:
         segments_len = len(unfetched_both_steps) + len(unfetched_last_step) + len(voter_records)
-        if segments_len != len(fb_profiles):
-            _raise_exception("segments len mismatch: {0} vs {1}".format(
-                    segments_len, len(fb_profiles)))
         unfetched_both_steps, unfetched_last_step = \
             _fetch_voter_batch(
                 unfetched_both_steps, 
@@ -104,10 +100,6 @@ def _batch_post(request_list):
             data={ "batch": json.dumps(request_list) })
         return response.status_code, response.json
 
-def _raise_exception(message):
-    from main.tasks import raise_exception
-    raise_exception.delay(message)
-
 def _fetch_profiles(profiles, include_address):
     request_list = [ { "method": "GET",
                        "relative_uri": _relative_uri(p, include_address) }
@@ -138,10 +130,6 @@ def _fetch_profiles(profiles, include_address):
         else:
             unfetched.append(profiles[index])
         index += 1
-    if len(unfetched) + len(voter_records) + len(not_found) != len(profiles):
-        num_records = len(unfetched) + len(voter_records) + len(not_found)
-        _raise_exception("mismatch between record length: {0} vs {1}".format(
-                num_records, len(profiles)))
     return unfetched, voter_records, not_found
 
 def _fetch_voter_batch(unfetched_both_steps, unfetched_last_step, voter_records):
@@ -153,10 +141,6 @@ def _fetch_voter_batch(unfetched_both_steps, unfetched_last_step, voter_records)
             _fetch_profiles(unfetched_both_steps, False)
         unfetched_last_step.extend(not_found_profiles)
         voter_records.extend(new_voter_records)
-    if starting_len != len(unfetched_both_steps) + \
-            len(unfetched_last_step) + \
-            len(voter_records):
-        _raise_exception("after no-address pass, mismatch")
     if len(unfetched_last_step) > 0:
         unfetched_last_step, new_voter_records, not_found_profiles = \
             _fetch_profiles(unfetched_last_step, True)
@@ -172,10 +156,6 @@ def _fetch_voter_batch(unfetched_both_steps, unfetched_last_step, voter_records)
             except IntegrityError:
                 voter_records.append(VoterRecord.objects.get(
                         fb_uid=profile.uid))
-    if starting_len != len(unfetched_both_steps) + \
-            len(unfetched_last_step) + \
-            len(voter_records):
-        _raise_exception("after address pass, mismatch")
     return unfetched_both_steps, unfetched_last_step
 
 def fetch_voter_from_fb_profile(fb_profile):
