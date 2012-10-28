@@ -4,6 +4,10 @@
 {% load static from staticfiles %}
 {% load url from future %}
 
+{% block nav %}
+{% if user.pledged %}{{ block.super }}{% endif %}
+{% endblock nav %}
+
 {% block content %}
 
     <div class="main-content cf">
@@ -19,7 +23,7 @@
             {% else %}
 
                 {% comment %}Translators: title of page where users are asked to pledge to vote{% endcomment %}
-                <h2 id="do-you-pledge">{% trans "Do you pledge to vote in this election?" %}</h2>
+                <h2 id="do-you-pledge">{% trans "Do you pledge to vote in this election?" %}<br/>{% trans "We're depending on you!" %}</h2>
 
             {% endif %}
         </div>
@@ -48,7 +52,7 @@
             {% if not user.pledged %}
                 
                 {% comment %}Translators: consent to post action to timeline{% endcomment %}
-                <p class="check-container"><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell my friends I'm voting (this will post to your Timeline){% endblocktrans %}</a></p>
+                <p class="check-container"><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Post this pledge to my timeline. (This is crucial for motivating your friends to vote!){% endblocktrans %}</a></p>
 
                 {% if voting_block and voting_block.has_backing_organization %}
                     <p class="check-container"><label for="join-block"><input type="checkbox" name="join-block" id="join-block" checked="checked" /> Join the <strong>{{ voting_block.name }}</strong> voting block? This will share your name and email with {% if voting_block.organization_website %}<a href="{{ voting_block.organization_website }}" target="_blank">{% endif %}{{ voting_block.organization_name }}{% if voting_block.organization_website %}</a>{% endif %} (<a href="{{ voting_block.organization_privacy_policy }}" target="_blank">Privacy Policy</a>)</a></p>
