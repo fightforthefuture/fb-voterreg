@@ -393,6 +393,11 @@ def missions(request):
         context,
         context_instance=RequestContext(request))
 
+def _voting_block_join_message(block):
+    return ("Welcome to the {0} voting block!<br>"
+            "Can you <a href=\"javascript:void(0);\" "
+            "class=\"invite-to-block\">invite 5 friends right now</a> "
+            "and keep our momentum?").format(block.name)
 
 @render_json
 def submit_pledge(request):
@@ -415,11 +420,17 @@ def submit_pledge(request):
     user.date_pledged = datetime.now()
     user.save()
 
+    showing_message = False
+
     join_block = request.GET.get('join_block', None) == 'true'
     if join_block:
         block = request.session['block']
         if not VotingBlockMember.objects.filter(
             member=user, voting_block_id=block.pk).exists():
+            showing_message = True
+            messages.add_message(
+                request, messages.INFO,
+                _voting_block_join_message(block))
             try:
                 VotingBlockMember.objects.create(
                     member=user,
@@ -430,12 +441,11 @@ def submit_pledge(request):
         next = reverse("main:voting_blocks_item", args=[block.pk,])
 
     update_friends_of.delay(user.id)
-    messages.add_message(
-        request, messages.INFO,
-
-        # Translators: message displayed to users in green bar when they pledge to vote
-        _("Thank you for pledging to vote!")
-    )
+    if not showing_message:
+        messages.add_message(
+            request, messages.INFO,
+            # Translators: message displayed to users in green bar when they pledge to vote
+            _("Thank you for pledging to vote!"))
     return {"next": next}
 
 
@@ -836,6 +846,9 @@ def voting_blocks_item_join(request, id):
     try:
         VotingBlockMember.objects.create(
             member=User.objects.get(fb_uid=request.facebook["uid"]), voting_block_id=id, joined=datetime.now())
+        messages.add_message(
+            request, messages.INFO,
+            _voting_block_join_message(VotingBlock.objects.get(id=id)))
     except:
         pass
     return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': id}))

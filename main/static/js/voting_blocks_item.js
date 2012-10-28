@@ -1,7 +1,6 @@
 $(function() {
 
     function inviteCustom(fbuid) {
-        debugger;
         FB.ui(
             {
                 method: "send",
@@ -13,8 +12,8 @@ $(function() {
                 picture: window['INVITE_PICTURE']
             }
         );
+        return false;
     }
 
-    $('#invite-custom').click(function(e){ inviteCustom(); });
-
+    $('.invite-to-block').click(function(e){ inviteCustom(); });
 });
