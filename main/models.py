@@ -358,9 +358,25 @@ class VotingBlockMember(models.Model):
     voting_block = models.ForeignKey(VotingBlock)
     member = models.ForeignKey(User)
     joined = models.DateTimeField(auto_now_add=True)
+    last_friendship_update = models.DateTimeField(null=True)
 
     class Meta:
         unique_together = (('voting_block', 'member',),)
+
+class VotingBlockFriendship(models.Model):
+
+    voting_block = models.ForeignKey(VotingBlock)
+    friendship = models.ForeignKey(Friendship)
+
+    invited_with_batch = models.BooleanField(default=False)
+    invited_individually = models.BooleanField(default=False)
+
+    @property
+    def invited(self):
+        return self.invited_with_batch or self.invited_individually
+
+    class Meta:
+        unique_together = (('voting_block', 'friendship',),)
 
 class WonBadge(models.Model):
     class Meta:

@@ -15,8 +15,14 @@ class Command(BaseCommand):
         if proceed != "y":
             return
         friend_fbuids = [u.fb_uid for u in user.friendship_set.all()]
+        user_vbs = user.votingblock_set.all().values_list('id', flat=True)
+        models.VotingBlockMember.objects.filter(id__in=user_vbs).delete()
+        models.VotingBlockFriendship.objects.filter(voting_block_id__in=user_vbs).delete()
+        user.votingblockmember_set.all().delete()
+        user.votingblock_set.all().delete()
         user.friendship_set.all().delete()
         user.friendshipbatch_set.all().delete()
+        user.mission_set.all().delete()
         user.delete()
         if len(args) > 1 and args[1] == "y":
             for fb_uid in friend_fbuids:

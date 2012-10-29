@@ -37,6 +37,8 @@ urlpatterns = patterns(
     url(r"^voting_blocks/(?P<id>\d+)(?:/section/(?P<section>\w+))?$", "voting_blocks_item", name="voting_blocks_item"),
     url(r"^voting_blocks/(?P<id>\d+)/join$", "voting_blocks_item_join", name="voting_blocks_item_join"),
     url(r"^voting_blocks/(?P<id>\d+)/leave$", "voting_blocks_item_leave", name="voting_blocks_item_leave"),
+    url(r"^voting_blocks/(?P<id>\d+)/mark_individual_invited$", "voting_blocks_item_mark_individual_invited", name="voting_blocks_item_mark_individual_invited"),
+    url(r"^voting_blocks/(?P<id>\d+)/mark_batch_invited$", "voting_blocks_item_mark_batch_invited", name="voting_blocks_item_mark_batch_invited"),
     url(r"^voting_blocks/(?P<id>\d+)/section/(?P<section>\w+)/page$", "voting_blocks_item_page", name="voting_blocks_item_page"),
 )
 
