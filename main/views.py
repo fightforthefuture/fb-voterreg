@@ -889,20 +889,24 @@ def voting_blocks_item_leave(request, id):
 
 @render_json
 def voting_blocks_item_mark_individual_invited(request, id):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
     #mark global
-    Friendship.objects.filter(user_fb_uid=request.facebook["uid"], fb_uid=request.GET["fbuid"], invited_individually=False, invited_with_batch=False)\
+    Friendship.objects.filter(user=user, fb_uid=request.GET["fbuid"], invited_individually=False, invited_with_batch=False)\
         .update(invited_individually=True)
+    user.save_invited_friends()
     #mark voting block invitation
-    VotingBlockFriendship.objects.filter(voting_block=int(id), friendship__user_fb_uid=request.facebook["uid"], friendship__fb_uid=request.GET["fbuid"])\
+    VotingBlockFriendship.objects.filter(voting_block=int(id), friendship__user=user, friendship__fb_uid=request.GET["fbuid"])\
         .update(invited_individually=True)
 
 @render_json
 def voting_blocks_item_mark_batch_invited(request, id):
+    user = User.objects.get(fb_uid=request.facebook["uid"])
     #mark global
-    Friendship.objects.filter(user_fb_uid=request.facebook["uid"], fb_uid__in=request.GET["fbuid"].split(','), invited_individually=False, invited_with_batch=False)\
+    Friendship.objects.filter(user=user, fb_uid__in=request.GET["fbuid"].split(','), invited_individually=False, invited_with_batch=False)\
         .update(invited_with_batch=True)
+    user.save_invited_friends()
     #mark voting block invitation
-    VotingBlockFriendship.objects.filter(voting_block=int(id), friendship__user_fb_uid=request.facebook["uid"], friendship__fb_uid__in=request.GET["fbuid"].split(','))\
+    VotingBlockFriendship.objects.filter(voting_block=int(id), friendship__user=user, friendship__fb_uid__in=request.GET["fbuid"].split(','))\
         .update(invited_with_batch=True)
 
     context = _voting_block_not_invited_context(int(id), request.facebook["uid"])
