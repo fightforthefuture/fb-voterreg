@@ -357,7 +357,7 @@ class VotingBlock(models.Model):
 class VotingBlockMember(models.Model):
     voting_block = models.ForeignKey(VotingBlock)
     member = models.ForeignKey(User)
-    joined = models.DateTimeField(auto_now_add=True)
+    joined = models.DateTimeField(null=True)
     last_friendship_update = models.DateTimeField(null=True)
 
     class Meta:

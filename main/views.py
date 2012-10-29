@@ -798,9 +798,9 @@ def voting_blocks_item(request, id, section=None):
         voting_block = voting_block_member.voting_block
         user = voting_block_member.member
     except  VotingBlockMember.DoesNotExist:
-        voting_block_member = None
         voting_block = VotingBlock.objects.get(id=id)
         user = User.objects.get(fb_uid=request.facebook["uid"])
+        voting_block_member = VotingBlockMember.objects.create(voting_block=voting_block, member=user)
     section = section or 'not_invited'
     sections = [
         {'name': 'members', 'count': _members_qs(user, 'members', voting_block).count(), 'title': 'Members'},
