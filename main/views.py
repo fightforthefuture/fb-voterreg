@@ -23,7 +23,7 @@ from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
 from models import User, FriendshipBatch, BATCH_REGULAR, VotingBlock, VotingBlockMember, VotingBlockFriendship
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timedelta
 from fb_utils import FacebookProfile, opengraph_url
 from django.core.mail import EmailMultiAlternatives
 from models import BATCH_NEARBY, Friendship, BADGE_CUTOFFS
@@ -137,12 +137,13 @@ def _unpledge(request):
 
 @csrf_exempt
 def index(request):
-    request.session['after'] = request.GET.get("after", None)
-    request.session['block_id'] = request.GET.get("block", None)
     if request.method == "POST":
         response = _post_index(request)
         if response:
             return response
+    request.session['after'] = request.REQUEST.get("after", None)
+    request.session['block_id'] = request.REQUEST.get("block", None)
+    request.session.modified = True
     user = User.objects.get(fb_uid=request.facebook["uid"])
     query_string = request.META["QUERY_STRING"]
     if user.data_fetched:
@@ -184,17 +185,20 @@ def my_vote(request):
 
 
 def my_vote_pledge(request):
-    user = User.objects.get(fb_uid=request.facebook["uid"])
-    if request.GET.get("from_widget", False):
-        user.registered = True
-        user.used_registration_widget = True
-        user.save()
-        update_friends_of.delay(user.id)
-        messages.add_message(
-            request, messages.INFO,
-            # Translators: message displayed to users in green bar when they register to vote
-            _("Thank you for registering to vote!")
-        )
+    if not request.facebook:
+        # assuming optimizely server.
+        user = { "pledged": False }
+    else:
+        user = User.objects.get(fb_uid=request.facebook["uid"])
+        if request.GET.get("from_widget", False):
+            user.registered = True
+            user.used_registration_widget = True
+            user.save()
+            update_friends_of.delay(user.id)
+            messages.add_message(
+                request, messages.INFO,
+                # Translators: message displayed to users in green bar when they register to vote
+                _("Thank you for registering to vote!"))
     return render_to_response("my_vote_pledge.html", {
         'page': 'my_vote',
         'section': 'pledge',
@@ -389,6 +393,11 @@ def missions(request):
         context,
         context_instance=RequestContext(request))
 
+def _voting_block_join_message(block):
+    return ("Welcome to the {0} voting block!<br>"
+            "Can you <a href=\"javascript:void(0);\" "
+            "class=\"invite-to-block\">invite 5 friends right now</a> "
+            "and keep our momentum?").format(block.name)
 
 @render_json
 def submit_pledge(request):
@@ -405,30 +414,38 @@ def submit_pledge(request):
         })
         print 'Explicit share pledge response: %s' % share.status_code
         print share.content
+
+    user = User.objects.get(id=user.id)
     user.explicit_share = explicit_share
+    user.date_pledged = datetime.now()
+    user.save()
+
+    showing_message = False
 
     join_block = request.GET.get('join_block', None) == 'true'
     if join_block:
         block = request.session['block']
-        try:
-            VotingBlockMember.objects.create(
-                member=user,
-                voting_block_id=block.pk,
-                joined=datetime.now(),
-            )
-        except IntegrityError:
-            pass
+        if not VotingBlockMember.objects.filter(
+            member=user, voting_block_id=block.pk).exists():
+            showing_message = True
+            messages.add_message(
+                request, messages.INFO,
+                _voting_block_join_message(block))
+            try:
+                VotingBlockMember.objects.create(
+                    member=user,
+                    voting_block_id=block.pk,
+                    joined=datetime.now())
+            except IntegrityError:
+                pass
         next = reverse("main:voting_blocks_item", args=[block.pk,])
 
-    user.date_pledged = datetime.now()
-    user.save()
     update_friends_of.delay(user.id)
-    messages.add_message(
-        request, messages.INFO,
-
-        # Translators: message displayed to users in green bar when they pledge to vote
-        _("Thank you for pledging to vote!")
-    )
+    if not showing_message:
+        messages.add_message(
+            request, messages.INFO,
+            # Translators: message displayed to users in green bar when they pledge to vote
+            _("Thank you for pledging to vote!"))
     return {"next": next}
 
 
@@ -857,6 +874,9 @@ def voting_blocks_item_join(request, id):
     try:
         VotingBlockMember.objects.create(
             member=User.objects.get(fb_uid=request.facebook["uid"]), voting_block_id=id, joined=datetime.now())
+        messages.add_message(
+            request, messages.INFO,
+            _voting_block_join_message(VotingBlock.objects.get(id=id)))
     except:
         pass
     return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': id}))
@@ -899,3 +919,22 @@ def test_logger_error(request):
     from main.tasks import raise_exception
     raise_exception.delay("what")
     return render_to_response("500.html")
+
+def demo_transaction_error(request):
+    v = VotingBlockMember.objects.all()[0]
+    error = "none"
+    try:
+        VotingBlockMember.objects.create(
+            member=v.member,
+            voting_block_id=v.voting_block_id,
+            joined=datetime.now())
+    except IntegrityError:
+        error = "integrity"
+        pass
+
+    from random import choice
+    user = User.objects.get(fb_uid=request.facebook["uid"])
+    user.date_pledged = user.date_pledged + choice([2, -2]) * timedelta(seconds=2)
+    user.save()
+
+    return HttpResponse(error)

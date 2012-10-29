@@ -20,6 +20,7 @@ $(function() {
                 }
             }
         );
+        return false;
     }
 
     function batchInvited(fbuid) {
@@ -67,6 +68,6 @@ $(function() {
         return;
     });
 
-    $('#invite-custom').click(function(e){ invite(); });
+    $('.invite-to-block').click(function(e){ invite(); });
 
 });

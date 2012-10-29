@@ -8,7 +8,8 @@ def add_settings(request):
              "BASE_URL": settings.BASE_URL,
              "KM_CODE": settings.KM_CODE,
              "FACEBOOK_CANVAS_PAGE": settings.FACEBOOK_CANVAS_PAGE,
-             "DEBUG_APP_REQUESTS": settings.DEBUG_APP_REQUESTS }
+             "DEBUG_APP_REQUESTS": settings.DEBUG_APP_REQUESTS,
+             "INSTALLATION": settings.INSTALLATION }
 
 def add_days_left(request):
     return { "num_days_left": (date(2012, 11, 6) - date.today()).days }
