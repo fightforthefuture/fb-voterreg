@@ -49,7 +49,9 @@
                     });
                 };
 
-                setTimeout(openModal, 100);
+                if(!!data){
+                    setTimeout(openModal, 100);
+                }
 
             }
         });
