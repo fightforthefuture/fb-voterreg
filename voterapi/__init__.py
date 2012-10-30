@@ -1,9 +1,11 @@
 from django.conf import settings
-from models import VoterRecord
+from models import VoterRecord, VoterHistoryRecord
 from fb_utils import FacebookProfile
 from django.db import IntegrityError
 from random import choice, random
 from urllib import urlencode
+from datetime import date
+import re
 import requests
 import json
 import facebook
@@ -42,13 +44,65 @@ def _params_from_fb_profile(profile, include_address):
 
 def fetch_voters_from_fb_profiles(fb_profiles):
     voter_records = []
-    total_segment_length = 0
     for index in range(0, len(fb_profiles), 50):
-        current_segment = fb_profiles[index:index+50]
-        total_segment_length += len(current_segment)
-        new_voter_records = _fetch_voters_from_fb_profiles(current_segment)
+        new_voter_records = _fetch_voters_from_fb_profiles(
+            fb_profiles[index:index+50])
         voter_records.extend(new_voter_records)
     return voter_records
+
+def fill_voter_history_for_users_friends(user):
+    friend_count = user.friendship_set.all().count()
+    for index in range(0, friend_count, 50):
+        friends = user.friendship_set.all().order_by("id")[index:index+50]
+        voter_records = VoterRecord.objects.filter(
+            fb_uid__in=[f.fb_uid for f in friends])
+        fill_voter_history(voter_records)
+
+def fill_voter_history(voter_records):
+    fetchable = [v for v in voter_records if 
+                 v.votizen_id and not v.loaded_history]
+    for index in range(0, len(fetchable), 50):
+        _fill_voter_history(fetchable[index:index+50])
+
+def _fill_voter_history(voter_records):
+    unfilled_records = voter_records
+    while len(unfilled_records) > 0:
+        request_list = \
+            [ { "method": "GET",
+                "relative_uri": 
+                    "/v1/voter/{0}/record/?format=json".format(v.votizen_id) }
+              for v in unfilled_records]
+        status_code, objects = _batch_history_post(request_list)
+        print(status_code)
+        if status_code != 200:
+            continue
+        index = 0
+        current_unfilled = []
+        for obj in objects:
+            voter_record = unfilled_records[index]
+            index += 1
+            if obj["status_code"] == 200:
+                voter_record = VoterRecord.objects.get(id=voter_record.id)
+                body = json.loads(obj["body"])
+                if body["id"] != voter_record.votizen_id:
+                    raise Exception("bad response from votizen")
+                for json_record in body["voting_history"]:
+                    _create_voter_history_record(voter_record, json_record)
+                voter_record.loaded_history = True
+                voter_record.save()
+            else:
+                current_unfilled.append(voter_record)
+        unfilled_records = current_unfilled
+
+def _create_voter_history_record(voter_record, json_record):
+    m = re.match(r"(\d{4})-(\d{2})-(\d{2})", json_record["date"])
+    voting_date = date(*[int(m.group(i)) for i in range(1, 4)])
+    if not VoterHistoryRecord.objects.filter(
+        voter=voter_record, date=voting_date).exists():
+        VoterHistoryRecord(
+            voter=voter_record,
+            date=voting_date,
+            voted=(json_record["voted"].lower() == "yes")).save()
 
 def _fetch_voters_from_fb_profiles(fb_profiles):
     unfetched_both_steps = []
@@ -75,6 +129,15 @@ def _relative_uri(profile, include_address):
     params = _params_from_fb_profile(profile, include_address)
     return _RELATIVE_URL + "?" + urlencode(
         dict([k, v.encode('utf-8')] for k, v in params.items()))
+
+def _batch_history_post(request_list):
+    batch_url = _BATCH_URL + "?" + urlencode(
+        { "api_key": settings.VOTIZEN_API_KEY,
+          "format": "json"})
+    response = requests.post(
+            batch_url, 
+            data={ "batch": json.dumps(request_list) })
+    return response.status_code, response.json
 
 def _batch_post(request_list):
     if settings.USE_FAKE_VOTIZEN_API:
