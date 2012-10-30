@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.modal.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/prompt.css' %}">
     {% block css %}{% endblock %}
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -42,6 +43,7 @@
   <body>
     <div id="fb-root"></div>
 
+    <div id="container"><div id="container-inner">
     <header>
         <div class="inner cf">
 
@@ -123,9 +125,11 @@
     {% block modals %}{% endblock %}
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/bootstrap.modal.js' %}"></script>
+    <script src="{% static 'js/prompt.js' %}"></script>
     <script src="https://connect.facebook.net/en_US/all.js#xfbml=1&amp;appId={{ FACEBOOK_APP_ID }}"></script>
     <script>
       var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
+      var PROMPT_URL = "{% url 'main:prompt' %}";
       var SINGLE_USER_INVITED_URL = "{% url 'main:single_user_invited' %}";
       var NOTIFICATION_URL = "{% url 'main:notifications' %}";
       var DEBUG_APP_REQUESTS = {% if DEBUG_APP_REQUESTS %}true{% else %}false{% endif %};
@@ -137,5 +141,6 @@
     </script>
     <script src="{% static 'js/base.js' %}"></script>
     {% block scripts %}{% endblock %}
+    </div></div>
   </body>
 </html>

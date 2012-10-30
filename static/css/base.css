@@ -53,6 +53,13 @@
 }
 
 html {
+}
+
+body {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-size: 15px;
+    min-height: 1200px;
+    padding-bottom: 300px;
     background: #ffffff; /* Old browsers */
     background: -moz-linear-gradient(top,  #ffffff 20%, #b1b8cb 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(20%,#ffffff), color-stop(100%,#b1b8cb)); /* Chrome,Safari4+ */
@@ -63,12 +70,8 @@ html {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#b1b8cb',GradientType=0 ); /* IE6-9 */
 }
 
-body {
-    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-size: 15px;
+#container{
     background: transparent url(../img/body-back.png) 0 116px no-repeat;
-    min-height: 1200px;
-   padding-bottom: 300px;
 }
 
 a {

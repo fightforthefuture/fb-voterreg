@@ -48,4 +48,13 @@
         var LOAD_MORE_URL = "{% url 'main:invite_friends_2_page' section %}";
     </script>
     <script src="{% static 'js/invite_friend_grid.js' %}"></script>
+
+    {% if not vwf_user.seen_initial_prompt %}
+        <script type="text/javascript">
+            jQuery(function(){
+                prompt.modal();
+            })
+        </script>
+    {% endif %}
+
 {% endblock %}

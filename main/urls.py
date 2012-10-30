@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
-from main.views import NotificationCheckView, VotingBlockShareView
+from main.views import NotificationCheckView, PromptView, VotingBlockShareView
 
 
 urlpatterns = patterns(
@@ -44,6 +44,10 @@ urlpatterns = patterns(
 
 urlpatterns += patterns(
     "",
+    url(r"^prompt$",
+        PromptView.as_view(),
+        name="prompt"
+    ),
     url(r"^voterreg_invite$",
         TemplateView.as_view(template_name="voterreg_invite.html"),
         name="voterreg_invite"),

@@ -22,9 +22,10 @@ from django.http import Http404, HttpResponse, HttpResponseNotAllowed, \
 from tasks import fetch_fb_friends, update_friends_of
 from decorators import render_json
 from voterapi import fetch_voter_from_fb_profile, correct_voter
-from models import User, FriendshipBatch, BATCH_REGULAR, VotingBlock, VotingBlockMember, VotingBlockFriendship
+from models import User, FriendshipBatch, BATCH_REGULAR, VotingBlock, \
+    VotingBlockMember, VotingBlockFriendship
 from datetime import datetime, date, time, timedelta
-from fb_utils import FacebookProfile, opengraph_url
+from fb_utils import FacebookProfile, opengraph_url, online_friends
 from django.core.mail import EmailMultiAlternatives
 from models import BATCH_NEARBY, Friendship, BADGE_CUTOFFS
 import logging
@@ -72,6 +73,47 @@ class NotificationCheckView(TemplateView):
     template_name = 'notifications.html'
 
 
+class PromptView(TemplateView):
+    template_name = 'prompt.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(params=kwargs)
+        if context['friends']:
+            self._user_obj.seen_initial_prompt = True
+            self._user_obj.save()
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        self._user_obj = User.objects.get(fb_uid=self.request.facebook["uid"])
+        context = super(PromptView, self).get_context_data(**kwargs)
+        prompt_type = self.request.GET.get('type', None)
+        if prompt_type == 'online_active':
+            context.update(self._online_active_voters())
+        else:
+            context.update(self._online_active_voters())
+        return context
+
+    def _online_active_voters(self):
+        user = self._user_obj
+        not_invited = user.friends.personally_invited(status=False)
+        friends = not_invited.filter(fb_uid__in=online_friends(self.request))
+        return {
+            'friends': friends.order_by('?')[:4],
+            'title': 'Will your friends vote?',
+            'description': (
+                "To maximize your friends' turnout on election day, it's "
+                "important to get them using Vote With Friends. Users online "
+                "at the time you send an invitation are more likely to "
+                "respond. Why don't you invite these friends? They're online"
+                "now!"
+            ),
+            'attributes': {
+                'online': True,
+                'likely_voter': True
+            }
+        }
+
+
 def _post_index(request):
     query_string = request.META["QUERY_STRING"]
     redirect_uri = settings.FACEBOOK_CANVAS_PAGE
@@ -84,7 +126,7 @@ def _post_index(request):
     if not data.get("user_id"):
         scope = ["user_birthday", "user_location", "friends_birthday,"
                  "friends_hometown", "friends_location", "email",
-                 "publish_actions"]
+                 "publish_actions", "friends_online_presence"]
         auth_url = facebook.auth_url(settings.FACEBOOK_APP_ID,
                                      redirect_uri, scope)
         markup = ('<script type="text/javascript">'

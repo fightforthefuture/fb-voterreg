@@ -109,6 +109,9 @@ class User(models.Model):
     # User explicitly shared their vote with friends
     explicit_share_vote = models.BooleanField(default=False)
 
+    # User has seen the initial modal prompt
+    seen_initial_prompt = models.BooleanField(default=False)
+
     @property
     def friends(self):
         return self.friendship_set.all()

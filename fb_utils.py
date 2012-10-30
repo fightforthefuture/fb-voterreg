@@ -1,5 +1,8 @@
 from datetime import date
 
+import facebook
+
+
 _STATE_ABBREVIATIONS = {
         'AK': 'Alaska',
         'AL': 'Alabama',
@@ -132,3 +135,20 @@ def opengraph_url(request, action):
         request.facebook["uid"],
         action,
     )
+
+
+def fql_query(query, access_token):
+    api = facebook.GraphAPI(access_token)
+    return api.fql(query)
+
+
+def online_friends(request):
+    try:
+        query = (
+            'SELECT uid, name FROM user WHERE uid IN ( SELECT uid2 FROM friend'
+            ' WHERE uid1 = me() ) AND online_presence = "active"'
+        )
+        data = fql_query(query, request.facebook['access_token'])
+        return [str(friend['uid']) for friend in data]
+    except facebook.GraphAPIError:
+        return None
