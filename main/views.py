@@ -114,11 +114,7 @@ class PromptView(TemplateView):
             'friends': friends.order_by('?')[:4],
             'title': 'Will your friends vote?',
             'description': (
-                "To maximize your friends' turnout on election day, it's "
-                "important to get them using Vote With Friends. Users online "
-                "at the time you send an invitation are more likely to "
-                "respond. Why don't you invite these friends? They're online "
-                "now!"
+                "It's in your hands. Here are four friends who are likely voters -- and they're online right now. Can you get each one of them pledged to vote?"
             ),
             'attributes': {
                 'online': True,
