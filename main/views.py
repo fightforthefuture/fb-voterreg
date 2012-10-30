@@ -104,7 +104,7 @@ class PromptView(TemplateView):
                 "To maximize your friends' turnout on election day, it's "
                 "important to get them using Vote With Friends. Users online "
                 "at the time you send an invitation are more likely to "
-                "respond. Why don't you invite these friends? They're online"
+                "respond. Why don't you invite these friends? They're online "
                 "now!"
             ),
             'attributes': {
