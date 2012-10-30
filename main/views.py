@@ -74,9 +74,16 @@ class NotificationCheckView(TemplateView):
 
 
 class PromptView(TemplateView):
+    """
+    View for a modal window prompting users to invite
+    """
     template_name = 'prompt.html'
 
     def get(self, request, *args, **kwargs):
+        """
+        Marks the user as having seen the initial prompt if friends were
+        returned by self.get_context_data
+        """
         context = self.get_context_data(params=kwargs)
         if context['friends']:
             self._user_obj.seen_initial_prompt = True
@@ -84,16 +91,22 @@ class PromptView(TemplateView):
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
+        """
+        Adds metadata for a prompt based on the `type` keyword argument.
+        """
         self._user_obj = User.objects.get(fb_uid=self.request.facebook["uid"])
         context = super(PromptView, self).get_context_data(**kwargs)
         prompt_type = self.request.GET.get('type', None)
-        if prompt_type == 'online_active':
-            context.update(self._online_active_voters())
+        if prompt_type == 'online':
+            context.update(self._online())
         else:
-            context.update(self._online_active_voters())
+            context.update(self._online())
         return context
 
-    def _online_active_voters(self):
+    def _online(self):
+        """
+        Returns metadata for a prompt featuring online friends.
+        """
         user = self._user_obj
         not_invited = user.friends.personally_invited(status=False)
         friends = not_invited.filter(fb_uid__in=online_friends(self.request))
