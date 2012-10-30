@@ -406,7 +406,8 @@ def invite_friends_2(request, section="not_invited"):
         "num_not_pledged": user.friends.invited_not_pledged().count(),
         "num_uninvited": user.friends.personally_invited(status=False).count(),
         "num_friends": user.num_friends or 0,
-        "num_voted": user.friends.voted().count()
+        "num_voted": user.friends.voted().count(),
+        'force_prompt': 'force_prompt' in request.GET
     }, context_instance=RequestContext(request))
 
 @csrf_exempt

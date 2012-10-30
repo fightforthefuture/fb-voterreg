@@ -1,3 +1,5 @@
+console.log('starting');
+
 (function($){
 
     window.prompt = {};
@@ -7,10 +9,12 @@
         if(typeof type !== "undefined"){
             params['type'] = type;
         }
+        console.log('modal starting');
         $.ajax({
             'url': PROMPT_URL,
             'data': params,
             'success': function(data){
+                console.log('modal success');
                 var $body = $('body'),
                     $container = $('#container');
                 
@@ -48,6 +52,8 @@
                         }
                     });
                 };
+
+                console.log(data);
 
                 if(!!data){
                     setTimeout(openModal, 100);
