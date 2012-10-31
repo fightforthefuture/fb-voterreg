@@ -14,6 +14,9 @@
                 {% if attributes.online %}
                     <div class="online">Online Now</div>
                 {% endif %}
+                {% if attributes.early_voting and friend.can_vote_early %}
+                    <div class="early_voting">Can Vote Early</div>
+                {% endif %}
             </div>
             <div class="action" data-friend-fbuid="{{ friend.fb_uid }}"> 
                 <a href="javascript:void(0)" class="uninvited invite btn btn-green">Ask To Vote</a>
@@ -21,4 +24,7 @@
             </div>
         </li>
     {% endfor %}
-</ul>{% endif %}
+</ul>
+{% if has_early_voters %}
+    <p class="early_voters">Some of your friends are <strong>online</strong> and can <strong>vote early</strong>. Can you get them to go vote <strong>right now</strong>?</p>
+{% endif %}{% endif %}

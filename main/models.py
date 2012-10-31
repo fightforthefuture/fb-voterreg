@@ -1,3 +1,5 @@
+import operator
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
@@ -9,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 from facebook import GraphAPI
 from django.conf import settings
 
+from main.choices import EARLY_VOTING_STATES
 from main.managers import FriendStatusManager
 
 APP_NOTIFICATION_THRESHOLD = 6 * 60 * 60 # in seconds
@@ -289,6 +292,17 @@ class Friendship(models.Model):
     @property
     def invited(self):
         return self.invited_with_batch or self.invited_individually
+
+    @property
+    def can_vote_early(self):
+        """
+        Returns a boolean indicating whether the user lives in a state that
+        allows early in-person voting.
+        """
+        return reduce(
+            operator.or_,
+            ((state in self.location_name) for state in EARLY_VOTING_STATES)
+        )
 
     def needs_invitation(self):
         touched = self.registered or self.pledged or \

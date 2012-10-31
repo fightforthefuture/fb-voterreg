@@ -109,6 +109,11 @@ body{
             color: #649332;
             content: '\25CF\A0\A0';
         }
+        .prompt .attributes .early_voting:before{
+            content: '\26A0\A0\A0';
+            color: #cb2431;
+            font-weight: bold;
+        }
 
     .prompt #friends{
         margin: 30px 0 0;
@@ -149,3 +154,15 @@ body{
         text-indent: -999em;
         overflow: hidden;
     }
+    .prompt .early_voters{
+        clear: both;
+        padding-top: 24px;
+        text-align: left;
+        font-size: 13px;
+        margin: 0;
+    }
+        .prompt .early_voters:before{
+            content: '\26A0\A0\A0';
+            color: #cb2431;
+            font-weight: bold;
+        }
