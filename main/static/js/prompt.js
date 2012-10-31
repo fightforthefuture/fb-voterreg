@@ -9,12 +9,10 @@ console.log('starting');
         if(typeof type !== "undefined"){
             params['type'] = type;
         }
-        console.log('modal starting');
         $.ajax({
             'url': PROMPT_URL,
             'data': params,
             'success': function(data){
-                console.log('modal success');
                 var $body = $('body'),
                     $container = $('#container');
                 
@@ -51,9 +49,22 @@ console.log('starting');
                             closeModal();
                         }
                     });
+                    $('.prompt .reload').live('click', function(evt){
+                        var $button = $(this);
+                        $button.removeClass('btn-blue').text('Loading...');
+                        var reloadParams = params;
+                        reloadParams['only_friends'] = 'true';
+                        console.log(reloadParams);
+                        $.ajax({
+                            'url': PROMPT_URL,
+                            'data': reloadParams,
+                            'success': function(data){
+                                $button.addClass('btn-blue').text('More Friends');
+                                $prompt.find('#friends').replaceWith($(data));
+                            }
+                        });
+                    });
                 };
-
-                console.log(data);
 
                 if(!!data){
                     setTimeout(openModal, 100);

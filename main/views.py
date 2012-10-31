@@ -96,6 +96,7 @@ class PromptView(TemplateView):
         """
         self._user_obj = User.objects.get(fb_uid=self.request.facebook["uid"])
         context = super(PromptView, self).get_context_data(**kwargs)
+        context['only_show_friends'] = self.request.GET.get('only_friends', None) == 'true'
         prompt_type = self.request.GET.get('type', None)
         if prompt_type == 'online':
             context.update(self._online())
@@ -109,17 +110,20 @@ class PromptView(TemplateView):
         """
         user = self._user_obj
         not_invited = user.friends.personally_invited(status=False)
-        friends = not_invited.filter(fb_uid__in=online_friends(self.request))
+        online = not_invited.filter(fb_uid__in=online_friends(self.request))
+        selection = online.order_by('?')[:4]
         return {
-            'friends': friends.order_by('?')[:4],
+            'friends': selection,
             'title': 'Will your friends vote?',
             'description': (
                 "It's in your hands. Here are four friends who are likely voters -- and they're online right now. Can you get each one of them pledged to vote?"
             ),
             'attributes': {
                 'online': True,
-                'likely_voter': True
-            }
+                'likely_voter': True,
+                'early_voting': True,
+            },
+            'has_early_voters': any([f.can_vote_early for f in selection])
         }
 
 

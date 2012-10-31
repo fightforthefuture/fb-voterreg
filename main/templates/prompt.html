@@ -1,24 +1,37 @@
-{% if friends %}<h1>{{ title }}</h1>
-<p>{{ description }}</p>
-<ul id="friends">
-    {% for friend in friends %}
-        <li>
-            <figure>
-                <img src="{{ friend.picture_thumbnail_url }}" alt="{{ friend.name }}">
-            </figure>
-            <h2>{{ friend.name }}</h2>
-            <div class="attributes">
-                {% if attributes.likely_voter %}
-                    <div class="likely_voter">Likely Voter</div>
-                {% endif %}
-                {% if attributes.online %}
-                    <div class="online">Online Now</div>
-                {% endif %}
-            </div>
-            <div class="action" data-friend-fbuid="{{ friend.fb_uid }}"> 
-                <a href="javascript:void(0)" class="uninvited invite btn btn-green">Ask To Vote</a>
-                <a href="javascript:void(0)" style="display: none" class="invited invite btn disabled">Invited!</a>
-            </div>
-        </li>
-    {% endfor %}
-</ul>{% endif %}
+{% if friends %}
+    {% if not only_show_friends %}
+        <h1>{{ title }}</h1>
+        <p>{{ description }}</p>
+    {% endif %}
+    <ul id="friends">
+        {% for friend in friends %}
+            <li>
+                <figure>
+                    <img src="{{ friend.picture_thumbnail_url }}" alt="{{ friend.name }}">
+                </figure>
+                <h2>{{ friend.name }}</h2>
+                <div class="attributes">
+                    {% if attributes.likely_voter %}
+                        <div class="likely_voter">Likely Voter</div>
+                    {% endif %}
+                    {% if attributes.online %}
+                        <div class="online">Online Now</div>
+                    {% endif %}
+                    {% if attributes.early_voting and friend.can_vote_early %}
+                        <div class="early_voting">Can Vote Early</div>
+                    {% endif %}
+                </div>
+                <div class="action" data-friend-fbuid="{{ friend.fb_uid }}"> 
+                    <a href="javascript:void(0)" class="uninvited invite btn btn-green">Ask To Vote</a>
+                    <a href="javascript:void(0)" style="display: none" class="invited invite btn disabled">Invited!</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if not only_show_friends %}
+        {% if has_early_voters %}
+            <p class="early_voters">Some of your friends are <strong>online</strong> and can <strong>vote early</strong>. Can you get them to go vote <strong>right now</strong>?</p>
+        {% endif %}
+        <a href="#" class="btn btn-blue reload">More Friends</a>
+    {% endif %}
+{% endif %}

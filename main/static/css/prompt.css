@@ -49,7 +49,7 @@ body{
     width: 675px;
     left: 50%;
     margin-left: -338px;
-    top: 100px;
+    top: 60px;
     background: #FFF;
     z-index: 10001;
     -webkit-border-radius: 7px;
@@ -109,6 +109,11 @@ body{
             color: #649332;
             content: '\25CF\A0\A0';
         }
+        .prompt .attributes .early_voting:before{
+            content: '\26A0\A0\A0';
+            color: #cb2431;
+            font-weight: bold;
+        }
 
     .prompt #friends{
         margin: 30px 0 0;
@@ -149,3 +154,31 @@ body{
         text-indent: -999em;
         overflow: hidden;
     }
+
+    .prompt .early_voters{
+        clear: both;
+        padding-top: 24px;
+        text-align: left;
+        font-size: 13px;
+        margin: 0;
+    }
+        .prompt .early_voters:before{
+            content: '\26A0\A0\A0';
+            color: #cb2431;
+            font-weight: bold;
+        }
+
+    .prompt .reload{
+        font-size: 12px;
+        line-height: 17px;
+        padding: 3px 8px 3px;
+        margin: 12px auto 0;
+        display: block;
+        width: 105px;
+    }
+        .prompt .reload.btn-blue:before{
+            content: url(../img/reload.png);
+            position: relative;
+            top: 3px;
+            margin-right: 5px;
+        }
