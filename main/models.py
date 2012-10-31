@@ -347,7 +347,7 @@ class Friendship(models.Model):
         self.wont_vote_reason = user.wont_vote_reason
         self.date_voted = user.date_voted
         self.last_voted = user.last_voted
-        self.voting_history = user.voting_history
+        self.voting_frequency = user.voting_frequency
 
     def picture_url(self):
         return "https://graph.facebook.com/{0}/picture?type=large".format(
