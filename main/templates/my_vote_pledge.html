@@ -54,7 +54,7 @@
                 {% comment %}Translators: consent to post action to timeline{% endcomment %}
                 <p class="check-container"><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Post this pledge to my timeline. (This is crucial for motivating your friends to vote!){% endblocktrans %}</a></p>
 
-                {% if voting_block and voting_block.has_backing_organization %}
+                {% if voting_block and voting_block.is_collecting_emails %}
                     <p class="check-container"><label for="join-block"><input type="checkbox" name="join-block" id="join-block" checked="checked" /> Join the <strong>{{ voting_block.name }}</strong> voting block? This will share your name and email with {% if voting_block.organization_website %}<a href="{{ voting_block.organization_website }}" target="_blank">{% endif %}{{ voting_block.organization_name }}{% if voting_block.organization_website %}</a>{% endif %} (<a href="{{ voting_block.organization_privacy_policy }}" target="_blank">Privacy Policy</a>)</a></p>
                 {% endif %}
 
@@ -76,6 +76,7 @@
     {{ block.super }}
     <script>
         var SUBMIT_PLEDGE_URL = "{% url 'main:submit_pledge' %}";
+        var AUTOJOIN = {% if not voting_block or voting_block.is_collecting_emails %}false{% else %}true{% endif %};
     </script>
     <script type="text/javascript" src="{% static 'js/pledge.js' %}"></script>
 {% endblock %}

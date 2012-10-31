@@ -40,7 +40,7 @@
             </div>
             <div class="permanent-link">
                 <input type="hidden" id="id_permanent_link" value="{{ voting_block.share_url }}">
-                <a href="{{ voting_block.share_url }}">Permalink</a>
+                <a href="{{ voting_block.share_url }}">{% if voting_block.is_collecting_emails %}Permalink{% else %}Invite link{% endif %}</a>
                 {% clippy "id_permanent_link" "#EEEEEE" %}
             </div>
         </div>

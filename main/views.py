@@ -217,12 +217,6 @@ def my_vote(request):
     block_id = request.session.get('block_id', None)
     force = 'force' in request.GET
 
-    if block_id:
-        try:
-            request.session['block'] = VotingBlock.objects.get(pk=int(block_id))
-        except VotingBlock.DoesNotExist:
-            pass
-
     if force or not user.pledged:
         return redirect('main:my_vote_pledge')
 
@@ -250,13 +244,22 @@ def my_vote_pledge(request):
                 request, messages.INFO,
                 # Translators: message displayed to users in green bar when they register to vote
                 _("Thank you for registering to vote!"))
+    voting_block = _voting_block_from_session(request.session)
     return render_to_response("my_vote_pledge.html", {
         'page': 'my_vote',
         'section': 'pledge',
         'user': user,
-        'voting_block': request.session.get('block', None)
+        'voting_block': voting_block
     }, context_instance=RequestContext(request))
 
+def _voting_block_from_session(session):
+    block_id = session.get("block_id", None)
+    if block_id:
+        try:
+            return VotingBlock.objects.get(id=block_id)
+        except VotingBlock.DoesNotExist:
+            pass
+    return None
 
 def my_vote_vote(request):
     user = User.objects.get(fb_uid=request.facebook["uid"])
@@ -477,7 +480,7 @@ def submit_pledge(request):
 
     join_block = request.GET.get('join_block', None) == 'true'
     if join_block:
-        block = request.session['block']
+        block = _voting_block_from_session(request.session)
         if not VotingBlockMember.objects.filter(
             member=user, voting_block_id=block.pk).exists():
             showing_message = True
@@ -844,6 +847,8 @@ def _voting_block_not_invited_context(voting_block, fbuid):
 
 
 def voting_blocks_item(request, id, section=None):
+    if request.session.get("block_id", None):
+        del request.session["block_id"]
     id = int(id)
     try:
         voting_block_member = VotingBlockMember.objects.select_related('voting_block', 'member')\
@@ -924,14 +929,22 @@ def voting_blocks_item_page(request, id, section):
 
 def voting_blocks_item_join(request, id):
     id = int(id)
-    try:
+    recs = VotingBlockMember.objects.filter(
+        member=User.objects.get(fb_uid=request.facebook["uid"]), 
+        voting_block_id=id)[:1]
+    vbm = None if len(recs) == 0 else recs[0]
+    if not vbm:
         VotingBlockMember.objects.create(
-            member=User.objects.get(fb_uid=request.facebook["uid"]), voting_block_id=id, joined=datetime.now())
-        messages.add_message(
-            request, messages.INFO,
-            _voting_block_join_message(VotingBlock.objects.get(id=id)))
-    except:
-        pass
+            member=User.objects.get(fb_uid=request.facebook["uid"]), 
+            voting_block_id=id, 
+            joined=datetime.now())
+    else:
+        if not vbm.joined:
+            vbm.joined = datetime.now()
+            vbm.save()
+    messages.add_message(
+        request, messages.INFO,
+        _voting_block_join_message(VotingBlock.objects.get(id=id)))
     return HttpResponseRedirect(reverse('main:voting_blocks_item', kwargs={'id': id}))
 
 def voting_blocks_item_leave(request, id):

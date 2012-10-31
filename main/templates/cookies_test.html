@@ -31,7 +31,7 @@
 {% block scripts %}
   <script type="text/javascript">
     if (document.cookie.length > 1) {
-      window.location.replace("/");
+      window.location.replace({% if inner_query_string %}"/?{{inner_query_string}}"{% else %}"/"{% endif %});
     }
     else {
       $("#content").show();

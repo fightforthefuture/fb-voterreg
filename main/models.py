@@ -365,6 +365,11 @@ class VotingBlock(models.Model):
         return self.name
 
     @property
+    def is_collecting_emails(self):
+        return self.organization_privacy_policy is not None and \
+            self.organization_privacy_policy != ""
+
+    @property
     def has_backing_organization(self):
         """
         We operationally define a voting block as having a backing org if the

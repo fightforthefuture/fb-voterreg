@@ -55,16 +55,22 @@ class FacebookMiddleware(object):
             user, created = User.objects.get_or_create(fb_uid=fb_user["uid"])
             # Some browsers block third-party cookies by default.
             if self._is_initial_request(request):
+                inner_query_string = request.META["QUERY_STRING"]
                 request.session["fb_user"] = fb_user
                 request.session.modified = True
-                query_string = urllib.urlencode(
-                    { 'fb_uid': fb_user['uid'],
-                      'signed_request': request.POST['signed_request'],
-                      'access_token': fb_user['access_token'],
-                      'no_cookies': True })
+                query_string_params = {}
+                for k, v in request.GET.items():
+                    query_string_params[k] = v
+                query_string_params.update({ 
+                        'fb_uid': fb_user['uid'],
+                        'signed_request': request.POST['signed_request'],
+                        'access_token': fb_user['access_token'],
+                        'no_cookies': True })
+                query_string = urllib.urlencode(query_string_params)
                 return render_to_response(
                     'cookies_test.html', 
-                    { 'query_string': query_string }, 
+                    { 'query_string': query_string,
+                      'inner_query_string': inner_query_string }, 
                     RequestContext(request))
             request.session["fb_user"] = fb_user
             request.session.modified = True
