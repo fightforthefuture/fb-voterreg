@@ -325,7 +325,6 @@ def fetch_me(request):
         graph = facebook.GraphAPI(request.facebook["access_token"])
         fb_profile = graph.get_object("me")
         profile = FacebookProfile(fb_profile)
-        voter = fetch_voter_from_fb_profile(profile)
         user.name = fb_profile["name"]
         user.first_name = profile.first_name
         user.last_name = profile.last_name
@@ -335,11 +334,13 @@ def fetch_me(request):
         user.location_state = profile.location_state or ""
         user.location_city = profile.location_city or ""
         user.far_from_home = profile.far_from_home()
+        user.data_fetched = True
+        user.save()
+        voter = fetch_voter_from_fb_profile(profile)
         if voter:
             user.votizen_id = voter.id
             user.registered = voter.registered
-        user.data_fetched = True
-        user.save()
+            user.save()
         try:
             _send_join_email(user, request)
         except Exception as e:

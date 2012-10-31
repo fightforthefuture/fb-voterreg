@@ -1,6 +1,5 @@
 # encoding: utf-8
 from south.v2 import DataMigration
-from main.models import User, Friendship
 
 
 class Migration(DataMigration):
@@ -11,15 +10,15 @@ class Migration(DataMigration):
         as having voted, each Friendship referencing them is also updated to
         indicate that they have voted.
         """
-        users = User.objects.all()
+        users = orm.User.objects.all()
         for user in users:
             if user.voted:
                 try:
-                    friendships_for_user = Friendship.objects.filter(fb_uid=user.fb_uid)
+                    friendships_for_user = orm.Friendship.objects.filter(fb_uid=user.fb_uid)
                     for friendship in friendships_for_user:
                         friendship.date_voted = user.date_voted
                         friendship.save()
-                except Friendship.DoesNotExist:
+                except orm.Friendship.DoesNotExist:
                     pass
 
     def backwards(self, orm):

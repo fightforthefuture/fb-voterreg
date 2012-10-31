@@ -1,6 +1,5 @@
 import facebook
-from voterapi import fetch_voters_from_fb_profiles, \
-    fill_voter_history_for_users_friends
+from voterapi import fetch_voters_from_fb_profiles
 from main.models import User, Friendship, BATCH_NEARBY, \
     BATCH_FAR_FROM_HOME, BATCH_BARELY_LEGAL, WonBadge, \
     LastAppNotification, BADGE_PLEDGED, BADGE_VOTED
@@ -141,8 +140,6 @@ def fetch_friends(fb_uid, access_token):
     user.friendshipbatch_set.all().update(completely_fetched=True)
 
     _update_registered_status_of_all(user.id, friends)
-
-    fill_voter_history_for_users_friends(user)
 
 
 def _award_badges(friendship):

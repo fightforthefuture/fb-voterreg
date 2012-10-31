@@ -15,6 +15,16 @@ APP_NOTIFICATION_THRESHOLD = 6 * 60 * 60 # in seconds
 
 BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
 
+VOTING_FREQUENCY_ALWAYS = 1
+VOTING_FREQUENCY_SOMETIMES = 2
+VOTING_FREQUENCY_RARELY = 3
+
+VOTING_FREQUENCIES = (
+    (VOTING_FREQUENCY_ALWAYS, "always"),
+    (VOTING_FREQUENCY_SOMETIMES, "sometimes"),
+    (VOTING_FREQUENCY_RARELY, "rarely")
+)
+
 WONT_VOTE_REASONS = (
 
     # Translators: Not voting because I will not be old enough
@@ -111,6 +121,9 @@ class User(models.Model):
 
     # User has seen the initial modal prompt
     seen_initial_prompt = models.BooleanField(default=False)
+
+    voting_frequency = models.IntegerField(choices=VOTING_FREQUENCIES, null=True)
+    last_voted = models.DateField(null=True)
 
     @property
     def friends(self):
@@ -269,7 +282,8 @@ class Friendship(models.Model):
     invited_pledge_count = models.IntegerField(default=0)
     wont_vote_reason = models.CharField(
         max_length=18, choices=WONT_VOTE_REASONS, blank=True)
-
+    voting_frequency = models.IntegerField(choices=VOTING_FREQUENCIES, null=True)
+    last_voted = models.DateField(null=True)
     objects = FriendStatusManager()
 
     @property
@@ -318,6 +332,8 @@ class Friendship(models.Model):
         self.invited_pledge_count = user.invited_pledge_count
         self.wont_vote_reason = user.wont_vote_reason
         self.date_voted = user.date_voted
+        self.last_voted = user.last_voted
+        self.voting_history = user.voting_history
 
     def picture_url(self):
         return "https://graph.facebook.com/{0}/picture?type=large".format(

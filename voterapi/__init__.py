@@ -50,14 +50,6 @@ def fetch_voters_from_fb_profiles(fb_profiles):
         voter_records.extend(new_voter_records)
     return voter_records
 
-def fill_voter_history_for_users_friends(user):
-    friend_count = user.friendship_set.all().count()
-    for index in range(0, friend_count, 50):
-        friends = user.friendship_set.all().order_by("id")[index:index+50]
-        voter_records = VoterRecord.objects.filter(
-            fb_uid__in=[f.fb_uid for f in friends])
-        fill_voter_history(voter_records)
-
 def fill_voter_history(voter_records):
     fetchable = [v for v in voter_records if 
                  v.votizen_id and not v.loaded_history]
@@ -73,7 +65,6 @@ def _fill_voter_history(voter_records):
                     "/v1/voter/{0}/record/?format=json".format(v.votizen_id) }
               for v in unfilled_records]
         status_code, objects = _batch_history_post(request_list)
-        print(status_code)
         if status_code != 200:
             continue
         index = 0
@@ -86,23 +77,84 @@ def _fill_voter_history(voter_records):
                 body = json.loads(obj["body"])
                 if body["id"] != voter_record.votizen_id:
                     raise Exception("bad response from votizen")
+                history_records = []
                 for json_record in body["voting_history"]:
-                    _create_voter_history_record(voter_record, json_record)
+                    history_records.append(_create_voter_history_record(
+                            voter_record, json_record))
                 voter_record.loaded_history = True
                 voter_record.save()
+                _update_user_and_friendship(
+                    voter_record.fb_uid, history_records)
             else:
                 current_unfilled.append(voter_record)
         unfilled_records = current_unfilled
 
+def _voting_frequency(start_year, votes):
+    from main import models as main_models
+    start_year += (4 - (start_year % 4))
+    num_voted = 0
+    num_not_voted = 0
+    for year in range(start_year, 2011, 4):
+        if year in votes:
+            if votes[year]:
+                num_voted += 1
+            else:
+                num_not_voted += 1
+        else:
+            num_not_voted += 1
+    if num_not_voted == 0 and num_voted > 0:
+        return main_models.VOTING_FREQUENCY_ALWAYS
+    elif num_not_voted < num_voted:
+        return main_models.VOTING_FREQUENCY_SOMETIMES
+    else:
+        return main_models.VOTING_FREQUENCY_RARELY
+
+def _update_user_and_friendship(fb_uid, voter_history_records):
+    from main.models import User, Friendship, VOTING_FREQUENCY_RARELY
+    votes = dict([(v.date.year, v.voted) for v in voter_history_records if
+                  v.date.year % 4 == 0])
+    dates_voted = [v.date for v in voter_history_records if v.voted]
+    last_voted = None if len(dates_voted) == 0 else max(dates_voted)
+    u = None
+    if len(dates_voted) > 0:
+        recs = User.objects.filter(fb_uid=fb_uid)
+        u = None if len(recs) == 0 else recs[0]
+        recs = Friendship.objects.filter(fb_uid=fb_uid)[:1]
+        f = None if len(recs) == 0 else recs[0]
+        birthday = None
+        if u and u.birthday:
+            birthday = u.birthday
+        if not birthday and f and f.birthday:
+            birthday = f.birthday
+        if birthday:
+            voting_frequency = _voting_frequency(
+                birthday.year + 19, votes)
+        else:
+            voting_frequency = _voting_frequency(
+                min([v.date.year for v in voter_history_records]), votes)
+    else:
+        voting_frequency = VOTING_FREQUENCY_RARELY
+    User.objects.filter(fb_uid=fb_uid).update(
+        voting_frequency=voting_frequency,
+        last_voted=last_voted)
+    Friendship.objects.filter(fb_uid=fb_uid).update(
+        voting_frequency=voting_frequency,
+        last_voted=last_voted)
+
 def _create_voter_history_record(voter_record, json_record):
     m = re.match(r"(\d{4})-(\d{2})-(\d{2})", json_record["date"])
     voting_date = date(*[int(m.group(i)) for i in range(1, 4)])
-    if not VoterHistoryRecord.objects.filter(
-        voter=voter_record, date=voting_date).exists():
-        VoterHistoryRecord(
+    recs = VoterHistoryRecord.objects.filter(
+        voter=voter_record, date=voting_date)[:1]
+    if len(recs) == 0:
+        vhr = VoterHistoryRecord(
             voter=voter_record,
             date=voting_date,
-            voted=(json_record["voted"].lower() == "yes")).save()
+            voted=(json_record["voted"].lower() == "yes"))
+        vhr.save()
+        return vhr
+    else:
+        return recs[0]
 
 def _fetch_voters_from_fb_profiles(fb_profiles):
     unfetched_both_steps = []
@@ -190,6 +242,7 @@ def _fetch_profiles(profiles, include_address):
         else:
             unfetched.append(profiles[index])
         index += 1
+    fill_voter_history(voter_records)
     return unfetched, voter_records, not_found
 
 def _fetch_voter_batch(unfetched_both_steps, unfetched_last_step, voter_records):
@@ -232,12 +285,17 @@ def fetch_voter_from_fb_profile(fb_profile):
         voter = fetch_voter(**params)
     votizen_id = "" if not voter else voter.id
     registered = False if not voter else voter.registered
-    try:
-        VoterRecord(fb_uid=fb_uid,
-                    votizen_id=votizen_id,
-                    registered=registered).save()
-    except IntegrityError:
-        pass
+    if not VoterRecord.objects.filter(fb_uid=fb_uid).exists():
+        try:
+            v = VoterRecord(fb_uid=fb_uid,
+                        votizen_id=votizen_id,
+                        registered=registered)
+            v.save()
+        except IntegrityError:
+            pass
+    else:
+        v = VoterRecord.objects.get(fb_uid=fb_uid)
+    fill_voter_history([v])
     return voter
 
 def fetch_voter(**kwargs):
