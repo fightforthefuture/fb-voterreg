@@ -96,6 +96,7 @@ class PromptView(TemplateView):
         """
         self._user_obj = User.objects.get(fb_uid=self.request.facebook["uid"])
         context = super(PromptView, self).get_context_data(**kwargs)
+        context['only_show_friends'] = self.request.GET.get('only_friends', None) == 'true'
         prompt_type = self.request.GET.get('type', None)
         if prompt_type == 'online':
             context.update(self._online())
