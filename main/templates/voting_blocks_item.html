@@ -96,5 +96,14 @@
 <script src="{% static 'js/invite_friend_grid.js' %}"></script>
 <script src="{% static 'js/voting_blocks_item.js' %}"></script>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+{% if not vwf_user.seen_initial_prompt or force_prompt %}
+    <script type="text/javascript">
+        jQuery(function(){
+            prompt.modal();
+        })
+    </script>
+{% endif %}
+
 {% endblock %}
 
