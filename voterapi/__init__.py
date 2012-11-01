@@ -77,10 +77,9 @@ def _fill_voter_history(voter_records):
                 body = json.loads(obj["body"])
                 if body["id"] != voter_record.votizen_id:
                     raise Exception("bad response from votizen")
-                history_records = []
-                for json_record in body["voting_history"]:
-                    history_records.append(_create_voter_history_record(
-                            voter_record, json_record))
+                history_records = \
+                    [_create_voter_history_record(voter_record, j)
+                     for j in body["voting_history"]]
                 voter_record.loaded_history = True
                 voter_record.save()
                 _update_user_and_friendship(
@@ -183,13 +182,27 @@ def _relative_uri(profile, include_address):
         dict([k, v.encode('utf-8')] for k, v in params.items()))
 
 def _batch_history_post(request_list):
-    batch_url = _BATCH_URL + "?" + urlencode(
-        { "api_key": settings.VOTIZEN_API_KEY,
-          "format": "json"})
-    response = requests.post(
+    if settings.USE_FAKE_VOTIZEN_API:
+        elems = []
+        for request in request_list:
+            votizen_id = re.search(
+                r"voter/([^/]+)/record", request["relative_uri"]).group(1)
+            voting_history = []
+            for year in range(2000, 2010, 4):
+                voting_history.append(
+                    { "date": "{0}-11-06".format(year),
+                      "voted": choice(["Yes", "No"]) })
+            body = json.dumps({"id": votizen_id, "voting_history": voting_history})
+            elems.append({ "status_code": 200, "body": body })
+        return 200, elems
+    else:
+        batch_url = _BATCH_URL + "?" + urlencode(
+            { "api_key": settings.VOTIZEN_API_KEY,
+              "format": "json" })
+        response = requests.post(
             batch_url, 
             data={ "batch": json.dumps(request_list) })
-    return response.status_code, response.json
+        return response.status_code, response.json
 
 def _batch_post(request_list):
     if settings.USE_FAKE_VOTIZEN_API:
