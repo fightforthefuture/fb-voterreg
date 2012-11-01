@@ -1258,6 +1258,20 @@ div.content {
                 font-weight: normal;
             }
 
+        #friends .action .btn.ask{
+            font-size: 12px;
+            line-height: 17px;
+            padding: 0px 5px 3px;
+            position: relative;
+        }
+            #friends .action .btn.ask:before{
+                content: url(../img/bubble.png);
+                position: relative;
+                top: 4px;
+                margin-right: 5px;
+            }
+
+
 a.load-more{
     display: block;
     text-align: center;
