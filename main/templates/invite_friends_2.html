@@ -44,6 +44,7 @@
 {% block scripts %}
     <script>
         var MARK_INVITED_URL = "{% url 'main:mark_individual_invited' %}";
+        var SHARE_LINK = "{{ share_url }}{% url 'main:share' %}";
         var FACEBOOK_CANVAS_PAGE = "{{FACEBOOK_CANVAS_PAGE}}";
         var LOAD_MORE_URL = "{% url 'main:invite_friends_2_page' section %}";
     </script>

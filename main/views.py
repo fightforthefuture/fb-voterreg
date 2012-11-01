@@ -433,6 +433,7 @@ def invite_friends_2(request, section="not_invited"):
         "friends": f_qs,
         "page": 'friends',
         "section": section,
+        "share_url": settings.SHARE_URL,
         "num_registered": user.friends.registered().count(),
         "num_pledged": user.friends.pledged().count(),
         "num_not_pledged": user.friends.invited_not_pledged().count(),
