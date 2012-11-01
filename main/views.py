@@ -367,8 +367,9 @@ def fetch_me(request):
         user.data_fetched = True
         user.save()
         voter = fetch_voter_from_fb_profile(profile)
+        user = User.objects.get(id=user.id)
         if voter:
-            user.votizen_id = voter.id
+            user.votizen_id = voter.votizen_id
             user.registered = voter.registered
             user.save()
         try:

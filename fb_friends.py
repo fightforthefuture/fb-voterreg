@@ -53,28 +53,22 @@ def _make_initial_batches(user, fb_friends, found_uids):
     return newly_found_uids
 
 def _make_main_batches(user_id, access_token, fb_friends, found_uids):
-    voters = fetch_voters_from_fb_profiles(
-        [FacebookProfile(f) for f in fb_friends if f["uid"] not in found_uids])
-    voter_map = dict((v.fb_uid, v) for v in voters)
     user = User.objects.get(id=user_id)
     user.update_friends_fetch()
     user.save()
+    facebook_profiles = []
     for fb_friend in fb_friends:
         uid = str(fb_friend["uid"])
         if uid in found_uids:
             continue
+        facebook_profiles.append(FacebookProfile(fb_friend))
         if Friendship.objects.filter(user=user, fb_uid=uid).count() > 0:
             continue
         profile = FacebookProfile(fb_friend)
-        voter = voter_map[uid]
-        f = Friendship.create_from_fb_profile(user, profile)
-        if voter and voter.registered:
-            f.registered = True
-            f.votizen_id = voter.id
-        try:
+        if not Friendship.objects.filter(user=user, fb_uid=uid).exists():
+            f = Friendship.create_from_fb_profile(user, profile)
             f.save()
-        except IntegrityError:
-            pass
+    fetch_voters_from_fb_profiles(facebook_profiles)
 
 def _update_registered_status_of_all(user_id, fb_friends):
     user = User.objects.get(id=user_id)
@@ -86,12 +80,7 @@ def _update_registered_status_of_all(user_id, fb_friends):
         f = f[0]
         if not f.votizen_id:
             profiles_to_update.append(FacebookProfile(fb_friend))
-    voters = fetch_voters_from_fb_profiles(profiles_to_update)
-    for voter in voters:
-        f = Friendship.objects.get(user=user, fb_uid=voter.fb_uid)
-        f.votizen_id = voter.id
-        f.registered = voter.registered
-        f.save()
+    fetch_voters_from_fb_profiles(profiles_to_update)
 
 def _make_friendships(user_id, access_token, fb_friends):
     user = User.objects.get(id=user_id)

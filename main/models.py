@@ -127,6 +127,10 @@ class User(models.Model):
 
     voting_frequency = models.IntegerField(choices=VOTING_FREQUENCIES, null=True)
     last_voted = models.DateField(null=True)
+    # this is a comma-separated list of dates in YYYY-MM-DD format, valid
+    # as of the time this person joined.
+    dates_voted = models.CharField(max_length=1024, blank=True)
+
 
     @property
     def friends(self):
@@ -287,6 +291,9 @@ class Friendship(models.Model):
         max_length=18, choices=WONT_VOTE_REASONS, blank=True)
     voting_frequency = models.IntegerField(choices=VOTING_FREQUENCIES, null=True)
     last_voted = models.DateField(null=True)
+    # this is a comma-separated list of dates in YYYY-MM-DD format, valid
+    # as of the time this person joined.
+    dates_voted = models.CharField(max_length=1024, blank=True)
     objects = FriendStatusManager()
 
     @property
