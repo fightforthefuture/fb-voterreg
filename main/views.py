@@ -54,6 +54,21 @@ class OGObjectView(TemplateView):
         return context
 
 
+class ShareView(TemplateView):
+    """
+    The view used to share with other apps
+    """
+    template_name = 'share.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ShareView, self).get_context_data(**kwargs)
+        context['base_url'] = settings.BASE_URL
+        context['canvas_url'] = settings.FACEBOOK_CANVAS_PAGE
+        context['share_url'] = settings.SHARING_URL
+        context['facebook_app_id'] = settings.FACEBOOK_APP_ID
+        return context
+
+
 class VotingBlockShareView(DetailView):
     """
 
