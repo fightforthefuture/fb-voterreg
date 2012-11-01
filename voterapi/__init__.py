@@ -90,7 +90,8 @@ def _fill_voter_history(voter_records):
 
 def _voting_frequency(start_year, votes):
     from main import models as main_models
-    start_year += (4 - (start_year % 4))
+    if (start_year % 4) != 0:
+        start_year += (4 - (start_year % 4))
     num_voted = 0
     num_not_voted = 0
     for year in range(start_year, 2011, 4):
