@@ -9,11 +9,8 @@ $(function() {
             {
                 method: "send",
                 to: fbuid,
-                name: "Vote. And help me get all our friends to vote.",
                 link: window['INVITE_LINK'],
-                name: window['INVITE_NAME'],
-                description: window['INVITE_DESCRIPTION'],
-                picture: window['INVITE_PICTURE']
+                name: window['INVITE_NAME']
             }, function(response) {
                 if (response && response["to"] && response["to"].length > 0 && callback) {
                     callback(fbuid);
