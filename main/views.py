@@ -905,6 +905,7 @@ def voting_blocks_item(request, id, section=None):
             for nfriend in nfriends:
                 VotingBlockFriendship.objects.create(voting_block=voting_block, friendship=nfriend)
         context.update(_voting_block_not_invited_context(voting_block.id, user.fb_uid))
+        context.update({'must_invite': True})
     else:
         context.update({
             "dont_friendship": True,
@@ -933,13 +934,14 @@ def voting_blocks_item_page(request, id, section):
             vbf.friendship.invited_with_batch = vbf.invited_with_batch
             friends.append(vbf.friendship)
         context.update({
-            'friends': friends
+            'friends': friends,
+            "must_invite": True
         })
     else:
         context.update({
             'friends': _members_qs(user, section, voting_block)[start:start+64],
             "dont_friendship": True,
-            "dont_status": True,
+            "dont_status": True
         })
     return render_to_response(
         "_invite_friends_page.html",
