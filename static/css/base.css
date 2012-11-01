@@ -72,6 +72,7 @@ body {
 
 #container{
     background: transparent url(../img/body-back.png) 0 116px no-repeat;
+    min-height: 700px;
 }
 
 a {
