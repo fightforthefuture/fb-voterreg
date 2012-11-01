@@ -416,6 +416,11 @@ class VotingBlockFriendship(models.Model):
     class Meta:
         unique_together = (('voting_block', 'friendship',),)
 
+class InvitedToBlock(models.Model):
+
+    fb_uid = models.CharField(max_length=32, unique=True)
+    voting_block = models.ForeignKey(VotingBlock)
+
 class WonBadge(models.Model):
     class Meta:
         unique_together = (("user", "badge_type",),)

@@ -20,6 +20,25 @@ $(function() {
         return false;
     }
 
+    function apprequest(fbuid, callback) {
+        if (DEBUG_APP_REQUESTS) {
+            callback(fbuid);
+            return;
+        }
+        FB.ui(
+            {
+                method: "apprequests",
+                to: fbuid,
+                message: window['INVITE_NAME']
+            }, function(response) {
+                if (response && response["to"] && response["to"].length > 0 && callback) {
+                    callback(fbuid);
+                }
+            }
+        );
+        return false;
+    }
+
     function batchInvited(fbuid) {
         var uninvited = $("#uninvited");
         uninvited.find(".invite").hide();
@@ -58,7 +77,7 @@ $(function() {
             fbuids.push($(this).data("uid"));
         });
         var that = this;
-        invite(
+        apprequest(
             fbuids.join(","),
             batchInvited
         );
