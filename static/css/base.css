@@ -1160,6 +1160,7 @@ div.content {
         padding: 0;
     }
     #friends li{
+        position: relative;
         width: 138px;
         background: #e8eaf0;
         float: left;
@@ -1175,7 +1176,7 @@ div.content {
     }
         #friends li figure{
             width: 50px;
-            margin: 8px auto;
+            margin: 20px auto 10px;
         }
         #friends li img{
             max-width: 100%;
@@ -1498,4 +1499,25 @@ a.load-more:hover{
     display: inline-block;
     margin-top: 24px;
     font-size: 13px;
+}
+
+.voter{
+    width: 53px;
+    height: 53px;
+    text-indent: -999em;
+    overflow: hidden;
+    background: url(../img/voter.png);
+    position: absolute;
+    top: -17px;
+    right: -2px;
+    cursor: pointer;
+}
+
+.years_voted {
+    font-size: 12px;
+    text-align: center;
+    margin: -3px 4px 6px;
+    color: #303030;
+    font-weight: bold;
+    display: none;
 }
