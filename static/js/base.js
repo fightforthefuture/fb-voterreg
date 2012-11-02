@@ -24,8 +24,10 @@ $(function() {
     }
     $(window).bind('checkNotifications', checkNotifications);
 
-    $('.logo').click(function(evt){
-        $(window).trigger('checkNotifications');
+    $('.voter').live('click', function(evt){
+        evt.preventDefault();
+        var $li = $(this).closest('li');
+        $li.find('.years_voted').show();
     });
 
     $(".invite-friends, header ul li a.invite").click(function() {

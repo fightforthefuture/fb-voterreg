@@ -9,6 +9,10 @@
                 </figure>
 
                 <h2>{{ friend.name }}</h2>
+                {% if friend.voting_years %}
+                    <p class="voter" title="Voted in {{ friend.voting_years|join:", " }}">Voter!</p>
+                    <p class="years_voted">Voted in {{ friend.voting_years|join:", " }}</p>
+                {% endif %}
 
                 {% if not dont_friendship %}
 

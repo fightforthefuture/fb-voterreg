@@ -131,14 +131,15 @@ class PromptView(TemplateView):
             'friends': selection,
             'title': 'Will your friends vote?',
             'description': (
-                "It's in your hands. Here are four friends who are likely voters -- and they're online right now. Can you get each one of them pledged to vote?"
+                "It's in your hands. Here are four friends who are likely "
+                "voters.  They're online right now, and some of them may be "
+                "able to vote early.  Can you get them to vote?"
             ),
             'attributes': {
                 'online': True,
                 'likely_voter': True,
                 'early_voting': True,
-            },
-            'has_early_voters': any([f.can_vote_early for f in selection])
+            }
         }
 
 

@@ -1,4 +1,5 @@
 import operator
+from time import strptime
 
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -295,6 +296,23 @@ class Friendship(models.Model):
     # as of the time this person joined.
     dates_voted = models.CharField(max_length=1024, blank=True)
     objects = FriendStatusManager()
+
+    @property
+    def voting_years(self):
+        """
+        Returns a list of unique years in which the friend has voted.
+
+        >>> self.dates_voted
+        u'2000-11-06,2004-01-21,2004-11-06,2008-11-06'
+        >>> self.voting_years
+        [2008, 2004, 2000]
+        """
+        dates = self.dates_voted.split(',')
+        try:
+            years = [strptime(d, '%Y-%m-%d')[0] for d in dates]
+        except ValueError:
+            return None
+        return sorted(list(set(years)), reverse=True)
 
     @property
     def invited(self):
