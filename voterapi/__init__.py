@@ -58,7 +58,9 @@ def fill_voter_history(voter_records):
 
 def _fill_voter_history(voter_records):
     unfilled_records = voter_records
-    while len(unfilled_records) > 0:
+    attempt_count = 0
+    while len(unfilled_records) > 0 and attempt_count < 8:
+        attempt_count += 1
         request_list = \
             [ { "method": "GET",
                 "relative_uri": 
