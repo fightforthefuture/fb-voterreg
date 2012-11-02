@@ -10,7 +10,6 @@ $(function() {
             }, function(response) {
                 if (response && response["success"]) {
                     _kmq.push(["record", "voting block big blue invite"]);
-                    callback(fbuid);
                 }
             }
         );
