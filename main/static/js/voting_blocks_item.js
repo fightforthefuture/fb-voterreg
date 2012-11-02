@@ -1,6 +1,6 @@
 $(function() {
 
-    function invite(fbuid, callback) {
+    function invite(fbuid) {
         FB.ui(
             {
                 method: "send",
@@ -8,7 +8,8 @@ $(function() {
                 link: window['INVITE_LINK'],
                 name: window['INVITE_NAME']
             }, function(response) {
-                if (response && response["to"] && response["to"].length > 0 && callback) {
+                if (response && response["success"]) {
+                    _kmq.push(["record", "voting block big blue invite"]);
                     callback(fbuid);
                 }
             }
@@ -28,6 +29,7 @@ $(function() {
                 message: window['INVITE_NAME']
             }, function(response) {
                 if (response && response["to"] && response["to"].length > 0 && callback) {
+                    _kmq.push(["record", "voting block app request"]);
                     callback(fbuid);
                 }
             }

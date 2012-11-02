@@ -32,7 +32,10 @@ $(function() {
                 picture: window['INVITE_PICTURE']
             },
             function(response) {
-                inviteFriendSucceeded(fbuid, $link);
+                if (response && response["success"]) {
+                    _kmq.push(["record", "individual invite"]);
+                    inviteFriendSucceeded(fbuid, $link);
+                }
             });
     }
 
