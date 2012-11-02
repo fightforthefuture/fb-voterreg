@@ -1,10 +1,6 @@
 $(function() {
 
     function invite(fbuid, callback) {
-        if (DEBUG_APP_REQUESTS) {
-            callback(fbuid);
-            return;
-        }
         FB.ui(
             {
                 method: "send",
@@ -22,7 +18,7 @@ $(function() {
 
     function apprequest(fbuid, callback) {
         if (DEBUG_APP_REQUESTS) {
-            callback(fbuid);
+            window.setTimeout(function() { if (callback) { callback(fbuid);} }, 1000);
             return;
         }
         FB.ui(
@@ -49,7 +45,7 @@ $(function() {
             function(result) {
                 $(window).trigger('checkNotifications');
                 uninvited.html(result["friends_batch_html"]);
-                if(result['num_friends'] > result['num_invited']) {
+                if (result['num_friends'] > result['num_invited']) {
                     uninvited.find(".invite").show();
                     uninvited.find(".invited").hide();
                 }
@@ -70,7 +66,7 @@ $(function() {
         });
     }
 
-    $(".mission-box-mass a.invite").click(function(e) {
+    $(".mission-box-mass").on("click", "a.invite", function(e) {
         var fbuids = [];
         var $uninvited = $(this).parents(".uninvited");
         $uninvited.find("img").each(function() {
