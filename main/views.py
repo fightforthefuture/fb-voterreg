@@ -855,7 +855,7 @@ def _voting_block_not_invited_context(voting_block, fbuid):
     vbfs = VotingBlockFriendship.objects.select_related('friendship').order_by("friendship__fb_uid").filter(friendship__user_fb_uid=fbuid, voting_block=voting_block)
     vbms = VotingBlockMember.objects.filter(voting_block=voting_block, joined__isnull=False).values_list('member__fb_uid', flat=True)
 
-    friends_batch = [x.friendship for x in vbfs.filter(~Q(friendship__fb_uid__in=vbms), invited_with_batch=False, invited_individually=False)[:32]]
+    friends_batch = [x.friendship for x in vbfs.filter(~Q(friendship__fb_uid__in=vbms), invited_with_batch=False, invited_individually=False)[:49]]
     friends = []
     for vbf in vbfs.filter(~Q(friendship__fb_uid__in=vbms))[:64]:
         vbf.friendship.invited_individually = vbf.invited_individually

@@ -2,7 +2,7 @@
 
 {% if friends_batch %}
 <ul>
-    {% for f in friends_batch %}<li><img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture"></li>{% endfor %}
+    {% for f in friends_batch %}<li {% if forloop.counter > 32 %}style="display:none"{% endif %}><img data-uid="{{f.fb_uid}}" src="https://graph.facebook.com/{{f.fb_uid}}/picture"></li>{% endfor %}
 </ul>
 <a href="javascript:void(0)" class="invite btn btn-green">Invite them</a>
 <a href="#" style="display: none;" class="invited btn">Invited</a>
