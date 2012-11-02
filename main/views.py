@@ -913,7 +913,7 @@ def voting_blocks_item(request, id, section=None):
            voting_block_member.last_friendship_update < user.friends_fetch_last_activity:
             nfriends = user.friends.filter(~Q(id__in=VotingBlockFriendship.objects.filter(friendship__user=user, voting_block=voting_block).values_list('friendship_id', flat=True)))
             for nfriend in nfriends:
-                VotingBlockFriendship.objects.create(voting_block=voting_block, friendship=nfriend)
+                VotingBlockFriendship.objects.get_or_create(voting_block=voting_block, friendship=nfriend)
         context.update(_voting_block_not_invited_context(voting_block.id, user.fb_uid))
         context.update({'must_invite': True})
     else:

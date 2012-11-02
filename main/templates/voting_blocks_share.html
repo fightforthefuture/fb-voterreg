@@ -41,7 +41,7 @@
             setTimeout(function() {
                 {% comment %}assign cause an permission denied exception in FF{% endcomment %}
                 window.top.location = '{{ canvas_url }}?block={{block.pk}}';
-            }, 2000);
+            }, 5000);
         </script>
     </body>
 </html>
