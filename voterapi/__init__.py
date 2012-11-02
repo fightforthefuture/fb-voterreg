@@ -81,8 +81,7 @@ def _fill_voter_history(voter_records):
                      for j in body["voting_history"]]
                 voter_record.loaded_history = True
                 voter_record.save()
-                _update_user_and_friendship(
-                    voter_record, history_records)
+                _update_user_and_friendship(voter_record, history_records)
             else:
                 current_unfilled.append(voter_record)
         unfilled_records = current_unfilled
