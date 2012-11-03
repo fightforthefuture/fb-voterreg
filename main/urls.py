@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
 from main.views import NotificationCheckView, PromptView, ShareView, \
-    VotingBlockShareView
+    VotingBlockShareView, MobilePledgeView
 
 
 urlpatterns = patterns(
@@ -45,6 +45,10 @@ urlpatterns = patterns(
 
 urlpatterns += patterns(
     "",
+    url(r"^mobile$",
+        MobilePledgeView.as_view(),
+        name="mobile",
+    ),
     url(r"^prompt$",
         PromptView.as_view(),
         name="prompt"

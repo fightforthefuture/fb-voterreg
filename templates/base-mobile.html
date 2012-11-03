@@ -1,0 +1,59 @@
+<!doctype html>
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load url from future %}
+
+<html xmlns:fb="http://ogp.me/ns/fb#" class="no-js" lang="en">
+    <head>
+        {% if INSTALLATION == "production" %}<script src="//cdn.optimizely.com/js/21249520.js"></script>{% endif %}
+        <meta charset="utf-8">
+        <title>{% block meta_title %}Fight for the Future{% endblock %}</title>
+        <meta name="description" content="{% block meta_description %}Fight for the Future{% endblock %}">
+        <meta name="author" content="Fight for the Future">
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-35232596-1']);
+            _gaq.push(['_trackPageview']);
+            var _kmq = _kmq || [];
+            var _kmk = _kmk || '{{ KM_CODE }}';
+            setTimeout(function() {
+                function addScript(src) {
+                    var sc = document.createElement('script'); sc.type = 'text/javascript'; sc.async = true; sc.src = src;
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sc, s);
+                }
+                addScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js');
+                addScript('//i.kissmetrics.com/i.js');
+                addScript('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+            }, 1);
+            {% if my_uid %}_kmq.push(['identify', '{{ my_uid }}']);{% endif %}
+            {% if traffic_source %}_kmq.push(['record', 'Traffic source: {{ traffic_source }}']);{% endif %}
+        </script>
+    </head>
+    <body>
+        {% block main %}{% endblock main %}
+        <script src="https://connect.facebook.net/en_US/all.js#xfbml=1&amp;appId={{ FACEBOOK_APP_ID }}"></script>
+        <script src="{% static 'js/jquery.js' %}"></script>
+        <script>
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '{{ FACEBOOK_APP_ID }}', 
+                    status: true, 
+                    cookie: true,
+                    xfbml: true,
+                    oauth: true
+                });
+                function handleResponseChange(response) {
+                    document.body.className = response.authResponse ? 'connected' : 'not_connected';
+                    if(response.authResponse){
+                        console.log(response);
+                    }
+                }
+                FB.Event.subscribe('auth.authResponseChange', handleResponseChange);  
+            };
+        </script>
+        {% block scripts %}{% endblock scripts %}
+    </body>
+</html>

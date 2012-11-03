@@ -1,0 +1,26 @@
+{% extends "base-mobile.html" %}
+
+{% block main %}
+    <p id="hi">Pledge to vote?</p>
+{% endblock main %}
+
+{% block scripts %}
+    <script>
+        (function($){
+            $(function(){
+                $('#hi').click(function(evt){
+                    FB.api('{{ OG_URL }}', 'post', {
+                        'vote_obj': '{{ VOTE_OBJ }}'
+                    }, function(response) {
+                        if (!response || response.error) {
+                            alert('Error occured');
+                            console.log(response);
+                        } else {
+                            alert('Cook was successful! Action ID: ' + response.id);
+                        }
+                    });
+                });
+            });
+        })(jQuery);
+    </script>
+{% endblock scripts %}

@@ -1044,3 +1044,29 @@ def demo_transaction_error(request):
     user.save()
 
     return HttpResponse(error)
+
+
+class MobilePledgeView(TemplateView):
+    """
+    The view used to serve the OpenGraph objects published whenever a user
+    pledges to vote.
+    """
+
+    http_method_names = ['get', 'post']
+
+    def get_context_data(self, **kwargs):
+        context = super(MobilePledgeView, self).get_context_data(**kwargs)
+        context['FACEBOOK_APP_ID'] = settings.FACEBOOK_APP_ID
+        context['OG_URL'] = opengraph_url(self.request,
+            settings.FACEBOOK_OG_PLEDGE_ACTION)
+        context['VOTE_OBJ'] = settings.BASE_URL + reverse('pledge_object')
+        return context
+
+    def get_template_names(self):
+        return 'mobile-%s.html' % self.request.method.lower()
+
+    def get(self, request, *args, **kwargs):
+        return super(MobilePledgeView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return super(MobilePledgeView, self).post(request, *args, **kwargs)
