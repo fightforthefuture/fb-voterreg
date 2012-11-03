@@ -838,7 +838,7 @@ def voting_blocks_create(request):
 
 def _members_qs(user, section, voting_block):
     if section == 'members':
-        return User.objects.filter(votingblockmember__voting_block=voting_block, votingblockmember__joined__isnull=False)
+        return User.objects.filter(votingblockmember__voting_block=voting_block)
     elif section == 'voted':
         return User.objects.filter(votingblockmember__voting_block=voting_block, votingblockmember__joined__isnull=False, date_voted__isnull=False)
     elif section == 'not_voted':
