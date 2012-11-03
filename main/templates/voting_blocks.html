@@ -37,6 +37,7 @@
         <p class="info">Voting blocks are a powerful way to rally and organize friends who support your cause, website, or group to vote on November 6th.</p>
         <a class="btn btn-green btn-large create" href="{% url 'main:voting_blocks_create' %}"><i class="icon-plus"></i> Create Voting Block</a>
         <p>Before you create a new voting block, make sure one doesn’t exist already</p>
+        {% include "_disclaimer.html" %}
         {% if my_voting_blocks %}
             <div class="mine">
                 <h2>My Voting Blocks</h2>

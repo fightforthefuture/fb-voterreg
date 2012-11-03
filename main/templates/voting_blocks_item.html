@@ -17,7 +17,10 @@
     <h2>{{ voting_block.description }}</h2>
     <div class="info cf">
         {% thumbnail voting_block.icon 436x280 crop as imgsrc %}
-        <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-436x280.png' %}{% endif %}">
+        <div class="image">
+            <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-436x280.png' %}{% endif %}">
+            {% include "_disclaimer.html" %}
+        </div>
         <div class="data">
             <p class="count"><strong>{{ voting_block_members_count }}</strong> members</p>
             {% if voting_block_members_today_count > 0 %}

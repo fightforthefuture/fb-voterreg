@@ -294,6 +294,9 @@
     color: #292929;
     margin: 2px 0 0 0;
 }
+    .voting-blocks .own > p.disclaimer{
+        margin-top: 8px;
+    }
 .voting-blocks .own > h1{
     font-size: 1.3em;
     margin-bottom: 10px;
@@ -611,8 +614,18 @@
     padding: 26px 0 0 0;
 }
 
-.voting-blocks-item .info img {
+.voting-blocks-item .info .image{
     float: left;
+    width: 436px;
+}
+
+.voting-blocks-item .info .image p{
+    font-size: 12px;
+    line-height: 1.42;
+    color: #666;
+}
+
+.voting-blocks-item .info img {
     height: 280px;
     width: 436px;
     border: 3px solid white;
