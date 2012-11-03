@@ -902,7 +902,7 @@ def voting_blocks_item(request, id, section=None):
         "sections": sections,
         "section": section,
         "voting_block": voting_block,
-        "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id, joined__isnull=False).count(),
+        "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id).count(),
         "voting_block_members_today_count": VotingBlockMember.objects.filter(voting_block_id=id,
             joined__gt=datetime.combine(datetime.now(), time.min)).count(),
         "voting_block_joined": voting_block_member and voting_block_member.joined
