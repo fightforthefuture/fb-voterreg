@@ -19,7 +19,7 @@
         {% thumbnail voting_block.icon 436x280 crop as imgsrc %}
         <div class="image">
             <img src="{% if imgsrc %}{{ imgsrc.url }}{% else %}{% static 'img/voting-block-436x280.png' %}{% endif %}">
-            {% include "_disclaimer.html" %}
+            {# include "_disclaimer.html" #}
         </div>
         <div class="data">
             <p class="count"><strong>{{ voting_block_members_count }}</strong> members</p>
