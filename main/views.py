@@ -30,6 +30,7 @@ from django.core.mail import EmailMultiAlternatives
 from models import BATCH_NEARBY, Friendship, BADGE_CUTOFFS
 import logging
 import forms
+from itertools import ifilter
 
 class OGObjectView(TemplateView):
     """
@@ -836,34 +837,100 @@ def voting_blocks_create(request):
         context,
         context_instance=RequestContext(request))
 
-def _members_qs(user, section, voting_block):
+def _members_qs(user, section, voting_block, count=False, skip=0, take=64):
+    #users on block
+    vbus = User.objects.filter(votingblockmember__voting_block=voting_block, votingblockmember__joined__isnull=False)
+    #friends on block
+    vbfs = VotingBlockFriendship.objects.filter(friendship__user=user, voting_block=voting_block)
+
     if section == 'members':
-        return User.objects.filter(votingblockmember__voting_block=voting_block)
-    elif section == 'voted':
-        return User.objects.filter(votingblockmember__voting_block=voting_block, votingblockmember__joined__isnull=False, date_voted__isnull=False)
-    elif section == 'not_voted':
-        return User.objects.filter(votingblockmember__voting_block=voting_block, votingblockmember__joined__isnull=False, date_voted__isnull=True)
+        if count:
+            return vbus.count()
+        else:
+            vbus = vbus.order_by('id')
+            vbfs = vbfs.select_related('friendship').filter(\
+                friendship__fb_uid__in=vbus[skip:skip+take].values_list('fb_uid', flat=True))
+            members = []
+            for vbu in vbus[skip:skip+take]:
+                vbf = next(ifilter(lambda f: f.friendship.fb_uid == vbu.fb_uid, vbfs), None)
+                if vbf:
+                    vbf.friendship.invited_with_batch = vbf.invited_with_batch
+                    vbf.friendship.invited_individually = vbf.invited_individually
+                    members.append(vbf.friendship)
+                else:
+                    members.append(vbu)
+            return members
+    elif section == 'friends_voted':
+        vbfs = vbfs.filter(friendship__date_voted__isnull=False,\
+            friendship__fb_uid__in=vbus.values_list('fb_uid', flat=True))
+        if count:
+            return vbfs.count()
+        else:
+            vbfs = vbfs.select_related('friendship').order_by('id')
+            friends = []
+            for vbf in vbfs[skip:skip+take]:
+                vbf.friendship.invited_with_batch = vbf.invited_with_batch
+                vbf.friendship.invited_individually = vbf.invited_individually
+                friends.append(vbf.friendship)
+            return friends
+    elif section == 'friends_pledged':
+        vbfs = vbfs.filter(friendship__date_pledged__isnull=False,\
+            friendship__fb_uid__in=vbus.values_list('fb_uid', flat=True))
+        if count:
+            return vbfs.count()
+        else:
+            raise NotImplementedError
+    elif section == 'friends_invited':
+        vbfs = vbfs.filter(Q(invited_with_batch=True) | Q(invited_individually=True))
+        if count:
+            return vbfs.count()
+        else:
+            raise NotImplementedError
+    elif section == 'friends_joined':
+        vbfs = vbfs.filter(friendship__fb_uid__in=vbus.values_list('fb_uid', flat=True))
+        if count:
+            return vbfs.count()
+        else:
+            vbfs = vbfs.select_related('friendship').order_by('id')
+            friends = []
+            for vbf in vbfs[skip:skip+take]:
+                vbf.friendship.invited_with_batch = vbf.invited_with_batch
+                vbf.friendship.invited_individually = vbf.invited_individually
+                friends.append(vbf.friendship)
+            return friends
     elif section == 'friends':
-        return User.objects.filter(votingblockmember__voting_block=voting_block, votingblockmember__joined__isnull=False, friendship__fb_uid=user.fb_uid)
-    elif section == 'not_invited':
-        vbfs = VotingBlockFriendship.objects.select_related('friendship').filter(friendship__user=user, voting_block=voting_block)
-        vbms = VotingBlockMember.objects.filter(voting_block=voting_block, joined__isnull=False).values_list('member__fb_uid', flat=True)
-        return vbfs.filter(~Q(friendship__fb_uid__in=vbms), invited_with_batch=False, invited_individually=False)
+        if count:
+            return vbfs.count()
+        else:
+            vbfs = vbfs.select_related('friendship').order_by('id')
+            friends = []
+            for vbf in vbfs[skip:skip+take]:
+                vbf.friendship.invited_with_batch = vbf.invited_with_batch
+                vbf.friendship.invited_individually = vbf.invited_individually
+                friends.append(vbf.friendship)
+            return friends
+    elif section == 'friends_batch':
+        vbfs = vbfs.filter(invited_with_batch=False, invited_individually=False)
+        if count:
+            return vbfs.count()
+        else:
+            vbfs = vbfs.select_related('friendship').order_by('id')
+            friends = []
+            for vbf in vbfs[skip:skip+take]:
+                vbf.friendship.invited_with_batch = vbf.invited_with_batch
+                vbf.friendship.invited_individually = vbf.invited_individually
+                friends.append(vbf.friendship)
+            return friends
 
 
-def _voting_block_not_invited_context(voting_block, fbuid):
-    vbfs = VotingBlockFriendship.objects.select_related('friendship').order_by("friendship__fb_uid").filter(friendship__user_fb_uid=fbuid, voting_block=voting_block)
-    vbms = VotingBlockMember.objects.filter(voting_block=voting_block, joined__isnull=False).values_list('member__fb_uid', flat=True)
+def _voting_block_friends_context(voting_block, user):
 
-    friends_batch = [x.friendship for x in vbfs.filter(~Q(friendship__fb_uid__in=vbms), invited_with_batch=False, invited_individually=False)[:49]]
-    friends = []
-    for vbf in vbfs.filter(~Q(friendship__fb_uid__in=vbms))[:64]:
-        vbf.friendship.invited_individually = vbf.invited_individually
-        vbf.friendship.invited_with_batch = vbf.invited_with_batch
-        friends.append(vbf.friendship)
-    num_invited = vbfs.filter(Q(invited_with_batch=True) | Q(invited_individually=True)).count()
-    num_pledged = vbfs.filter(friendship__date_pledged__isnull=False).count()
-    num_friends = vbfs.count()
+    friends_batch = _members_qs(user, 'friends_batch', voting_block, False, 0, 49)
+    friends = _members_qs(user, 'friends', voting_block, False, 0, 64)
+
+    num_invited = _members_qs(user, 'friends_invited', voting_block, True)
+    num_pledged = _members_qs(user, 'friends_pledged', voting_block, True)
+    num_friends = _members_qs(user, 'friends', voting_block, True)
     badge_cutoffs = filter(lambda x: x<=num_friends, BADGE_CUTOFFS)
 
     return {
@@ -882,45 +949,43 @@ def voting_blocks_item(request, id, section=None):
     id = int(id)
     try:
         voting_block_member = VotingBlockMember.objects.select_related('voting_block', 'member')\
-            .get(member__fb_uid=request.facebook["uid"], voting_block=id)
+        .get(member__fb_uid=request.facebook["uid"], voting_block=id)
         voting_block = voting_block_member.voting_block
         user = voting_block_member.member
     except  VotingBlockMember.DoesNotExist:
         voting_block = VotingBlock.objects.get(id=id)
         user = User.objects.get(fb_uid=request.facebook["uid"])
         voting_block_member = VotingBlockMember.objects.create(voting_block=voting_block, member=user)
-    section = section or 'not_invited'
+    section = section or 'friends'
     sections = [
-        {'name': 'members', 'count': _members_qs(user, 'members', voting_block).count(), 'title': 'Members'},
-        {'name': 'voted', 'count': _members_qs(user, 'voted', voting_block).count(), 'title': 'Voted'},
-        {'name': 'not_voted', 'count': _members_qs(user, 'not_voted', voting_block).count(), 'title': 'Haven\'t Voted'},
-        {'name': 'friends', 'count': _members_qs(user, 'friends', voting_block).count(), 'title': 'My Friends'},
-        {'name': 'not_invited', 'count': _members_qs(user, 'not_invited', voting_block).count(), 'title': 'Invite Friends'},
+            {'name': 'members', 'count': _members_qs(user, 'members', voting_block, True), 'title': 'All members'},
+            {'name': 'friends_joined', 'count': _members_qs(user, 'friends_joined', voting_block, True), 'title': 'Friends who\'ve joined'},
+            {'name': 'friends_voted', 'count': _members_qs(user, 'friends_voted', voting_block, True), 'title': 'Friends who vote'},
+            {'name': 'friends', 'count': _members_qs(user, 'friends', voting_block, True), 'title': 'All friends'},
     ]
     context = {
         "page": "voting_blocks",
         "sections": sections,
         "section": section,
         "voting_block": voting_block,
-        "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id).count(),
+        "voting_block_members_count": VotingBlockMember.objects.filter(voting_block_id=id, joined__isnull=False).count(),
         "voting_block_members_today_count": VotingBlockMember.objects.filter(voting_block_id=id,
             joined__gt=datetime.combine(datetime.now(), time.min)).count(),
         "voting_block_joined": voting_block_member and voting_block_member.joined
     }
 
-    if section == "not_invited":
-        if not voting_block_member.last_friendship_update or \
+    if section == "friends":
+        #update friend list
+        if not voting_block_member.last_friendship_update or\
            voting_block_member.last_friendship_update < user.friends_fetch_last_activity:
             nfriends = user.friends.filter(~Q(id__in=VotingBlockFriendship.objects.filter(friendship__user=user, voting_block=voting_block).values_list('friendship_id', flat=True)))
             for nfriend in nfriends:
                 VotingBlockFriendship.objects.get_or_create(voting_block=voting_block, friendship=nfriend)
-        context.update(_voting_block_not_invited_context(voting_block.id, user.fb_uid))
+        context.update(_voting_block_friends_context(voting_block.id, user))
         context.update({'must_invite': True})
     else:
         context.update({
-            "dont_friendship": True,
-            "dont_status": True,
-            "friends": _members_qs(user, section, voting_block)[:64],
+            "friends": _members_qs(user, section, voting_block, False, 0, 64),
         })
 
     return render_to_response(
@@ -935,7 +1000,7 @@ def voting_blocks_item_page(request, id, section):
     user = User.objects.get(fb_uid=request.facebook["uid"])
     start = int(request.POST.get('start', 0))
     context = { "voting_block": voting_block }
-    if section == "not_invited":
+    if section == "friends":
         vbfs = VotingBlockFriendship.objects.select_related('friendship').order_by("friendship__fb_uid").filter(friendship__user=user, voting_block=voting_block)
         vbms = VotingBlockMember.objects.filter(voting_block=voting_block, joined__isnull=False).values_list('member__fb_uid', flat=True)
         friends = []
@@ -949,9 +1014,7 @@ def voting_blocks_item_page(request, id, section):
         })
     else:
         context.update({
-            'friends': _members_qs(user, section, voting_block)[start:start+64],
-            "dont_friendship": True,
-            "dont_status": True
+            'friends': _members_qs(user, section, voting_block, False, start, 64)
         })
     return render_to_response(
         "_invite_friends_page.html",
@@ -1011,7 +1074,7 @@ def voting_blocks_item_mark_batch_invited(request, id):
         if not InvitedToBlock.objects.filter(fb_uid=fb_uid).update(voting_block=int(id)):
             InvitedToBlock.objects.create(voting_block_id=id, fb_uid=fb_uid)
 
-    context = _voting_block_not_invited_context(int(id), request.facebook["uid"])
+    context = _voting_block_friends_context(int(id), user)
     html = render_to_string("_voting_blocks_mass_invites_friends.html", context, context_instance=RequestContext(request))
     return {
         "friends_batch_html": html,
