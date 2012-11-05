@@ -43,7 +43,7 @@ class Command(BaseCommand):
             prefix = 'all'
 
         headers = [
-            ['First Name(supporter)', 'Last Name(supporter)', 'Email(supporter)']
+            ['First Name', 'Last Name', 'Email']
         ]
         user_list = [
             [user.first_name, user.last_name, user.email] for user in users
