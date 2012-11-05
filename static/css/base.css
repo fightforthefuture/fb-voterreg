@@ -508,6 +508,9 @@ div.content {
     box-shadow:  5px 5px 18px 0px #999999;
     overflow: hidden;
 }
+    .main-content.wide{
+        width: 850px;
+    }
 
 .main-content-message {
     margin: 16px 0;
@@ -1520,4 +1523,8 @@ a.load-more:hover{
     color: #303030;
     font-weight: bold;
     display: none;
+}
+
+#_vit{
+    margin: 20px 20px 0;
 }
