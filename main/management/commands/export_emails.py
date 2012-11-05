@@ -1,6 +1,6 @@
-import csv
 import datetime
 from optparse import make_option
+from os import environ
 import time
 
 from django.conf import settings
@@ -49,7 +49,7 @@ class Command(BaseCommand):
             [user.first_name, user.last_name, user.email] for user in users if user.email
         ]
         filename = ('%s_%s_%s.csv' % (
-            settings.environment,
+            environ.get("RACK_ENV", 'dev'),
             prefix,
             int(time.mktime(datetime.datetime.now().timetuple())),
         ))[:32]
