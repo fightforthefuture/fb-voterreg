@@ -61,3 +61,10 @@ def vwf_user(request):
         }
     except TypeError:
         return {}
+
+
+def urls(request):
+    return {
+        'base_url': settings.BASE_URL,
+        'sharing_url': settings.SHARING_URL,
+    }

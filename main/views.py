@@ -245,13 +245,16 @@ def my_vote(request):
     block_id = request.session.get('block_id', None)
     force = 'force' in request.GET
 
-    if force or not user.pledged:
+    if not user.pledged:
         return redirect('main:my_vote_pledge')
 
-    elif user.pledged and after:
+    if not user.voted or (user.voted and force):
+        return redirect('main:my_vote_vote')
+
+    elif user.pledged and user.voted and after:
         return redirect(after)
 
-    elif user.pledged and block_id:
+    elif user.pledged and user.voted and block_id:
         return redirect(reverse("main:voting_blocks_item", args=[block_id,]))
 
     return redirect('main:invite_friends_2')

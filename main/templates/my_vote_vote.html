@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <div class="main-content cf">
+    <div class="main-content cf{% if user.voted %} wide{% endif %}">
 
         <div class="main-content-message">
 
@@ -17,6 +17,8 @@
 
                 {% comment %}Translators: tagline of page where users are asked if they've voted, if they've already voted.{% endcomment %}
                 <p>Participation is the cornerstone of democracy.</p>
+                <p>Look up your polling place, early vote sites, ballot, and election official information for the US 2012 General Election:</p>
+                <div id="_vit"></div>
 
             {% else %}
 
@@ -26,17 +28,12 @@
             {% endif %}
         </div>
 
-        <form action="{% url 'main:my_vote_vote' %}" method="post">
-            {% csrf_token %}
+        {% if not user.voted %}
+            
+            <form action="{% url 'main:my_vote_vote' %}" method="post">
+                {% csrf_token %}
 
-            <div class="main-content-buttons">
-
-                {% if user.voted %}
-
-                    {% comment %}Translators: text of the button a user presses to retract their status as having voted{% endcomment %}
-                    <button class="btn btn-large" type="submit" name="no"><i class="icon-cancel"></i> {% trans "Oops. I actually haven't voted yet." %}</button>
-
-                {% else %}
+                <div class="main-content-buttons">
 
                     {% comment %}Translators: text of the button a user presses to say they've voted{% endcomment %}
                     <button class="btn btn-large btn-green" type="submit" name="yes"><i class="icon-ok"></i> {% trans "Yes, I've already voted" %}</button>
@@ -44,26 +41,27 @@
                     {% comment %}Translators: text of the button a user presses to say they have note voted{% endcomment %}
                     <button class="btn btn-large" type="submit" name="no"><i class="icon-cancel"></i> {% trans "No, not yet." %}</button>
 
-                {% endif %}
+                </div>
 
-            </div>
-
-            <div class="main-content-message">
-
-                {% if not user.voted %}
-                    
+                <div class="main-content-message">
+                        
                     {% comment %}Translators: consent to post voting action to timeline{% endcomment %}
                     <p><label for="tell-friends"><input type="checkbox" name="tell-friends" id="tell-friends" checked="checked" /> {% blocktrans %}Tell My Friends I Voted (this will post to your Timeline){% endblocktrans %}</a></p>
 
-                {% endif %}
+                    {% comment %}Translators: explanation of why it's important for users to vote{% endcomment %}
+                    <p>{% blocktrans %}<strong>Why is it important to say so?</strong>  Because it encourages your friends to vote too, and tells your friends that they don't need to remind you.{% endblocktrans %}</p>
 
-                {% comment %}Translators: explanation of why it's important for users to vote{% endcomment %}
-                <p>{% blocktrans %}<strong>Why is it important to say so?</strong>  Because it encourages your friends to vote too, and tells your friends that they don't need to remind you.{% endblocktrans %}</p>
+                </div>
 
-        </div>
+            </form>
 
-        </form>
+        {% endif %}
 
     </div>
 
 {% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="https://voter-info-tool.appspot.com/js/loader.js"></script>
+    <script type="text/javascript">vit.load();</script>
+{% endblock scripts %}

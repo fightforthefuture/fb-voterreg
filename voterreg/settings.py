@@ -88,7 +88,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "context_processors.add_settings",
     "context_processors.add_fbuid",
     "context_processors.add_source",
-    "context_processors.add_days_left" )
+    "context_processors.add_days_left",
+    "context_processors.urls" )
 
 INSTALLED_APPS = (
     'django.contrib.auth',
