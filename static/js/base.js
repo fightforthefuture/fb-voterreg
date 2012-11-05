@@ -42,4 +42,23 @@ $(function() {
             requestCallback);
         return false;
     });
+
+    $('a[data-message-url]').live('click', function(evt){
+        evt.preventDefault();
+        FB.ui({
+            'method': 'send',
+            'name': 'Vote. And help me get all our friends to vote.',
+            'link': $(this).attr('data-message-url')
+        }, requestCallback);
+    });
+
+    $('a[data-timeline-url]').live('click', function(evt){
+        evt.preventDefault();
+        FB.ui({
+            'method': 'feed',
+            'name': 'Vote. And help me get all our friends to vote.',
+            'link': $(this).attr('data-timeline-url')
+        }, requestCallback);
+    });
+
 });

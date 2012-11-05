@@ -312,7 +312,8 @@ header .score{
 
 
 div.content {
-    margin: 46px 0 0 0;
+    margin: 49px 0 0 0;
+    position: relative;
 }
 
 
@@ -957,7 +958,7 @@ div.content {
 .feedback{
     display: block;
     position: fixed;
-    top: 275px;
+    top: 400px;
     right: 0;
     width: 31px;
     height: 120px;
@@ -1528,3 +1529,27 @@ a.load-more:hover{
 #_vit{
     margin: 20px 20px 0;
 }
+
+#banner{
+    width: 110px;
+    height: 98px;
+    position: absolute;
+    top: -90px;
+    right: 15px;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    background: url(../img/banner.png) no-repeat;
+}
+    #banner li{
+        list-style-type: none;
+    }
+    #banner a{
+        display: block;
+        height: 33px;
+        padding: 8px 0 0 41px;
+        color: #FFF;
+        text-decoration: none;
+        font: 12px/1.17 Montserrat, Helvetica, Arial, "Lucida Grande", sans-serif;
+        text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.4);
+    }
