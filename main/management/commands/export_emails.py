@@ -46,9 +46,10 @@ class Command(BaseCommand):
             ['First Name', 'Last Name', 'Email']
         ]
         user_list = [
-            [user.first_name, user.last_name, user.email] for user in users
+            [user.first_name, user.last_name, user.email] for user in users if user.email
         ]
-        filename = ('%s_%s.csv' % (
+        filename = ('%s_%s_%s.csv' % (
+            settings.environment,
             prefix,
             int(time.mktime(datetime.datetime.now().timetuple())),
         ))[:32]
