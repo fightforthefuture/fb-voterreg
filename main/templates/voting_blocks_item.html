@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="{% static 'css/voting_blocks.css' %}" xmlns="http://www.w3.org/1999/html">
 {% endblock css %}
 
+{% block banner_message_url %}{{ block.share_url }}{% endblock banner_message_url %}
+{% block banner_timeline_url %}{{ block.share_url }}{% endblock banner_timeline_url %}
+
 {% block content %}
 <div class="voting-blocks-item">
     <h1>{{ voting_block.name }}</h1>

@@ -106,8 +106,8 @@
     </ul>
     <div class="content cf">
         <ul id="banner">
-            <li><a href="#" data-message-url="{% block banner_message_url %}{{ share_url }}{% url 'main:share' %}{% endblock banner_message_url %}">Invite Friends</a></li>
-            <li><a href="#" data-timeline-url="{% block banner_timeline_url %}{{ share_url }}{% url 'main:share' %}{% endblock banner_timeline_url %}">Post On Timeline</a></li>
+            <li><a href="#" data-message-url="{% block banner_message_url %}{{ sharing_url }}{% url 'main:share' %}{% endblock banner_message_url %}">Invite Friends</a></li>
+            <li><a href="#" data-timeline-url="{% block banner_timeline_url %}{{ sharing_url }}{% url 'main:share' %}{% endblock banner_timeline_url %}">Post On Timeline</a></li>
         </ul>
         {% block content %}{% endblock %}
     </div>
