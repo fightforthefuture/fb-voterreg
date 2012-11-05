@@ -1060,6 +1060,7 @@ class MobilePledgeView(TemplateView):
         context['OG_URL'] = opengraph_url(self.request,
             settings.FACEBOOK_OG_PLEDGE_ACTION)
         context['VOTE_OBJ'] = settings.BASE_URL + reverse('pledge_object')
+        context['APP_SHARE_URL'] = settings.BASE_URL + reverse('main:share')
         return context
 
     def get_template_names(self):

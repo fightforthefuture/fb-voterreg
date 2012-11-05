@@ -131,8 +131,7 @@ class FacebookProfile(object):
 
 
 def opengraph_url(request, action):
-    return 'https://graph.facebook.com/%s/%s' % (
-        request.facebook["uid"],
+    return 'https://graph.facebook.com/me/%s' % (
         action,
     )
 

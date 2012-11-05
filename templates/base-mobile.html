@@ -13,6 +13,7 @@
         <meta name="author" content="Fight for the Future">
         <meta name="viewport" content="width=device-width" />
         <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+        <link rel="stylesheet" href="{% static 'css/mobile.css' %}">
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-35232596-1']);
@@ -34,26 +35,17 @@
     </head>
     <body>
         {% block main %}{% endblock main %}
+        <div id="fb-root"></div>
         <script src="https://connect.facebook.net/en_US/all.js#xfbml=1&amp;appId={{ FACEBOOK_APP_ID }}"></script>
         <script src="{% static 'js/jquery.js' %}"></script>
         <script>
-            window.fbAsyncInit = function() {
-                FB.init({
-                    appId: '{{ FACEBOOK_APP_ID }}', 
-                    status: true, 
-                    cookie: true,
-                    xfbml: true,
-                    oauth: true
-                });
-                function handleResponseChange(response) {
-                    document.body.className = response.authResponse ? 'connected' : 'not_connected';
-                    if(response.authResponse){
-                        console.log(response);
-                    }
-                }
-                FB.Event.subscribe('auth.authResponseChange', handleResponseChange);  
+            var app = {
+                'PLEDGE_ACTION_URL': '{{ OG_URL }}',
+                'VOTE_OBJ_URL': '{{ VOTE_OBJ }}',
+                'APP_ID': '{{ FACEBOOK_APP_ID }}',
+                'APP_SHARE_URL': '{{ APP_SHARE_URL }}',
             };
         </script>
-        {% block scripts %}{% endblock scripts %}
+        <script src="{% static 'js/mobile.js' %}"></script>
     </body>
 </html>

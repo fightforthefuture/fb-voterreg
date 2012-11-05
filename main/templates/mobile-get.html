@@ -1,26 +1,25 @@
 {% extends "base-mobile.html" %}
 
 {% block main %}
-    <p id="hi">Pledge to vote?</p>
-{% endblock main %}
 
-{% block scripts %}
-    <script>
-        (function($){
-            $(function(){
-                $('#hi').click(function(evt){
-                    FB.api('{{ OG_URL }}', 'post', {
-                        'vote_obj': '{{ VOTE_OBJ }}'
-                    }, function(response) {
-                        if (!response || response.error) {
-                            alert('Error occured');
-                            console.log(response);
-                        } else {
-                            alert('Cook was successful! Action ID: ' + response.id);
-                        }
-                    });
-                });
-            });
-        })(jQuery);
-    </script>
-{% endblock scripts %}
+    <div class="panel" id="loading">
+        <p>Loading...</p>
+    </div>
+
+    <div class="panel" id="error">
+        <p>Uh oh, something is broken.</p>
+        <button class="btn btn-green btn-share">Share With Your Friends</button>
+    </div>
+
+    <div class="panel" id="pre-pledge">
+        <h1>Will you vote in this election? We're depending on you!</h1>
+        <button class="btn btn-green" id="pledge-btn">Yes, I will vote!</button>
+        <label for="explicit"><input name="explicit" id="explicit" type="checkbox" checked="checked" /> Post this pledge to my timeline. (This is crucial for motivating your friends to vote!)</label>
+    </div>
+
+    <div class="panel" id="post-pledge">
+        <p>Thanks for pledging!</p>
+        <button class="btn btn-green btn-share">Share With Your Friends</button>
+    </div>
+
+{% endblock main %}
