@@ -58,6 +58,6 @@ class Command(BaseCommand):
         }))
         path = default_storage.save('exports/' + filename, csv_file)
         self.stdout.write('Export available at %s%s\n' % (
-            settings.MEDIA_URL,
+            settings.STATIC_URL,
             path,
         ))
