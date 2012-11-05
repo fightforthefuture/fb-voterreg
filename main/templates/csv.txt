@@ -1,0 +1,2 @@
+{% for row in data %}{% for field in row %}"{{ field|addslashes }}"{% if not forloop.last %}, {% endif %}{% endfor %}{% if not forloop.last %}
+{% endif %}{% endfor %}
