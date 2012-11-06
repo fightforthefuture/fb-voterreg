@@ -304,20 +304,18 @@ def my_vote_vote(request):
         }, context_instance=RequestContext(request))
 
     elif request.method == 'POST':
-        explicit_share = request.POST.get('tell-friends', '') == 'on'
-        if explicit_share:
-            og_url = opengraph_url(request, settings.FACEBOOK_OG_VOTE_ACTION)
-            share = requests.post(og_url, params={
-                'election_obj': settings.BASE_URL + reverse('vote_object'),
-                'access_token': request.facebook['access_token'],
-                'fb:explicitly_shared': 'true',
-            })
-            print 'Explicit share vote response: %s' % share.status_code
-            print share.content
-
-        user.explicit_share_vote = explicit_share
-
         if 'yes' in request.POST:
+            explicit_share = request.POST.get('tell-friends', '') == 'on'
+            if explicit_share:
+                og_url = opengraph_url(request, settings.FACEBOOK_OG_VOTE_ACTION)
+                share = requests.post(og_url, params={
+                        'election_obj': settings.BASE_URL + reverse('vote_object'),
+                        'access_token': request.facebook['access_token'],
+                        'fb:explicitly_shared': 'true',
+                        })
+                print 'Explicit share vote response: %s' % share.status_code
+                print share.content
+            user.explicit_share_vote = explicit_share
             user.date_voted = datetime.now()
             try:
                 friendships = Friendship.objects.filter(fb_uid=user.fb_uid)
