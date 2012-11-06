@@ -48,7 +48,12 @@ class FacebookMiddleware(object):
             'no_cookies' not in request.POST and \
             'no_cookies' not in request.GET
 
+    def _unsubscribe_response(self):
+        return HttpResponse('<script>top.location.href="{0}/nowunsubscribed";</script>'.format(settings.BASE_URL))
+
     def process_request(self, request):
+        if request.path.startswith("/unsubscribe"):
+            return self._unsubscribe_response()
         fb_user = self._get_fb_user(request)
         request.facebook = fb_user
         if fb_user:

@@ -24,7 +24,7 @@ urlpatterns = patterns(
     url(r"^mark_individual_invited$", "mark_individual_invited", name="mark_individual_invited"),
     url(r"^single_user_invited$", "single_user_invited", name="single_user_invited"),
     url(r"^friends_list$", "friends_list"),
-    url(r"^unsubscribe", "unsubscribe", name="unsubscribe"),
+    url(r"^unsubscribe$", "unsubscribe", name="unsubscribe"),
     url(r"^invite_friends_2$", "invite_friends_2", name="invite_friends_2"),
     url(r"^invite_friends_2/(?P<section>\w+)$", "invite_friends_2", name="invite_friends_2"),
     url(r"^invite_friends_2_page/(?P<section>\w+)$", "invite_friends_2_page", name="invite_friends_2_page"),
@@ -57,6 +57,8 @@ urlpatterns += patterns(
         ShareView.as_view(),
         name="share"
     ),
+    url(r"^nowunsubscribed$",
+        TemplateView.as_view(template_name="now_unsubscribed.html")),
     url(r"^voterreg_invite$",
         TemplateView.as_view(template_name="voterreg_invite.html"),
         name="voterreg_invite"),
