@@ -17,7 +17,7 @@ from django.core.mail import EmailMultiAlternatives
 from main.choices import EARLY_VOTING_STATES
 from main.managers import FriendStatusManager
 
-APP_NOTIFICATION_THRESHOLD = 6 * 60 * 60 # in seconds
+APP_NOTIFICATION_THRESHOLD = 1 * 60 * 60 # in seconds
 
 BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
 
