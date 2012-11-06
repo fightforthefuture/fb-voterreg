@@ -546,7 +546,8 @@ class LastAppNotification(models.Model):
 
     def _send(self):
         for_voted, email, fb_notification = self._make_template()
-        self._send_email(for_voted, email)
+        # Holmes wants to turn this off, at least for now.
+        # self._send_email(for_voted, email)
         graph = GraphAPI(access_token=settings.FACEBOOK_APP_ACCESS_TOKEN)
         graph.put_object(
             self.user.fb_uid, "notifications", 
