@@ -25,6 +25,7 @@ urlpatterns = patterns(
     url(r"^single_user_invited$", "single_user_invited", name="single_user_invited"),
     url(r"^friends_list$", "friends_list"),
     url(r"^unsubscribe$", "unsubscribe", name="unsubscribe"),
+    url(r"^appunsubscribe$", "unsubscribe", name="appunsubscribe"),
     url(r"^invite_friends_2$", "invite_friends_2", name="invite_friends_2"),
     url(r"^invite_friends_2/(?P<section>\w+)$", "invite_friends_2", name="invite_friends_2"),
     url(r"^invite_friends_2_page/(?P<section>\w+)$", "invite_friends_2_page", name="invite_friends_2_page"),
