@@ -572,7 +572,7 @@ class LastAppNotification(models.Model):
             "friends_activity_email.txt",
             context)
         msg = EmailMultiAlternatives(
-            "Your friends have {0}".format(verb),
+            first_sentence + "!",
             text_body,
             settings.EMAIL_SENDER,
             [self.user.email],
