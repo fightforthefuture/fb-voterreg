@@ -522,7 +522,7 @@ class LastAppNotification(models.Model):
             template_suffix = " pledged to vote using Vote with Friends"
         friends = list(qs[:2])
         if count > 2:
-            email_text = "{0}, {1}, and {2} other friend{3} {4}".format(
+            email_text = u"{0}, {1}, and {2} other friend{3} {4}".format(
                 friends[0].name, friends[1].name,
                 count - 2, 
                 "s" if count > 3 else "",
@@ -533,12 +533,12 @@ class LastAppNotification(models.Model):
                 "s" if count > 3 else "",
                 "have" if count > 3 else "has")
         elif count == 2:
-            email_text = "{0} and {1} have".format(
+            email_text = u"{0} and {1} have".format(
                 friends[0].name, friends[1].name)
             template = "{{{0}}} and {{{1}}} have".format(
                 friends[0].fb_uid, friends[1].fb_uid)
         else:
-            email_text = "{0} has".format(friends[0].name)
+            email_text = u"{0} has".format(friends[0].name)
             template = "{{{0}}} has".format(friends[0].fb_uid)
         template += template_suffix
         email_text += template_suffix
@@ -556,13 +556,13 @@ class LastAppNotification(models.Model):
     def _send_email(self, for_voted, first_sentence):
         if self.user.unsubscribed or not self.user.email:
             return
-        url = "https://apps.facebook.com/votewithfriends/?target=/invite_friends_2/{0}".format(
-            "voted" if for_voted else "pledged")
+        verb = "voted" if for_voted else "pledged"
+        url = "https://apps.facebook.com/votewithfriends/?target=/invite_friends_2/{0}".format(verb)
         context = {
             "first_sentence": first_sentence,
             "for_voted": for_voted,
             "url": url,
-            "verb": "voted" if for_voted else "pledged",
+            "verb": verb,
             "FACEBOOK_CANVAS_PAGE": settings.FACEBOOK_CANVAS_PAGE,
             "unsubscribe_url": reverse("main:unsubscribe") }
         html_body = render_to_string(
@@ -572,7 +572,7 @@ class LastAppNotification(models.Model):
             "friends_activity_email.txt",
             context)
         msg = EmailMultiAlternatives(
-            "Get your friends to pledge.",
+            "Your friends have {0}".format(verb),
             text_body,
             settings.EMAIL_SENDER,
             [self.user.email],
