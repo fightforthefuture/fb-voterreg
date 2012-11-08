@@ -50,9 +50,9 @@ class Command(BaseCommand):
         ]
         filename = ('%s_%s_%s.csv' % (
             environ.get("RACK_ENV", 'dev'),
-            prefix,
+            prefix[:32],
             int(time.mktime(datetime.datetime.now().timetuple())),
-        ))[:32]
+        ))
 
         csv_file = ContentFile(render_to_string('csv.txt', {
             'data': headers + user_list
