@@ -1,0 +1,8 @@
+{{first_sentence}}! See who else has {{ verb }} at {{ url }}.
+
+Sincerely,
+Center for Rights & Vote with Friends
+
+--
+
+Unsubscribe link: {{ FACEBOOK_CANVAS_PAGE }}?target={{ unsubscribe_url }}

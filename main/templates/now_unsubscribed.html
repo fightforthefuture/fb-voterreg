@@ -1,0 +1,8 @@
+{% extends "base-error.html" %}
+
+{% block error_type %}{% endblock %}
+{% block header %}{% endblock %}
+
+{% block copy %}
+If you uninstalled the Facebook app, you're now unsubscribed from mailings. If you haven't uninstalled the Facebook app, please <a href="{{FACEBOOK_CANVAS_PAGE}}?target=/appunsubscribe">click here to unsubscribe from mailings</a>.
+{% endblock %}

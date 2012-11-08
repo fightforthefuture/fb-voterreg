@@ -11,11 +11,13 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from facebook import GraphAPI
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 
 from main.choices import EARLY_VOTING_STATES
 from main.managers import FriendStatusManager
 
-APP_NOTIFICATION_THRESHOLD = 6 * 60 * 60 # in seconds
+APP_NOTIFICATION_THRESHOLD = 1 * 60 * 60 # in seconds
 
 BADGE_CUTOFFS = [25, 50, 100, 200, 500, 1000]
 
@@ -509,33 +511,77 @@ class LastAppNotification(models.Model):
         pledged_count = self.user.friends.pledged().count()
         voted_count = self.user.friends.voted().count()
         if voted_count - self.voted_count > 0:
+            for_voted = True
             count = voted_count
             qs = self.user.friends.voted().order_by("-date_voted")
             template_suffix = " voted"
         else:
+            for_voted = False
             count = pledged_count
             qs = self.user.friends.pledged().order_by("-date_pledged")
             template_suffix = " pledged to vote using Vote with Friends"
         friends = list(qs[:2])
         if count > 2:
+            email_text = u"{0}, {1}, and {2} other friend{3} {4}".format(
+                friends[0].name, friends[1].name,
+                count - 2, 
+                "s" if count > 3 else "",
+                "have" if count > 3 else "has")
             template = "{{{0}}}, {{{1}}} and {2} other friend{3} {4}".format(
                 friends[0].fb_uid, friends[1].fb_uid,
                 count - 2, 
                 "s" if count > 3 else "",
                 "have" if count > 3 else "has")
         elif count == 2:
+            email_text = u"{0} and {1} have".format(
+                friends[0].name, friends[1].name)
             template = "{{{0}}} and {{{1}}} have".format(
                 friends[0].fb_uid, friends[1].fb_uid)
         else:
+            email_text = u"{0} has".format(friends[0].name)
             template = "{{{0}}} has".format(friends[0].fb_uid)
-        return template + template_suffix
+        template += template_suffix
+        email_text += template_suffix
+        return for_voted, email_text, template
 
     def _send(self):
+        for_voted, email, fb_notification = self._make_template()
+        # Holmes wants to turn this off, at least for now.
+        # self._send_email(for_voted, email)
         graph = GraphAPI(access_token=settings.FACEBOOK_APP_ACCESS_TOKEN)
         graph.put_object(
             self.user.fb_uid, "notifications", 
-            href="", template=self._make_template())
+            href="", template=fb_notification)
         self._mark_as_notified()
+
+    def _send_email(self, for_voted, first_sentence):
+        if self.user.unsubscribed or not self.user.email:
+            return
+        verb = "voted" if for_voted else "pledged"
+        url = "https://apps.facebook.com/votewithfriends/?target=/invite_friends_2/{0}".format(verb)
+        context = {
+            "first_sentence": first_sentence,
+            "for_voted": for_voted,
+            "url": url,
+            "verb": verb,
+            "FACEBOOK_CANVAS_PAGE": settings.FACEBOOK_CANVAS_PAGE,
+            "unsubscribe_url": reverse("main:unsubscribe") }
+        html_body = render_to_string(
+            "friends_activity_email.html",
+            context)
+        text_body = render_to_string(
+            "friends_activity_email.txt",
+            context)
+        msg = EmailMultiAlternatives(
+            first_sentence + "!",
+            text_body,
+            settings.EMAIL_SENDER,
+            [self.user.email],
+            headers={ 'Reply-To': 'info@votewithfriends.net',
+                      "From": "Vote with Friends <{0}>".format(settings.EMAIL_SENDER)})
+        msg.attach_alternative(html_body, "text/html")
+        msg.send(fail_silently=False)
+
 
     @classmethod
     def notify_user(cls, user):

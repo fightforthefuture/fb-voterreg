@@ -25,9 +25,8 @@ $(function() {
             {
                 method: "send",
                 to: fbuid,
-                name: "Vote. And help me get all our friends to vote.",
                 link: window['INVITE_LINK'] || window['SHARE_LINK'] || window['FACEBOOK_CANVAS_PAGE'],
-                name: window['INVITE_NAME'],
+                name: window['INVITE_NAME'] || "Vote. And help me get all our friends to vote.",
                 description: window['INVITE_DESCRIPTION'],
                 picture: window['INVITE_PICTURE']
             },
@@ -39,10 +38,29 @@ $(function() {
             });
     }
 
+    function messageFriend(fbuid) {
+        FB.ui(
+        {
+            method: "send",
+            to: fbuid,
+            link: window['INVITE_LINK'] || window['SHARE_LINK'] || window['FACEBOOK_CANVAS_PAGE'],
+            name: window['INVITE_NAME'] || "Vote. And help me get all our friends to vote.",
+            description: window['INVITE_DESCRIPTION'],
+            picture: window['INVITE_PICTURE']
+        });
+    }
+
     $(document).on(
         "click", "#friends li .invite",
         function(e) {
             inviteFriend($(this).parent().data("friend-fbuid"), $(this));
+            return false;
+        });
+
+    $(document).on(
+        "click", "#friends li .pledged",
+        function(e) {
+            messageFriend($(this).parent().data("friend-fbuid"));
             return false;
         });
 
